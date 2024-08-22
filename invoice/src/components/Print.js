@@ -45,11 +45,7 @@ const Print = () => {
         border-collapse: collapse;
       }
       
-      th {
-        background-color: #f2f2f2;
-        color: black;
-      }
-      td {
+    td {
      color: black; 
     }
     }
