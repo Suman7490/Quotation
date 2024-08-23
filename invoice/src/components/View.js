@@ -37,7 +37,7 @@ const View = () => {
     }
 
     useEffect(() => {
-        axios.get(`https://66b1ede41ca8ad33d4f5c78f.mockapi.io/invoice/Invoice`)
+        axios.get(`http://localhost:8000/api/getall`)
             .then((response) => {
                 setAPIData(response.data);
             })

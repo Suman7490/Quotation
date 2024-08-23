@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 
+
+
+
+
 const installmentSchema = new mongoose.Schema({
     label: {
         type: String,
