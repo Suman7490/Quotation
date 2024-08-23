@@ -141,7 +141,7 @@ const CreateInvoice = () => {
       })
         .then((response) => {
           alert('Quotation created successfully');
-          window.location.href = '/view'; 
+          window.location.href = '/'; 
         })
         .catch((error) => {
           console.log('Error posting data:', error)
