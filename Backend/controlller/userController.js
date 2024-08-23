@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 const sequenceSchema = new mongoose.Schema({
     _id: String,
-    sequence_value: { type: Number, default: 0 }
+    sequence_value: { type: Number, default: 100 }
 });
 
 const Sequence = mongoose.model('Sequence', sequenceSchema);
@@ -31,7 +31,6 @@ export const create = async (req, res) => {
         }
 
         const userId = await getNextSequenceValue('userId');
-
         const userData = new User({ ...req.body, userId });
 
         if (!userData) {
