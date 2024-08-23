@@ -37,7 +37,7 @@ const Home = () => {
                             <td>{row.id}</td>
                             <td>{row.name}</td>
                             <td>{row.email}</td>
-                            <td>{row.current_date}</td>
+                            <td>{row.currentDate}</td>
                             <td>{row.designation}</td>
                             <td>{row.domain}</td>
                             <td>{row.description}</td>

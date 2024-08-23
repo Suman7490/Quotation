@@ -94,7 +94,7 @@ app.post('/create', (req, res) => {
     VALUES ?`;
 
     const installmentValues = req.body.installments.map(installment => [
-        null,  // Placeholder for quotation_id
+        installment.quotation_id, 
         installment.label,
         installment.when,
         installment.installmentAmount
