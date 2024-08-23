@@ -16,7 +16,7 @@ const Print = () => {
     const id = queryParams.get('id'); // Get the ID from the URL query parameter
 
     if (id) {
-      axios.get(`http://localhost:8000/api/getone/${id}`)
+      axios.get(`https://66b1ede41ca8ad33d4f5c78f.mockapi.io/invoice/Invoice/${id}`)
         .then((response) => {
           setData(response.data);
         })

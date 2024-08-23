@@ -133,10 +133,9 @@ const CreateInvoice = () => {
 
 
  // ****** Post Data into Fake API ******
- 
-  const postData = (userData) => {
+  const postData = () => {
     if (Validate()) {
-      axios.post(`http://localhost:8000/api/create`, {
+      axios.post(`https://66b1ede41ca8ad33d4f5c78f.mockapi.io/invoice/Invoice`, {
         name, email, gender, currentDate,designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
         installments,
       })
