@@ -1,7 +1,26 @@
 import User from "../model/userModel.js";
 import moment from "moment";
+import mongoose from "mongoose";
+
+// **********************************************
 
 
+const sequenceSchema = new mongoose.Schema({
+    _id: String,
+    sequence_value: { type: Number, default: 0 }
+});
+
+const Sequence = mongoose.model('Sequence', sequenceSchema);
+
+
+const getNextSequenceValue = async (sequenceName) => {
+    const sequenceDocument = await Sequence.findOneAndUpdate(
+        { _id: sequenceName },
+        { $inc: { sequence_value: 1 } },
+        { new: true, upsert: true }
+    );
+    return sequenceDocument.sequence_value;
+};
 
 // ************ Create Quotation ***************
 export const create = async (req, res) => {
@@ -11,7 +30,9 @@ export const create = async (req, res) => {
             req.body.currentDate = moment(req.body.currentDate, "DD/MM/YYYY").toDate();
         }
 
-        const userData = new User(req.body);
+        const userId = await getNextSequenceValue('userId');
+
+        const userData = new User({ ...req.body, userId });
 
         if (!userData) {
             return res.status(404).json({ msg: "User data not found" });

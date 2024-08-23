@@ -39,7 +39,7 @@ const CreateInvoice = () => {
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
 
-
+  
 
 
   // *************** Form Validations **************
@@ -81,8 +81,8 @@ const CreateInvoice = () => {
     return `${date}/${month}/${year}`;
   }
 
-
-
+  
+  
 
   // **************** Calculation Events *******************
   const handlePrice = (event) => {
@@ -132,27 +132,24 @@ const CreateInvoice = () => {
 
 
 
-  // ****** Post Data into Fake API ******
-  let userId = 1000;
-  const postData = () => {
+ // ****** Post Data into Fake API ******
+ 
+  const postData = (userData) => {
     if (Validate()) {
-      const data = {
-        id: userId, // Add the user ID to the data
-        name, email, gender, currentDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment,
+      axios.post(`http://localhost:8000/api/create`, {
+        name, email, gender, currentDate,designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
         installments,
-      };
-      axios.post(`http://localhost:8000/api/create`, data)
+      })
         .then((response) => {
           alert('Quotation created successfully');
-          userId++; 
-          window.location.href = '/';
+          window.location.href = '/'; 
         })
         .catch((error) => {
           console.log('Error posting data:', error)
         })
     }
   }
-
+ 
 
 
   return (
@@ -213,8 +210,8 @@ const CreateInvoice = () => {
                   {rows.map((_, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' onChange={(e) => handleInstallmentChange(index, 'when', e.target.value)} error={errors.when ? { content: errors.when } : null} /></TableCell>
-                      <TableCell><FormField name='Total' type='number' placeholder='Amount' control={Input} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' onChange={(e) => handleInstallmentChange(index, 'when', e.target.value)}error={errors.when ? { content: errors.when } : null} /></TableCell>
+                      <TableCell><FormField name='Total' type='number' placeholder='Amount' control={Input} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)}error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
