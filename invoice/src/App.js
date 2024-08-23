@@ -9,6 +9,7 @@ import CreateInvoice from './components/CreateInvoice';
 import Header from "./components/Header";
 import Print from "./components/Print";
 import Update from "./components/Update";
+import Home from "./components/Home";
 
 function App(props) {
   return (
@@ -17,6 +18,7 @@ function App(props) {
       <Router>
         
         <Header />
+        <Home/>
         <br /> <br />
         <Routes>
           <Route exact path='/' element={<View />}></Route>
