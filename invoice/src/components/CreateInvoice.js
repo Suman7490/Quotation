@@ -25,7 +25,7 @@ const CreateInvoice = () => {
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
   const [checkbox, setCheckbox] = useState(false);
-  const [currentDate, setCurrentDate] = useState(getDate());
+  const [date, setDate] = useState('');
   const [errors, setErrors] = useState({});
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
@@ -51,7 +51,7 @@ const CreateInvoice = () => {
     if (!designation) newErrors.designation = 'Desingnation is required';
     if (!domain) newErrors.domain = 'Research Area / Domain is required';
     if (!gender) newErrors.gender = 'Gender is required';
-    if (!currentDate) newErrors.currentDate = 'Current date is required';
+    if (!date) newErrors.setDate = 'Current date is required';
     if (!price) newErrors.price = 'Price is required';
     if (!quantity) newErrors.quantity = 'Quantity is required';
     if (!total) newErrors.total = 'Total is required';
@@ -73,13 +73,20 @@ const CreateInvoice = () => {
 
 
   // ******** Date Formate in DD-MM-YYY ***********
-  function getDate() {
-    const today = new Date();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    const date = today.getDate();
-    return `${date}/${month}/${year}`;
-  }
+  const handleDateChange = (event) => {
+    const date = event.target.value;
+    const formattedDate = formatDate(date);
+    setDate(formattedDate);
+};
+
+const formatDate = (date) => {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+};
 
   
   
@@ -135,8 +142,8 @@ const CreateInvoice = () => {
  // ****** Post Data into Fake API ******
   const postData = () => {
     if (Validate()) {
-      axios.post(`https://66b1ede41ca8ad33d4f5c78f.mockapi.io/invoice/Invoice`, {
-        name, email, gender, currentDate,designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
+      axios.post(`http://localhost:8081/create`, {
+        name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
         installments,
       })
         .then((response) => {
@@ -166,7 +173,7 @@ const CreateInvoice = () => {
                 <FormField control={Input} label='Full Name' placeholder='Full Name' onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
-                <SemanticDatepicker control={Date} label='Date' onChange={getDate} error={errors.currentDate ? { content: errors.currentDate, pointing: 'below' } : null} />
+                <SemanticDatepicker control={Date} label='Date' onChange={handleDateChange} error={errors.currentDate ? { content: errors.currentDate, pointing: 'below' } : null} />
               </FormGroup>
               <FormGroup widths='equal'>
                 <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />

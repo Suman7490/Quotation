@@ -70,13 +70,17 @@ app.get('/', (req, res) => {
 
 
 // ************* Post Data ************
+
+
+
+
 app.post('/create', (req, res) => {
-    const quotation_sql = "INSERT INTO quotation ('name', 'email', 'gender', 'current_date', 'designation', 'domain', 'entitle', 'description', 'price', 'quantity', 'total', 'discount', 'grand_total','input_count') VALUES (?)";
+    const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `current_date`, `designation`, `domain`, `entitle`, `description`, `price`, `quantity`, `total`, `discount`, `grand_total`, `input_count`) VALUES (?)";
     const quotation_values = [
         req.body.name,
         req.body.email,
         req.body.gender,
-        req.body.current_date,
+        req.body.date,
         req.body.designation,
         req.body.domain,
         req.body.entitle,
@@ -85,26 +89,34 @@ app.post('/create', (req, res) => {
         req.body.quantity,
         req.body.total,
         req.body.discount,
-        req.body.grand_total,
-        req.body.input_count
-    ]
+        req.body.grandTotal,
+        req.body.inputCount
+    ];
 
-    const installmentsSql = `INSERT INTO payments 
-    ('quotation_id', 'label', 'due_when', 'installment_amount') 
-    VALUES ?`;
-
-    const installmentValues = req.body.installments.map(installment => [
-        installment.quotation_id, 
-        installment.label,
-        installment.when,
-        installment.installmentAmount
-    ]);
-
-    db.query(quotation_sql, installmentsSql, [quotation_values, installmentValues], (err, result) => {
+    db.query(quotation_sql, [quotation_values], (err, result) => {
         if (err) return res.json(err);
-        return res.json(result);
-    })
-})
+
+        const quotationId = result.insertId;
+        const installments = req.body.installments.map(installment => [
+            quotationId, 
+            installment.label,
+            installment.dueWhen,
+            installment.installmentAmount
+        ]);
+
+        const installmentsSql = `INSERT INTO payments 
+        (\`quotation_id\`, \`label\`, \`due_when\`, \`installment_amount\`) 
+        VALUES ?`;
+
+        db.query(installmentsSql, [installments], (err, result) => {
+            if (err) return res.json(err);
+            return res.json(result);
+        });
+    });
+});
+
+
+// *********************************************************************
 app.listen(8081, () => {
     console.log("Listening")
 })
