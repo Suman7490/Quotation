@@ -73,10 +73,16 @@ const CreateInvoice = () => {
 
 
   // ******** Date Formate in DD-MM-YYY ***********
-  const handleDateChange = (event) => {
-    const date = event.target.value;
-    const formattedDate = formatDate(date);
-    setDate(formattedDate);
+//   const handleDateChange = (event) => {
+//     const date = event.target.value;
+//     const formattedDate = formatDate(date);
+//     setDate(formattedDate);
+// };
+
+const handleDateChange = (event, data) => {
+  const date = data.value; // Directly capture the date
+  console.log('Selected date:', date);
+  setDate(date);
 };
 
 const formatDate = (date) => {
@@ -85,10 +91,9 @@ const formatDate = (date) => {
     const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
     const year = d.getFullYear();
 
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
 };
 
-  
   
 
   // **************** Calculation Events *******************
@@ -142,8 +147,9 @@ const formatDate = (date) => {
  // ****** Post Data into Fake API ******
   const postData = () => {
     if (Validate()) {
+      const formattedDate = formatDate(date);
       axios.post(`http://localhost:8081/create`, {
-        name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
+        name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
         installments,
       })
         .then((response) => {
@@ -173,7 +179,7 @@ const formatDate = (date) => {
                 <FormField control={Input} label='Full Name' placeholder='Full Name' onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
-                <SemanticDatepicker control={Date} label='Date' onChange={handleDateChange} error={errors.currentDate ? { content: errors.currentDate, pointing: 'below' } : null} />
+                <SemanticDatepicker control={Date} label='Date' onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
               </FormGroup>
               <FormGroup widths='equal'>
                 <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />

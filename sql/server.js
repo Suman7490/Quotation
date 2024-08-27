@@ -22,6 +22,8 @@ app.get('/', (req, res) => {
         INNER JOIN payments p ON q.quotation_id = p.quotation_id
     `;
 
+
+
     db.query(sql, (err, result) => {
         if (err) return res.json({ Message: "Error inside server" });
         const data = {}
@@ -33,7 +35,7 @@ app.get('/', (req, res) => {
                     name: row.name,
                     email: row.email,
                     gender: row.gender,
-                    currentDate: row.current_date,
+                    date: row.current_date,
                     designation: row.designation,
                     domain: row.domain,
                     entitle: row.entitle,
@@ -98,7 +100,7 @@ app.post('/create', (req, res) => {
 
         const quotationId = result.insertId;
         const installments = req.body.installments.map(installment => [
-            quotationId, 
+            quotationId,
             installment.label,
             installment.dueWhen,
             installment.installmentAmount
@@ -110,6 +112,7 @@ app.post('/create', (req, res) => {
 
         db.query(installmentsSql, [installments], (err, result) => {
             if (err) return res.json(err);
+
             return res.json(result);
         });
     });

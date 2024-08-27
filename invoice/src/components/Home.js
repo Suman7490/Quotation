@@ -4,12 +4,22 @@ import React, { useEffect, useState } from 'react'
 const Home = () => {
     const [data, setData] = useState([]);
 
-
     useEffect(() => {
         axios.get('http://localhost:8081/')
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
+
+
+    // ****************** Date fromate ******************
+    const formatDate = (isoDate) => {
+        const date = new Date(isoDate);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${year}-${month}-${day}`;
+    };
 
 
     return (
@@ -37,7 +47,7 @@ const Home = () => {
                             <td>{row.id}</td>
                             <td>{row.name}</td>
                             <td>{row.email}</td>
-                            <td>{row.currentDate}</td>
+                            <td>{formatDate(row.date)}</td>
                             <td>{row.designation}</td>
                             <td>{row.domain}</td>
                             <td>{row.description}</td>
@@ -45,8 +55,8 @@ const Home = () => {
                             <td>{row.discount}</td>
                             <td>{row.grandTotal}</td>
                             <td>
-                                <span>{row.inputCount}</span>
-                                <ul>
+                                <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                    <span>{row.inputCount}</span>
                                     {row.installments.map((installment, idx) => (
                                         <li key={idx}>
                                             {installment.label}: {installment.when} - {installment.installmentAmount}
