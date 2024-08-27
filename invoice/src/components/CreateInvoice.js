@@ -70,7 +70,7 @@ const CreateInvoice = () => {
     return Object.keys(newErrors).length === 0;
   }
 
-
+// *************** Date Formate ***************
   const handleDateChange = (event, data) => {
     const date = data.value; // Directly capture the date
     console.log('Selected date:', date);
@@ -136,7 +136,7 @@ const CreateInvoice = () => {
 
 
 
-  // ****** Post Data into Fake API ******
+  // ****** Post Data into API ******
   const postData = () => {
     if (Validate()) {
       const formattedDate = formatDate(date);
