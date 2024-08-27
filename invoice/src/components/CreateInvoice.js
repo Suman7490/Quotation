@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { FormGroup, FormField, Form, Input, Checkbox, Button, Select, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
@@ -17,16 +17,15 @@ const ResearchDomain = [
 
 const CreateInvoice = () => {
   // ****** Start Set the input values ******
+  const { id: quotationId } = useParams();
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [domain, setDomain] = useState("");
-  const [entitle, setEntitle] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
-  const [checkbox, setCheckbox] = useState(false);
   const [date, setDate] = useState('');
-  const [errors, setErrors] = useState({});
+  const [domain, setDomain] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [entitle, setEntitle] = useState("");
+  const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [total, setTotal] = useState(0);
@@ -35,11 +34,12 @@ const CreateInvoice = () => {
   const [totalInstallment, setTotalInstallment] = useState(0);
   const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
+  const [checkbox, setCheckbox] = useState(false);
+  const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
 
-  
 
 
   // *************** Form Validations **************
@@ -71,30 +71,22 @@ const CreateInvoice = () => {
   }
 
 
+  const handleDateChange = (event, data) => {
+    const date = data.value; // Directly capture the date
+    console.log('Selected date:', date);
+    setDate(date);
+  };
 
-  // ******** Date Formate in DD-MM-YYY ***********
-//   const handleDateChange = (event) => {
-//     const date = event.target.value;
-//     const formattedDate = formatDate(date);
-//     setDate(formattedDate);
-// };
-
-const handleDateChange = (event, data) => {
-  const date = data.value; // Directly capture the date
-  console.log('Selected date:', date);
-  setDate(date);
-};
-
-const formatDate = (date) => {
+  const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
     const year = d.getFullYear();
 
     return `${year}-${month}-${day}`;
-};
+  };
 
-  
+
 
   // **************** Calculation Events *******************
   const handlePrice = (event) => {
@@ -144,24 +136,70 @@ const formatDate = (date) => {
 
 
 
- // ****** Post Data into Fake API ******
+  // ****** Post Data into Fake API ******
   const postData = () => {
     if (Validate()) {
       const formattedDate = formatDate(date);
-      axios.post(`http://localhost:8081/create`, {
-        name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment, 
-        installments,
-      })
-        .then((response) => {
-          alert('Quotation created successfully');
-          window.location.href = '/'; 
-        })
-        .catch((error) => {
-          console.log('Error posting data:', error)
-        })
-    }
-  }
 
+      if (quotationId) {
+        // Update existing quotation
+        axios.put(`http://localhost:8081/edit/${quotationId}`, {
+          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment,
+          installments,
+        })
+          .then((response) => {
+            alert('Quotation updated successfully');
+            window.location.href = '/';
+          })
+          .catch((error) => {
+            console.log('Error updating data:', error);
+          });
+      } else {
+        // Create new quotation
+        axios.post(`http://localhost:8081/create`, {
+          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment,
+          installments,
+        })
+          .then((response) => {
+            alert('Quotation created successfully');
+            window.location.href = '/';
+          })
+          .catch((error) => {
+            console.log('Error posting data:', error)
+          })
+      }
+    }
+  };
+
+
+
+  // **************** Upadate **************
+  useEffect(() => {
+    if (quotationId) {
+      // Fetch the existing data for the quotation
+      axios.get(`http://localhost:8081/pdf/${quotationId}`)
+        .then((response) => {
+          const data = response.data;
+          setName(data.name || "");
+          setEmail(data.email || "");
+          setGender(data.gender || "");
+          setDate(new Date(data.date));
+          setDesignation(data.designation || "");
+          setDomain(data.domain || "");
+          setEntitle(data.entitle || "");
+          setDescription(data.description || "");
+          setPrice(data.price || 0);
+          setQuantity(data.quantity || 0);
+          setTotal(data.total || 0);
+          setDiscount(data.discount || 0);
+          setGrandTotal(data.grandTotal || 0);
+          setInputCount(data.inputCount || 0);
+          setInstallments(data.installments || []);
+          setRows(Array(data.inputCount).fill(''));
+        })
+        .catch((error) => console.log('Error fetching data:', error));
+    }
+  }, [quotationId]);
 
 
   return (
@@ -176,15 +214,15 @@ const formatDate = (date) => {
           <div className='col-md-12'>
             <Form className=''>
               <FormGroup widths='equal'>
-                <FormField control={Input} label='Full Name' placeholder='Full Name' onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
-                <FormField control={Input} label='Email' placeholder='joe@schmoe.com' onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
-                <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
-                <SemanticDatepicker control={Date} label='Date' onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
+                <FormField control={Input} label='Full Name' placeholder='Full Name' value={name} onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
+                <FormField control={Input} label='Email' placeholder='joe@schmoe.com' value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
+                <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
+                <SemanticDatepicker control={Date} label='Date' value={date} onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
               </FormGroup>
               <FormGroup widths='equal'>
-                <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />
-                <FormField control={Input} label='Designation' placeholder='Designation' onChange={(e) => setDesignation(e.target.value)} error={errors.designation ? { content: errors.designation } : null} />
-                <FormField control={Input} label='Entitle' placeholder='Entitle' onChange={(e) => setEntitle(e.target.value)} />
+                <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' value={domain} options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />
+                <FormField control={Input} label='Designation' placeholder='Designation' value={designation} onChange={(e) => setDesignation(e.target.value)} error={errors.designation ? { content: errors.designation } : null} />
+                <FormField control={Input} label='Entitle' placeholder='Entitle' value={entitle} onChange={(e) => setEntitle(e.target.value)} />
               </FormGroup>
               <Table celled padded>
                 <TableHeader>
@@ -198,7 +236,7 @@ const formatDate = (date) => {
                 <TableBody>
 
                   <TableRow>
-                    <TableCell><FormField type='text' placeholder='Enter Description' control={Input} onChange={(e) => setDescription(e.target.value)} error={errors.description ? { content: errors.description } : null} /></TableCell>
+                    <TableCell><FormField type='text' placeholder='Enter Description' control={Input} value={description} onChange={(e) => setDescription(e.target.value)} error={errors.description ? { content: errors.description } : null} /></TableCell>
                     <TableCell><FormField type='number' placeholder='Enter Price' control={Input} value={price} onChange={handlePrice} error={errors.price ? { content: errors.price } : null} /></TableCell>
                     <TableCell><FormField type='number' placeholder='Enter Price' control={Input} value={quantity} onChange={handleQuantity} error={errors.quantity ? { content: errors.quantity } : null} /></TableCell>
                     <TableCell><FormField placeholder='BasePrice' onChange={(e) => setTotal(e.target.value)} error={errors.total ? { content: errors.total } : null} />{total}</TableCell>
@@ -222,8 +260,8 @@ const formatDate = (date) => {
                   {rows.map((_, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' onChange={(e) => handleInstallmentChange(index, 'when', e.target.value)}error={errors.when ? { content: errors.when } : null} /></TableCell>
-                      <TableCell><FormField name='Total' type='number' placeholder='Amount' control={Input} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)}error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' onChange={(e) => handleInstallmentChange(index, 'when', e.target.value)} error={errors.when ? { content: errors.when } : null} /></TableCell>
+                      <TableCell><FormField name='Total' type='number' placeholder='Amount' control={Input} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

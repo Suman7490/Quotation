@@ -69,9 +69,10 @@ app.get('/', (req, res) => {
 });
 
 
-
-
 // ************* Post Data ************
+
+
+
 
 
 
@@ -115,6 +116,165 @@ app.post('/create', (req, res) => {
 
             return res.json(result);
         });
+    });
+});
+
+// ********************* Edit Data ****************
+app.put('/edit/:id', (req, res) => {
+    const quotationId = req.params.id;
+
+    const updateQuotationSql = `
+        UPDATE quotation 
+        SET name = ?, email = ?, gender = ?, current_date = ?, designation = ?, domain = ?, 
+            entitle = ?, description = ?, price = ?, quantity = ?, total = ?, discount = ?, 
+            grand_total = ?, input_count = ?
+        WHERE quotation_id = ?
+    `;
+
+    const quotationValues = [
+        req.body.name,
+        req.body.email,
+        req.body.gender,
+        req.body.date,
+        req.body.designation,
+        req.body.domain,
+        req.body.entitle,
+        req.body.description,
+        req.body.price,
+        req.body.quantity,
+        req.body.total,
+        req.body.discount,
+        req.body.grand_total,
+        req.body.input_count,
+        quotationId
+    ];
+
+    db.query(updateQuotationSql, quotationValues, (err, result) => {
+        if (err) {
+            console.error('Error updating quotation:', err);
+            return res.status(500).json({ message: 'Error updating quotation', error: err });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Quotation not found' });
+        }
+
+        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
+
+        db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
+            if (err) {
+                console.error('Error deleting installments:', err);
+                return res.status(500).json({ message: 'Error deleting installments', error: err });
+            }
+
+            const installments = req.body.installments.map(installment => [
+                quotationId,
+                installment.label,
+                installment.dueWhen,
+                installment.installmentAmount
+            ]);
+
+            const insertInstallmentsSql = `
+                INSERT INTO payments (quotation_id, label, due_when, installment_amount) 
+                VALUES ?
+            `;
+
+            db.query(insertInstallmentsSql, [installments], (err, result) => {
+                if (err) {
+                    console.error('Error inserting installments:', err);
+                    return res.status(500).json({ message: 'Error inserting installments', error: err });
+                }
+
+                return res.json({ message: "Quotation updated successfully" });
+            });
+        });
+    });
+});
+ 
+
+// ************** Delete data ***************
+app.delete('/delete/:id', (req, res) => {
+    const quotationId = req.params.id;
+
+    // SQL query to delete the quotation
+    const deleteQuotationSql = `DELETE FROM quotation WHERE quotation_id = ?`;
+
+    db.query(deleteQuotationSql, [quotationId], (err, result) => {
+        if (err) {
+            console.error('Error deleting quotation:', err);
+            return res.status(500).json({ message: 'Error deleting quotation', error: err });
+        }
+
+        // Check if any rows were affected (i.e., if the delete was successful)
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Quotation not found' });
+        }
+
+        // Delete associated installments
+        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
+        db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
+            if (err) {
+                console.error('Error deleting installments:', err);
+                return res.status(500).json({ message: 'Error deleting installments', error: err });
+            }
+
+            return res.json({ message: "Quotation and installments deleted successfully" });
+        });
+    });
+});
+
+
+// ************* Get Data by Quotation ID *************
+app.get('/pdf/:id', (req, res) => {
+    const quotationId = req.params.id;
+    const sql = `
+        SELECT q.quotation_id, q.name, q.email, q.gender, q.designation, q.domain, q.description, 
+               q.price, q.quantity, q.current_date, q.entitle, q.total, q.discount, q.grand_total, q.input_count,
+               p.label, p.due_when AS 'when', p.installment_amount
+        FROM quotation q
+        LEFT JOIN payments p ON q.quotation_id = p.quotation_id
+        WHERE q.quotation_id = ?
+    `;
+
+    db.query(sql, [quotationId], (err, result) => {
+        if (err) return res.json({ Message: "Error retrieving data" });
+
+        if (result.length === 0) {
+            return res.json({ Message: "Quotation not found" });
+        }
+
+        const data = {
+            id: result[0].quotation_id,
+            name: result[0].name,
+            email: result[0].email,
+            gender: result[0].gender,
+            date: result[0].current_date,
+            designation: result[0].designation,
+            domain: result[0].domain,
+            entitle: result[0].entitle,
+            description: result[0].description,
+            totalInstallment: 0,
+            price: result[0].price,
+            quantity: result[0].quantity,
+            total: result[0].total,
+            discount: result[0].discount,
+            grandTotal: result[0].grand_total,
+            inputCount: result[0].input_count,
+            installments: []
+        };
+
+        result.forEach(row => {
+            if (row.label) {
+                data.installments.push({
+                    label: row.label,
+                    when: row.when,
+                    installmentAmount: row.installment_amount
+                });
+                data.totalInstallment++;
+            }
+        });
+
+        return res.json(data);
     });
 });
 

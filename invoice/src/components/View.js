@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Icon, Button } from 'semantic-ui-react';
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Icon} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 const View = () => {

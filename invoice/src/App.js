@@ -4,12 +4,13 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import View from './components/View';
 import CreateInvoice from './components/CreateInvoice';
 import Header from "./components/Header";
 import Print from "./components/Print";
 import Update from "./components/Update";
 import Home from "./components/Home";
+import Pdf from "./components/Pdf";
+import Edit from './components/Edit';
 
 function App(props) {
   return (
@@ -18,13 +19,15 @@ function App(props) {
       <Router>
         
         <Header />
-        <Home/>
         <br /> <br />
         <Routes>
-          <Route exact path='/' element={<View />}></Route>
+          <Route exact path='/' element={<Home />}></Route>
           <Route path='/CreateInvoice' element={<CreateInvoice />}></Route>
           <Route path="/update" element={<Update />}></Route>
           <Route path="/print" element={<Print/>}></Route>
+          <Route path="/pdf/:id" element={<Pdf/>}></Route>
+          <Route path="/edit/:id" element={<CreateInvoice/>}></Route>
+          <Route path="/delete/:id" element={<Home/>}></Route>
         </Routes>
       </Router>
     </>
