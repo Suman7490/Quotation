@@ -42,7 +42,7 @@ const Update = () => {
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [grandTotal, setGrandTotal] = useState(0);
-    const [totalInstallment, setTotalInstallment] = useState(0);
+    // const [totalInstallment, setTotalInstallment] = useState(0);
     const [installments, setInstallments] = useState([]);
     const [inputCount, setInputCount] = useState(0);
     const [rows, setRows] = useState([]);
@@ -119,14 +119,12 @@ const Update = () => {
                 domain,
                 entitle,
                 description,
-                totalInstallment,
                 price,
                 quantity,
                 total,
                 discount,
                 grandTotal,
                 inputCount,
-                totalInstallment,
                 installments
             })
                 .then((response) => {

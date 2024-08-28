@@ -10,7 +10,6 @@ import Print from "./components/Print";
 import Update from "./components/Update";
 import Home from "./components/Home";
 import Pdf from "./components/Pdf";
-import Edit from './components/Edit';
 
 function App(props) {
   return (

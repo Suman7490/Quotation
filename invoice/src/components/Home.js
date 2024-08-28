@@ -36,16 +36,15 @@ const Home = () => {
     };
 
 // ************** deleting data ********************
-useEffect(() => {
-    // Fetch the list of quotations when the component mounts
-    axios.get('http://localhost:8081/quotations')
-        .then((response) => {
-            setQuotations(response.data);
-        })
-        .catch((error) => {
-            console.error('Error fetching quotations:', error);
-        });
-}, []);
+// useEffect(() => {
+//     axios.get('http://localhost:8081/quotations')
+//         .then((response) => {
+//             setQuotations(response.data);
+//         })
+//         .catch((error) => {
+//             console.error('Error fetching quotations:', error);
+//         });
+// }, []);
 const deleteQuotation = (quotationId) => {
     if (window.confirm('Are you sure you want to delete this quotation?')) {
         axios.delete(`http://localhost:8081/delete/${quotationId}`)

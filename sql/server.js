@@ -173,9 +173,6 @@ app.put('/edit/:id', (req, res) => {
             quotationId,
             installment.paymentId
         ]);
-        
-
-
 
 
         installments.forEach((installment, index) => {
@@ -197,6 +194,10 @@ app.put('/edit/:id', (req, res) => {
 
     });
 });
+
+
+
+
 
 
 

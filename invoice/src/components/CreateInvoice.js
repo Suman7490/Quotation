@@ -31,7 +31,7 @@ const CreateInvoice = () => {
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [totalInstallment, setTotalInstallment] = useState(0);
+  // const [totalInstallment, setTotalInstallment] = useState(0);
   const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
   const [checkbox, setCheckbox] = useState(false);
@@ -70,7 +70,7 @@ const CreateInvoice = () => {
     return Object.keys(newErrors).length === 0;
   }
 
-// *************** Date Formate ***************
+  // *************** Date Formate ***************
   const handleDateChange = (event, data) => {
     const date = data.value; // Directly capture the date
     console.log('Selected date:', date);
@@ -144,7 +144,7 @@ const CreateInvoice = () => {
       if (quotationId) {
         // Update existing quotation
         axios.put(`http://localhost:8081/edit/${quotationId}`, {
-          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment,
+          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
           .then((response) => {
@@ -154,10 +154,14 @@ const CreateInvoice = () => {
           .catch((error) => {
             console.log('Error updating data:', error);
           });
-      } else {
+      }
+
+
+
+      else {
         // Create new quotation
         axios.post(`http://localhost:8081/create`, {
-          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount, totalInstallment,
+          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
           .then((response) => {
@@ -180,7 +184,7 @@ const CreateInvoice = () => {
       axios.get(`http://localhost:8081/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-          console.log("fatched data:",data)
+          console.log("fatched data:", data)
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
@@ -201,9 +205,9 @@ const CreateInvoice = () => {
           const rowsData = data.installments.map(installment => ({
             when: installment.when,
             installmentAmount: installment.installmentAmount,
-        }));
-        console.log("Rows Data: ", rowsData);
-        setRows(rowsData);
+          }));
+          console.log("Rows Data: ", rowsData);
+          setRows(rowsData);
         })
         .catch((error) => console.log('Error fetching data:', error));
     }
@@ -279,7 +283,7 @@ const CreateInvoice = () => {
                   {rows.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.when}  onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.when} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
                     </TableRow>
                   ))}
