@@ -144,8 +144,8 @@ app.put('/edit/:id', (req, res) => {
         req.body.quantity,
         req.body.total,
         req.body.discount,
-        req.body.grand_total,
-        req.body.input_count,
+        req.body.grandTotal,
+        req.body.inputCount,
         quotationId
     ];
 
@@ -154,43 +154,52 @@ app.put('/edit/:id', (req, res) => {
             console.error('Error updating quotation:', err);
             return res.status(500).json({ message: 'Error updating quotation', error: err });
         }
-        
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Quotation not found' });
         }
 
-        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
 
-        db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
-            if (err) {
-                console.error('Error deleting installments:', err);
-                return res.status(500).json({ message: 'Error deleting installments', error: err });
-            }
+        const updatePaymentsSql = `
+        UPDATE payments
+        SET label = ?, due_when = ?, installment_amount = ?
+        WHERE quotation_id = ? AND payment_id = ?;
+    `;
 
-            const installments = req.body.installments.map(installment => [
-                quotationId,
-                installment.label,
-                installment.dueWhen,
-                installment.installmentAmount
-            ]);
+        const installments = req.body.installments.map(installment => [
+            installment.label,
+            installment.dueWhen,
+            installment.installmentAmount,
+            quotationId,
+            installment.paymentId
+        ]);
+        
 
-            const insertInstallmentsSql = `
-                INSERT INTO payments (quotation_id, label, due_when, installment_amount) 
-                VALUES ?
-            `;
 
-            db.query(insertInstallmentsSql, [installments], (err, result) => {
+
+
+        installments.forEach((installment, index) => {
+            db.query(updatePaymentsSql, installment, (err, result) => {
                 if (err) {
-                    console.error('Error inserting installments:', err);
-                    return res.status(500).json({ message: 'Error inserting installments', error: err });
+                    console.error(`Error updating installment ${index + 1}:`, err);
+                    return res.status(500).json({ message: `Error updating installment ${index + 1}`, error: err });
+                }
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: `Installment ${index + 1} not found` });
                 }
 
-                return res.json({ message: "Quotation updated successfully" });
-            });
-        });
+                if (index === installments.length - 1) {
+                    return res.json({ message: "Quotation and payments updated successfully" });
+                }
+            })
+        })
+
+
     });
 });
- 
+
+
+
 
 // ************** Delete data ***************
 app.delete('/delete/:id', (req, res) => {

@@ -180,6 +180,7 @@ const CreateInvoice = () => {
       axios.get(`http://localhost:8081/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
+          console.log("fatched data:",data)
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
@@ -195,11 +196,29 @@ const CreateInvoice = () => {
           setGrandTotal(data.grandTotal || 0);
           setInputCount(data.inputCount || 0);
           setInstallments(data.installments || []);
-          setRows(Array(data.inputCount).fill(''));
+          // const rowsData = data.installments.length > 0 ? data.installments : Array(data.inputCount).fill({ dueWhen: '', installmentAmount: '' });
+          // setRows(rowsData);
+          const rowsData = data.installments.map(installment => ({
+            when: installment.when,
+            installmentAmount: installment.installmentAmount,
+        }));
+        console.log("Rows Data: ", rowsData);
+        setRows(rowsData);
         })
         .catch((error) => console.log('Error fetching data:', error));
     }
   }, [quotationId]);
+
+
+
+
+
+
+
+
+
+
+
 
 
   return (
@@ -257,11 +276,11 @@ const CreateInvoice = () => {
                     <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell>
                   </TableRow>
 
-                  {rows.map((_, index) => (
+                  {rows.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' onChange={(e) => handleInstallmentChange(index, 'when', e.target.value)} error={errors.when ? { content: errors.when } : null} /></TableCell>
-                      <TableCell><FormField name='Total' type='number' placeholder='Amount' control={Input} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.when}  onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
+                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
