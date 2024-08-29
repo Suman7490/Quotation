@@ -5,6 +5,7 @@ import companyLogo from './KRW.png';
 import Signature from './Signature.png';
 import ReactToPrint from 'react-to-print';
 import { TableRow, TableCell, Table, Icon } from 'semantic-ui-react';
+import '../App.css';
 
 const Pdf = () => {
     const { id } = useParams(); // Get the id from the URL
