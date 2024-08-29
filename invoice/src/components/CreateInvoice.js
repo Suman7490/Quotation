@@ -21,7 +21,7 @@ const CreateInvoice = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(null);
   const [domain, setDomain] = useState("");
   const [designation, setDesignation] = useState("");
   const [entitle, setEntitle] = useState("");
@@ -71,21 +71,37 @@ const CreateInvoice = () => {
   }
 
   // *************** Date Formate ***************
+  // const handleDateChange = (event, data) => {
+  //   const date = data.value; // Directly capture the date
+  //   console.log('Selected date:', date);
+  //   setDate(date);
+  // };
+
+  // const formatDate = (date) => {
+  //   const d = new Date(date);
+  //   const day = String(d.getDate()).padStart(2, '0');
+  //   const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
+  //   const year = d.getFullYear();
+
+  //   return `${year}-${month}-${day}`;
+  // };
+
   const handleDateChange = (event, data) => {
-    const date = data.value; // Directly capture the date
-    console.log('Selected date:', date);
-    setDate(date);
+    const selectedDate = data.value; // Capturing the selected date
+    console.log('Selected date:', selectedDate);
+    const formattedDate = formatDate(selectedDate);
+    setDate(formattedDate);
   };
 
+  // Format date to YYYY-MM-DD
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
     const year = d.getFullYear();
-
     return `${year}-${month}-${day}`;
   };
-
+ 
 
 
   // **************** Calculation Events *******************
@@ -137,12 +153,27 @@ const CreateInvoice = () => {
 
 
   // ****** Post Data into API ******
-  const postData = () => {
+  const postData = (e) => {
+    e.preventDefault();
     if (Validate()) {
       const formattedDate = formatDate(date);
 
+      // if (quotationId) {
+      //   // Update existing quotation
+      //   axios.put(`http://localhost:8081/edit/${quotationId}`, {
+      //     name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
+      //     installments,
+      //   })
+      //     .then((response) => {
+      //       alert('Quotation updated successfully');
+      //       window.location.href = '/';
+      //     })
+      //     .catch((error) => {
+      //       console.log('Error updating data:', error);
+      //     });
+      // }
+
       if (quotationId) {
-        // Update existing quotation
         axios.put(`http://localhost:8081/edit/${quotationId}`, {
           name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
@@ -152,16 +183,16 @@ const CreateInvoice = () => {
             window.location.href = '/';
           })
           .catch((error) => {
-            console.log('Error updating data:', error);
+            console.error('Error updating quotation:', error);
+            alert('Failed to update quotation');
           });
       }
-
 
 
       else {
         // Create new quotation
         axios.post(`http://localhost:8081/create`, {
-          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
+          name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
           .then((response) => {
@@ -240,7 +271,7 @@ const CreateInvoice = () => {
                 <FormField control={Input} label='Full Name' placeholder='Full Name' value={name} onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
-                <SemanticDatepicker control={Date} label='Date' value={date} onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
+                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null}  onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
               </FormGroup>
               <FormGroup widths='equal'>
                 <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' value={domain} options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />
