@@ -196,8 +196,11 @@ app.post('/create', (req, res) => {
 // });
 app.put('/edit/:id', (req, res) => {
     const quotationId = req.params.id;
-    const { name, email, gender, date, designation, domain, entitle,
-        description, price, quantity, total, discount, grandTotal, inputCount, installments } = req.body;  // Simplified to just update the name
+
+    const {
+        name, email, gender, date, designation, domain, entitle,
+        description, price, quantity, total, discount, grandTotal, inputCount, installments
+    } = req.body;  // Simplified to just update the name
 
     console.log('Received data for update:', req.body);
 

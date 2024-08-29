@@ -125,14 +125,41 @@ const CreateInvoice = () => {
     }
   };
 
+  // const handleInstallmentChange = (index, field, value) => {
+  //   const updatedInstallments = [...installments];
+  //   if (!updatedInstallments[index]) {
+  //     updatedInstallments[index] = { label: labels[index] };
+  //   }
+  //   updatedInstallments[index][field] = value;
+  //   setInstallments(updatedInstallments);
+  // };
+
+
   const handleInstallmentChange = (index, field, value) => {
-    const updatedInstallments = [...installments];
-    if (!updatedInstallments[index]) {
-      updatedInstallments[index] = { label: labels[index] };
+    const updatedRows = [...rows]; // Clone the current rows state
+    const updatedInstallments = [...installments]; // Clone the current installments state
+
+    // Ensure the row exists before updating
+    if (!updatedRows[index]) {
+        updatedRows[index] = { label: labels[index] };
     }
+
+    // Update the field in the row
+    updatedRows[index][field] = value;
+
+    // Ensure the installment exists before updating
+    if (!updatedInstallments[index]) {
+        updatedInstallments[index] = { label: labels[index] };
+    }
+
+    // Update the field in the corresponding installment
     updatedInstallments[index][field] = value;
+
+    // Update state with the modified rows and installments
+    setRows(updatedRows);
     setInstallments(updatedInstallments);
-  };
+};
+
 
 
 
@@ -210,6 +237,16 @@ const CreateInvoice = () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
   return (
     <>
       <div className='container border border-warning rounded p-5'>
@@ -268,8 +305,8 @@ const CreateInvoice = () => {
                   {rows.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
-                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
+                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
