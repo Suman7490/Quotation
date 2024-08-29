@@ -85,7 +85,7 @@ const CreateInvoice = () => {
     const year = d.getFullYear();
     return `${year}-${month}-${day}`;
   };
- 
+
 
 
   // **************** Calculation Events *******************
@@ -125,15 +125,6 @@ const CreateInvoice = () => {
     }
   };
 
-  // const handleInstallmentChange = (index, field, value) => {
-  //   const updatedInstallments = [...installments];
-  //   if (!updatedInstallments[index]) {
-  //     updatedInstallments[index] = { label: labels[index] };
-  //   }
-  //   updatedInstallments[index][field] = value;
-  //   setInstallments(updatedInstallments);
-  // };
-
 
   const handleInstallmentChange = (index, field, value) => {
     const updatedRows = [...rows]; // Clone the current rows state
@@ -141,7 +132,7 @@ const CreateInvoice = () => {
 
     // Ensure the row exists before updating
     if (!updatedRows[index]) {
-        updatedRows[index] = { label: labels[index] };
+      updatedRows[index] = { label: labels[index] };
     }
 
     // Update the field in the row
@@ -149,7 +140,7 @@ const CreateInvoice = () => {
 
     // Ensure the installment exists before updating
     if (!updatedInstallments[index]) {
-        updatedInstallments[index] = { label: labels[index] };
+      updatedInstallments[index] = { label: labels[index] };
     }
 
     // Update the field in the corresponding installment
@@ -158,7 +149,7 @@ const CreateInvoice = () => {
     // Update state with the modified rows and installments
     setRows(updatedRows);
     setInstallments(updatedInstallments);
-};
+  };
 
 
 
@@ -182,7 +173,7 @@ const CreateInvoice = () => {
             console.error('Error updating quotation:', error);
             alert('Failed to update quotation');
           });
-      }else {
+      } else {
         // Create new quotation
         axios.post(`http://localhost:8081/create`, {
           name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
@@ -236,17 +227,6 @@ const CreateInvoice = () => {
   }, [quotationId]);
 
 
-
-
-
-
-
-
-
-
-
-
-
   return (
     <>
       <div className='container border border-warning rounded p-5'>
@@ -262,7 +242,7 @@ const CreateInvoice = () => {
                 <FormField control={Input} label='Full Name' placeholder='Full Name' value={name} onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
-                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null}  onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
+                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
               </FormGroup>
               <FormGroup widths='equal'>
                 <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' value={domain} options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />

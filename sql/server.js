@@ -70,13 +70,6 @@ app.get('/', (req, res) => {
 
 
 // ************* Post Data ************
-
-
-
-
-
-
-
 app.post('/create', (req, res) => {
     const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `date`, `designation`, `domain`, `entitle`, `description`, `price`, `quantity`, `total`, `discount`, `grandTotal`, `inputCount`) VALUES (?)";
     const quotation_values = [
@@ -120,80 +113,6 @@ app.post('/create', (req, res) => {
 });
 
 // ********************* Edit Data ****************
-// app.put('/edit/:id', (req, res) => {
-//     const quotationId = req.params.id;
-
-//     const updateQuotationSql = `
-//         UPDATE quotation 
-//         SET name = ?, email = ?, gender = ?, date = ?, designation = ?, domain = ?, 
-//             entitle = ?, description = ?, price = ?, quantity = ?, total = ?, discount = ?, 
-//             grandTotal = ?, inputCount = ?
-//         WHERE quotation_id = id 
-//     `;
-
-//     const quotationValues = [
-//         req.body.name,
-//         req.body.email,
-//         req.body.gender,
-//         req.body.date,
-//         req.body.designation,
-//         req.body.domain,
-//         req.body.entitle,
-//         req.body.description,
-//         req.body.price,
-//         req.body.quantity,
-//         req.body.total,
-//         req.body.discount,
-//         req.body.grandTotal,
-//         req.body.inputCount,
-//         quotationId
-//     ];
-
-//     db.query(updateQuotationSql, quotationValues, (err, result) => {
-//         if (err) {
-//             console.error('Error updating quotation:', err);
-//             return res.status(500).json({ message: 'Error updating quotation', error: err });
-//         }
-
-//         if (result.affectedRows === 0) {
-//             return res.status(404).json({ message: 'Quotation not found' });
-//         }
-
-
-//         const updatePaymentsSql = `
-//         UPDATE payments
-//         SET label = ?, dueWhen = ?, installmentAmount = ?
-//         WHERE quotation_id = ? AND payment_id = ?;
-//     `;
-
-//         const installments = req.body.installments.map(installment => [
-//             installment.label,
-//             installment.dueWhen,
-//             installment.installmentAmount,
-//             quotationId,
-//             installment.paymentId
-//         ]);
-
-
-//         installments.forEach((installment, index) => {
-//             db.query(updatePaymentsSql, installment, (err, result) => {
-//                 if (err) {
-//                     console.error(`Error updating installment ${index + 1}:`, err);
-//                     return res.status(500).json({ message: `Error updating installment ${index + 1}`, error: err });
-//                 }
-//                 if (result.affectedRows === 0) {
-//                     return res.status(404).json({ message: `Installment ${index + 1} not found` });
-//                 }
-
-//                 if (index === installments.length - 1) {
-//                     return res.json({ message: "Quotation and payments updated successfully" });
-//                 }
-//             })
-//         })
-
-
-//     });
-// });
 app.put('/edit/:id', (req, res) => {
     const quotationId = req.params.id;
 
@@ -257,13 +176,6 @@ app.put('/edit/:id', (req, res) => {
         });
     });
 });
-
-
-
-
-
-
-
 
 
 
