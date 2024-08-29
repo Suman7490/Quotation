@@ -35,31 +35,21 @@ const Home = () => {
         navigate(`/edit/${id}`); // Pass the selected row ID to the next page
     };
 
-// ************** deleting data ********************
-// useEffect(() => {
-//     axios.get('http://localhost:8081/quotations')
-//         .then((response) => {
-//             setQuotations(response.data);
-//         })
-//         .catch((error) => {
-//             console.error('Error fetching quotations:', error);
-//         });
-// }, []);
-const deleteQuotation = (quotationId) => {
-    if (window.confirm('Are you sure you want to delete this quotation?')) {
-        axios.delete(`http://localhost:8081/delete/${quotationId}`)
-            .then((response) => {
-                alert('Quotation deleted successfully');
-                // Remove the deleted quotation from the state
-                setQuotations(quotations.filter(quotation => quotation.id !== quotationId));
-                window.location.href = '/';
-            })
-            .catch((error) => {
-                console.error('Error deleting data:', error);
-                alert('Error deleting quotation');
-            });
-    }
-};
+    const deleteQuotation = (quotationId) => {
+        if (window.confirm('Are you sure you want to delete this quotation?')) {
+            axios.delete(`http://localhost:8081/delete/${quotationId}`)
+                .then((response) => {
+                    alert('Quotation deleted successfully');
+                    // Remove the deleted quotation from the state
+                    setQuotations(quotations.filter(quotation => quotation.id !== quotationId));
+                    window.location.href = '/';
+                })
+                .catch((error) => {
+                    console.error('Error deleting data:', error);
+                    alert('Error deleting quotation');
+                });
+        }
+    };
 
 
     return (
@@ -106,7 +96,7 @@ const deleteQuotation = (quotationId) => {
                             </TableCell>
                             <TableCell>
                                 <Icon name='edit' size='large' onClick={() => edit(row.id)} className='text-primary' style={{ cursor: 'pointer' }} />
-                                <Icon name='trash' size='large' className='text-danger' onClick={() => deleteQuotation(row.id)}/>
+                                <Icon name='trash' size='large' className='text-danger' onClick={() => deleteQuotation(row.id)} />
                                 <Icon name='eye' size='large' onClick={() => pdf(row.id)} className='text-success' style={{ cursor: 'pointer' }} />
                             </TableCell>
                         </TableRow>

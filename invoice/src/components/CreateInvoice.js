@@ -31,7 +31,6 @@ const CreateInvoice = () => {
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  // const [totalInstallment, setTotalInstallment] = useState(0);
   const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
   const [checkbox, setCheckbox] = useState(false);
@@ -71,21 +70,6 @@ const CreateInvoice = () => {
   }
 
   // *************** Date Formate ***************
-  // const handleDateChange = (event, data) => {
-  //   const date = data.value; // Directly capture the date
-  //   console.log('Selected date:', date);
-  //   setDate(date);
-  // };
-
-  // const formatDate = (date) => {
-  //   const d = new Date(date);
-  //   const day = String(d.getDate()).padStart(2, '0');
-  //   const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
-  //   const year = d.getFullYear();
-
-  //   return `${year}-${month}-${day}`;
-  // };
-
   const handleDateChange = (event, data) => {
     const selectedDate = data.value; // Capturing the selected date
     console.log('Selected date:', selectedDate);
@@ -158,21 +142,6 @@ const CreateInvoice = () => {
     if (Validate()) {
       const formattedDate = formatDate(date);
 
-      // if (quotationId) {
-      //   // Update existing quotation
-      //   axios.put(`http://localhost:8081/edit/${quotationId}`, {
-      //     name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
-      //     installments,
-      //   })
-      //     .then((response) => {
-      //       alert('Quotation updated successfully');
-      //       window.location.href = '/';
-      //     })
-      //     .catch((error) => {
-      //       console.log('Error updating data:', error);
-      //     });
-      // }
-
       if (quotationId) {
         axios.put(`http://localhost:8081/edit/${quotationId}`, {
           name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
@@ -186,10 +155,7 @@ const CreateInvoice = () => {
             console.error('Error updating quotation:', error);
             alert('Failed to update quotation');
           });
-      }
-
-
-      else {
+      }else {
         // Create new quotation
         axios.post(`http://localhost:8081/create`, {
           name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
@@ -231,8 +197,6 @@ const CreateInvoice = () => {
           setGrandTotal(data.grandTotal || 0);
           setInputCount(data.inputCount || 0);
           setInstallments(data.installments || []);
-          // const rowsData = data.installments.length > 0 ? data.installments : Array(data.inputCount).fill({ dueWhen: '', installmentAmount: '' });
-          // setRows(rowsData);
           const rowsData = data.installments.map(installment => ({
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
@@ -243,16 +207,6 @@ const CreateInvoice = () => {
         .catch((error) => console.log('Error fetching data:', error));
     }
   }, [quotationId]);
-
-
-
-
-
-
-
-
-
-
 
 
 
