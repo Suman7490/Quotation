@@ -234,7 +234,7 @@ const CreateInvoice = () => {
           // const rowsData = data.installments.length > 0 ? data.installments : Array(data.inputCount).fill({ dueWhen: '', installmentAmount: '' });
           // setRows(rowsData);
           const rowsData = data.installments.map(installment => ({
-            when: installment.when,
+            dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
           console.log("Rows Data: ", rowsData);
@@ -314,7 +314,7 @@ const CreateInvoice = () => {
                   {rows.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.when} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
                     </TableRow>
                   ))}

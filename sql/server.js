@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
     const sql = `
         SELECT q.quotation_id, q.name, q.email, q.gender, q.designation, q.domain, q.description, 
                q.price, q.quantity, q.date, q.entitle, q.total, q.discount, q.grandTotal, q.inputCount,
-               p.label, p.dueWhen AS 'when', p.installmentAmount
+               p.label, p.dueWhen, p.installmentAmount
         FROM quotation q
         INNER JOIN payments p ON q.quotation_id = p.quotation_id
     `;
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
             if (row.label) {
                 data[row.quotation_id].installments.push({
                     label: row.label,
-                    when: row.when,
+                    dueWhen: row.dueWhen,
                     installmentAmount: row.installmentAmount
                 });
                 data[row.quotation_id].totalInstallment++;
@@ -303,7 +303,7 @@ app.get('/pdf/:id', (req, res) => {
     const sql = `
         SELECT q.quotation_id, q.name, q.email, q.gender, q.designation, q.domain, q.description, 
                q.price, q.quantity, q.date, q.entitle, q.total, q.discount, q.grandTotal, q.inputCount,
-               p.label, p.dueWhen AS 'when', p.installmentAmount
+               p.label, p.dueWhen, p.installmentAmount
         FROM quotation q
         LEFT JOIN payments p ON q.quotation_id = p.quotation_id
         WHERE q.quotation_id = ?
@@ -340,7 +340,7 @@ app.get('/pdf/:id', (req, res) => {
             if (row.label) {
                 data.installments.push({
                     label: row.label,
-                    when: row.when,
+                    dueWhen: row.dueWhen,
                     installmentAmount: row.installmentAmount
                 });
                 data.totalInstallment++;

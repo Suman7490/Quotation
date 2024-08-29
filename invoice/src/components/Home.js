@@ -99,7 +99,7 @@ const deleteQuotation = (quotationId) => {
                                     <span>{row.inputCount}</span>
                                     {row.installments.map((installment, idx) => (
                                         <li key={idx}>
-                                            {installment.label}: {installment.when} - {installment.installmentAmount}
+                                            {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
                                         </li>
                                     ))}
                                 </ul>
