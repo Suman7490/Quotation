@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FormGroup, FormField, Form, Input, Select, Checkbox, Button, } from 'semantic-ui-react';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -17,12 +16,6 @@ const Role = [
     { text: 'Employee', value: 'Employee' },
 ]
 const Register = () => {
-    // const [name, setName] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [gender, setGender] = useState("");
-    // const [role, setRole] = useState("");
-    // const [password, setPassword] = useState("");
-    // const [checkbox, setCheckbox] = useState(false);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -50,7 +43,6 @@ const Register = () => {
         if (!formData.gender) newErrors.gender = 'Gender is required';
         if (!formData.role) newErrors.role = 'Role is required';
         if (!formData.checkbox) newErrors.checkbox = 'You must agree to the terms and conditions';
-
         return newErrors;
     }
 
@@ -65,16 +57,21 @@ const Register = () => {
             setErrors(validationErrors);
             return;
         }
+        try {
+            const emailExists = await axios.post(`http://localhost:8081/check-email`, { email: formData.email });
+            if (emailExists.data.exists) {
+                setErrors({ ...validationErrors, email: 'Email already exists' });
+                return;
+            }
+            await axios.post('http://localhost:8081/register', formData);
+            alert('Registration successful');
+            navigate('/');
+        } catch (error) {
+            console.error('Error during registration:', error);
+        }
 
-        axios.post('http://localhost:8081/register', formData)
-            .then(response => {
-                alert('Registration successful');
-            })
-            .catch(error => {
-                console.error('Error registering user:', error);
-            });
+
     };
-
 
 
 

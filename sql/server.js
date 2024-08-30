@@ -1,10 +1,15 @@
+
 import express from 'express';
 import mysql from 'mysql';
 import cors from 'cors';
+import bcrypt from 'bcrypt';
+// const { check, validationResult } = 'express-validator';
+import { check, validationResult } from 'express-validator';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+const saltRounds = 10;
 
 
 const db = mysql.createConnection({
@@ -269,61 +274,106 @@ app.get('/pdf/:id', (req, res) => {
 
 
 // ************************ Register form ************************
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.sendStatus(401);
-  
-    jwt.verify(token, 'your_jwt_secret', (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
-    });
-  };
+app.post('/register', [
+    check('email').isEmail().withMessage('Invalid email format'),
+], (req, res) => {
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-
-//   app.post('/register', async (req, res) => {
-//     const { name, email, password, gender, role, checkbox } = req.body;
-  
-//     try {
-//       const hashedPassword = await bcrypt.hash(password, 10);
-  
-//       const [result] = await db.execute(
-//         `INSERT INTO employees (name, email, password, gender, role, checkbox) VALUES (?, ?, ?, ?, ?, ?)`,
-//         [name, email, hashedPassword, gender, role, checkbox]
-//       );
-  
-//       res.json({ message: 'User registered successfully', userId: result.insertId });
-//     } catch (error) {
-//       console.error('Error during user registration:', error);
-//       res.status(500).json({ message: 'Internal server error' });
-//     }
-//   });
-app.post('/register', (req, res) => {
     const { name, email, password, gender, role } = req.body;
-  
+    const checkEmailQuery = 'SELECT * FROM employees WHERE email = ?';
+
     // Hash the password
-    bcrypt.hash(password, saltRounds, (err, hash) => {
-      if (err) {
-        return res.status(500).json({ message: 'Error hashing password', error: err });
-      }
-  
-      const query = 'INSERT INTO employees (name, email, password, gender, role) VALUES (?, ?, ?, ?, ?)';
-      db.query(query, [name, email, hash, gender, role], (err, result) => {
+    db.query(checkEmailQuery, [email], (err, result) => {
         if (err) {
-          console.error('Error registering user:', err);
-          return res.status(500).json({ message: 'Error registering user', error: err });
+            console.error('Error checking email:', err);
+            return res.status(500).json({ message: 'Error checking email', error: err });
         }
-        res.status(201).json({ message: 'User registered successfully' });
-      });
+
+        if (result.length > 0) {
+            // Email already exists
+            return res.status(409).json({ message: 'Email already in use' });
+        }
+
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error hashing password', error: err });
+            }
+
+            const query = 'INSERT INTO employees (name, email, password, gender, role) VALUES (?, ?, ?, ?, ?)';
+            db.query(query, [name, email, hash, gender, role], (err, result) => {
+                if (err) {
+                    console.error('Error registering user:', err);
+                    return res.status(500).json({ message: 'Error registering user', error: err });
+                }
+                res.status(201).json({ message: 'User registered successfully' });
+            });
+        });
+
+
+
+    })
+
+});
+
+
+
+// ************* Check email exists or not ******************
+app.post('/check-email', (req, res) => {
+    const { email } = req.body;
+
+    const checkEmailQuery = 'SELECT COUNT(*) as count FROM employees WHERE email = ?';
+    db.query(checkEmailQuery, [email], (err, results) => {
+        if (err) {
+            console.error('Error checking email:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        
+        const emailExists = results[0].count > 0;
+        res.json({ exists: emailExists });
     });
-  });
-// ************** Login **********
+});
+    // ****************** Login Form **************
+    app.post('/login', (req, res) => {
+        const { email, password } = req.body;
+      
+        const query = 'SELECT * FROM employees WHERE email = ?';
+        db.query(query, [email], (err, results) => {
+          if (err) {
+            console.error('Error finding user:', err);
+            return res.status(500).json({ message: 'Error finding user', error: err });
+          }
+      
+          if (results.length === 0) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+          }
+      
+          const user = results[0];
+          bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+              console.error('Error comparing passwords:', err);
+              return res.status(500).json({ message: 'Error comparing passwords', error: err });
+            }
+      
+            if (!isMatch) {
+              return res.status(401).json({ message: 'Invalid email or password' });
+            }
+      
+            // Generate JWT
+            const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, secretKey, { expiresIn: '1h' });
+            res.json({ message: 'Login successful', token });
+          });
+        });
+      });
+      
 
 
 
-// *********************************************************************
-app.listen(8081, () => {
-    console.log("Listening")
-})
+
+    // *********************************************************************
+    app.listen(8081, () => {
+        console.log("Listening")
+    })
