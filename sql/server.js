@@ -6,6 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -265,6 +266,27 @@ app.get('/pdf/:id', (req, res) => {
         return res.json(data);
     });
 });
+
+
+// ************************ Register form ************************
+app.post('/register', (req, res) => {
+    const sql = `INSERT INTO employees (name, email, password, gender role, checkbox) VALUES (?)`;
+    const values = [
+        req.body.name,
+        req.body.email,
+        req.body.password,
+        req.body.gender,
+        req.body.role,
+        req.body.checkbox
+    ]
+    db.query(sql, [values], (err, data) => {
+        if (err) { return res.json("Error"); }
+        return res.json(data);
+    })
+});
+
+// ************** Login **********
+
 
 
 // *********************************************************************

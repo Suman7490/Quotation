@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FormGroup, FormField, Form, Input, Select, Checkbox, Button, } from 'semantic-ui-react';
 
 
@@ -15,48 +16,66 @@ const Role = [
     { text: 'Employee', value: 'Employee' },
 ]
 const Register = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [gender, setGender] = useState("");
-    const [role, setRole] = useState("");
-    const [password, setPassword] = useState("");
-    const [checkbox, setCheckbox] = useState(false);
+    // const [name, setName] = useState("");
+    // const [email, setEmail] = useState("");
+    // const [gender, setGender] = useState("");
+    // const [role, setRole] = useState("");
+    // const [password, setPassword] = useState("");
+    // const [checkbox, setCheckbox] = useState(false);
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
-    const Validate = () => {
-        const errors = {};
-        if (!name) errors.name = 'Name is required';
-        if (!gender) errors.gender = 'Name is required';
-        if (!role) errors.role = 'Name is required';
-        if (!password) errors.password = 'Name is required';
-        if (!checkbox) errors.checkbox = 'You must agree to the terms & conditions';
-
-        if (!email) {
-            errors.email = 'Email is required';
-        }
-        else if (!/\S+@\S+\.\S+/.test(email)) {
-            errors.email = 'Email is invalid';
-        }
+    const [values, setValues] = useState({
+        name: '',
+        email: '',
+        gender: '',
+        role: '',
+        password: '',
+        checkbox: false,
+    });
 
 
-        if (password.length < 8) {
-            errors.length = "Password must be at least 8 characters long.";
-        }
-        else if (!/[A-Z]/.test(password)) {
-            errors.uppercase = "Password must contain at least one uppercase letter.";
-        }
-        else if (!/[a-z]/.test(password)) {
-            errors.lowercase = "Password must contain at least one lowercase letter.";
-        }
-        else if (!/[0-9]/.test(password)) {
-            errors.number = "Password must contain at least one number.";
-        }
-        else if (!/[!@#$%^&*]/.test(password)) {
-            errors.specialChar = "Password must contain at least one special character (!@#$%^&*).";
-        }
-
+    const Validations = () => {
+        const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const password_pattern = /^(?=.\d)(?=.[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/;
+        const error = {};
+        if (values.name === "") { error.name = "Name should not be empty" }
+        else { error.name = ""; }
+        if (values.gender === "") { error.gender = "Gender should not be empty" }
+        else { error.gender = ""; }
+        if (values.role === "") { error.role = "role should not be empty" }
+        else { error.role = ""; }
+        if (values.password === "") { error.password = "password should not be empty" }
+        else if (!password_pattern.test(values.password)) { error.password = "Password didn't match" }
+        else { error.password = "" }
+        if (values.email === "") { error.email = "Email should not be empty" }
+        else if (!email_pattern.test(values.email)) { error.email = "Email pattern didn't match" }
+        else { error.email = "" }
+        if (values.checkbox === false) { error.checkbox = "You must agree to the terms & conditions" }
+        else { error.checkbox = "" }
+        return error;
     }
 
+    const handleInput = (e) => {
+        setValues(prev => ({
+            ...prev, [e.target.name]: [e.target.value]
+        }))
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const err = Validations(values);
+        setErrors(err);
+        if(err.name === "" && err.email === "" && err.password === "" && err.gender === "" && err.role === "" && err.checkbox === true){
+            
+        }
+    }
+
+
+
+
+
+ 
 
     return (
         <>
