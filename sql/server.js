@@ -269,22 +269,56 @@ app.get('/pdf/:id', (req, res) => {
 
 
 // ************************ Register form ************************
-app.post('/register', (req, res) => {
-    const sql = `INSERT INTO employees (name, email, password, gender role, checkbox) VALUES (?)`;
-    const values = [
-        req.body.name,
-        req.body.email,
-        req.body.password,
-        req.body.gender,
-        req.body.role,
-        req.body.checkbox
-    ]
-    db.query(sql, [values], (err, data) => {
-        if (err) { return res.json("Error"); }
-        return res.json(data);
-    })
-});
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(401);
+  
+    jwt.verify(token, 'your_jwt_secret', (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+  };
 
+
+
+//   app.post('/register', async (req, res) => {
+//     const { name, email, password, gender, role, checkbox } = req.body;
+  
+//     try {
+//       const hashedPassword = await bcrypt.hash(password, 10);
+  
+//       const [result] = await db.execute(
+//         `INSERT INTO employees (name, email, password, gender, role, checkbox) VALUES (?, ?, ?, ?, ?, ?)`,
+//         [name, email, hashedPassword, gender, role, checkbox]
+//       );
+  
+//       res.json({ message: 'User registered successfully', userId: result.insertId });
+//     } catch (error) {
+//       console.error('Error during user registration:', error);
+//       res.status(500).json({ message: 'Internal server error' });
+//     }
+//   });
+app.post('/register', (req, res) => {
+    const { name, email, password, gender, role } = req.body;
+  
+    // Hash the password
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error hashing password', error: err });
+      }
+  
+      const query = 'INSERT INTO employees (name, email, password, gender, role) VALUES (?, ?, ?, ?, ?)';
+      db.query(query, [name, email, hash, gender, role], (err, result) => {
+        if (err) {
+          console.error('Error registering user:', err);
+          return res.status(500).json({ message: 'Error registering user', error: err });
+        }
+        res.status(201).json({ message: 'User registered successfully' });
+      });
+    });
+  });
 // ************** Login **********
 
 

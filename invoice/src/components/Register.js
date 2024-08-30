@@ -1,5 +1,6 @@
+import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FormGroup, FormField, Form, Input, Select, Checkbox, Button, } from 'semantic-ui-react';
 
 
@@ -25,57 +26,58 @@ const Register = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
-    const [values, setValues] = useState({
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
+        password: '',
         gender: '',
         role: '',
-        password: '',
         checkbox: false,
     });
 
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value, });
+    }
+
 
     const Validations = () => {
-        const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const password_pattern = /^(?=.\d)(?=.[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/;
-        const error = {};
-        if (values.name === "") { error.name = "Name should not be empty" }
-        else { error.name = ""; }
-        if (values.gender === "") { error.gender = "Gender should not be empty" }
-        else { error.gender = ""; }
-        if (values.role === "") { error.role = "role should not be empty" }
-        else { error.role = ""; }
-        if (values.password === "") { error.password = "password should not be empty" }
-        else if (!password_pattern.test(values.password)) { error.password = "Password didn't match" }
-        else { error.password = "" }
-        if (values.email === "") { error.email = "Email should not be empty" }
-        else if (!email_pattern.test(values.email)) { error.email = "Email pattern didn't match" }
-        else { error.email = "" }
-        if (values.checkbox === false) { error.checkbox = "You must agree to the terms & conditions" }
-        else { error.checkbox = "" }
-        return error;
+        const newErrors = {};
+        if (!formData.name) newErrors.name = 'Name is required';
+        if (!formData.email) newErrors.email = 'Email is required';
+        if (!formData.password) newErrors.password = 'Password is required';
+        if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+        if (!formData.gender) newErrors.gender = 'Gender is required';
+        if (!formData.role) newErrors.role = 'Role is required';
+        if (!formData.checkbox) newErrors.checkbox = 'You must agree to the terms and conditions';
+
+        return newErrors;
     }
 
-    const handleInput = (e) => {
-        setValues(prev => ({
-            ...prev, [e.target.name]: [e.target.value]
-        }))
-    }
 
-    const handleSubmit = (e) => {
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const err = Validations(values);
-        setErrors(err);
-        if(err.name === "" && err.email === "" && err.password === "" && err.gender === "" && err.role === "" && err.checkbox === true){
-            
+
+        const validationErrors = Validations();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
         }
-    }
+
+        axios.post('http://localhost:8081/register', formData)
+            .then(response => {
+                alert('Registration successful');
+            })
+            .catch(error => {
+                console.error('Error registering user:', error);
+            });
+    };
 
 
 
 
-
- 
 
     return (
         <>
@@ -85,24 +87,62 @@ const Register = () => {
 
                     <div className='col-md-8 border border-warning rounded p-5'>
                         <h1 className='text-center'>Register Form</h1>
-                        <Form className=''>
-                            <FormGroup widths='equal'>
-                                <FormField control={Input} label='Full Name' placeholder='Full Name' />
-                                <FormField control={Input} label='Email' placeholder='joe@schmoe.com' />
-                                <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' options={genderOptions} />
-                            </FormGroup>
-                            <FormGroup widths='equal'>
-                                <FormField control={Select} label={{ children: 'Role' }} placeholder='Role' options={Role} />
-                                <FormField control={Input} label='Password' placeholder='Password' />
-                            </FormGroup>
-                            <Checkbox label='I agree to the Terms and Conditions' /><br />
-                            <Button color='yellow'>Register</Button>
-                        </Form>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor='name'>Name</label>
+                                <input type="text" name="name" className='form-control' value={formData.name} onChange={handleChange} />
+                                {errors.name && <span className='text-danger'> {errors.name}</span>}
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor='email'>Email</label>
+                                <input type="email" name="email" className='form-control' value={formData.email} onChange={handleChange} />
+                                {errors.email && <span className='text-danger'> {errors.email}</span>}
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor='gender'>Gender</label>
+                                <select className='form-control' name='gender' value={formData.gender} onChange={handleChange} >
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                {errors.gender && <span className='text-danger'> {errors.gender}</span>}
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor='role'>Role</label>
+                                <select className='form-control' name="role" value={formData.role} onChange={handleChange}>
+                                    <option value="">Select Role</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="User">User</option>
+                                </select>
+                                {errors.role && <span className='text-danger'> {errors.role}</span>}
+                            </div>
+
+                            <div className="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" className='form-control' value={formData.password} onChange={handleChange} />
+                                {errors.password && <span className='text-danger'> {errors.password}</span>}
+                            </div>
+
+                            <div className="form-group">
+                                <input type="checkbox" name="checkbox" className='form-check-input' checked={formData.terms} onChange={handleChange} />
+                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                {errors.checkbox && <span className='text-danger'> {errors.checkbox}</span>}
+                            </div>
+
+                            <button className='btn btn-large btn-warning' type='submit'>Register</button>
+                        </form>
+
+
+
                     </div>
 
                     <div className='col-md-2'></div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }
