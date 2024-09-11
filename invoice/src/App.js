@@ -8,6 +8,8 @@ import CreateInvoice from './components/CreateInvoice';
 import Header from "./components/Header";
 import Home from "./components/Home";
 import Pdf from "./components/Pdf";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 function App(props) {
   return (
@@ -23,6 +25,8 @@ function App(props) {
           <Route path="/pdf/:id" element={<Pdf/>}></Route>
           <Route path="/edit/:id" element={<CreateInvoice/>}></Route>
           <Route path="/delete/:id" element={<Home/>}></Route>
+          <Route path="/register" element={<Register/>}></Route>
+          <Route path="/login" element={<Login/>}></Route>
         </Routes>
       </Router>
     </>
