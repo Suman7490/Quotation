@@ -2,7 +2,7 @@
 FROM node:14
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy the package.json and package-lock.json files
 COPY package*.json ./
@@ -14,7 +14,8 @@ RUN npm install
 COPY . .
 
 # Expose the application port (if your app runs on port 3000, for example)
-EXPOSE 3000
+ENV PORT=8081
 
+EXPOSE 8081
 # Start the backend service
 CMD ["npm", "start"]
