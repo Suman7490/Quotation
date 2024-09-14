@@ -1,20 +1,20 @@
-# Use Node.js version 20 as the base image
-FROM node:20
+# Use the official Node.js v20.16.0 image from DockerHub
+FROM node:20.16.0
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and package-lock.json files to the working directory
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install the dependencies
+RUN npm install --legacy-peer-deps
 
-# Copy the rest of the application code
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Expose the port your app runs on (8081 for your backend)
+# Expose the application port (8081)
 EXPOSE 8081
 
-# Start the server
+# Command to start the Node.js app
 CMD ["node", "server.js"]

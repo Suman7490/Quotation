@@ -1,27 +1,29 @@
-# Use Node.js version 20 as the base image
-FROM node:20
+# Use a Node.js image to build the frontend assets
+FROM node:20.16.0 AS build
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy the package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copy the rest of the app source code
+# Copy the rest of the application code
 COPY . .
 
-# Build the app for production
+# Build the frontend
 RUN npm run build
 
-# Use an official NGINX image to serve the static files
-FROM nginx:alpine
-COPY --from=0 /app/build /usr/share/nginx/html
+# Now use an NGINX image to serve the built static files
+FROM nginx:stable-alpine
 
-# Expose the port the frontend will run on (3000)
-EXPOSE 3000
+# Copy the built files from the previous stage to the NGINX public directory
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 80 for the web server
+EXPOSE 80
 
 # Start NGINX server
 CMD ["nginx", "-g", "daemon off;"]

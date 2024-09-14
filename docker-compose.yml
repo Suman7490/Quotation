@@ -1,20 +1,27 @@
-version: '3'
+version: '3.8'
 
 services:
-  backend:
-    build: ./SQL
-    ports:
-      - "8081:8081"
-    environment:
-      NODE_ENV: production
-    volumes:
-      - ./SQL:/app
-    restart: unless-stopped
-
   frontend:
-    build: ./invoice
+    build:
+      context: ./invoice
+      dockerfile: Dockerfile
     ports:
-      - "3000:80"   # Port 3000 on the host forwards to port 80 in the container
+      - "80:80"  # Maps port 80 on the host to port 80 in the frontend container
+    restart: always
     environment:
-      NODE_ENV: production
-    restart: unless-stopped
+      - NODE_ENV=production
+    depends_on:
+      - sql
+
+  backend:
+    build:
+      context: ./sql
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"  # Maps port 8081 on the host to port 8081 in the backend container
+    restart: always
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - invoice
+
