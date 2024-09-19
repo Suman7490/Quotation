@@ -58,12 +58,12 @@ const Register = () => {
             return;
         }
         try {
-            const emailExists = await axios.post(`http://localhost:8081/check-email`, { email: formData.email });
+            const emailExists = await axios.post(`https://chaicode-6vsbc.ondigitalocean.app/check-email`, { email: formData.email });
             if (emailExists.data.exists) {
                 setErrors({ ...validationErrors, email: 'Email already exists' });
                 return;
             }
-            await axios.post('http://localhost:8081/register', formData);
+            await axios.post('https://chaicode-6vsbc.ondigitalocean.app/register', formData);
             alert('Registration successful');
             navigate('/');
         } catch (error) {

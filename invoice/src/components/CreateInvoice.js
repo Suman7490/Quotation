@@ -161,7 +161,7 @@ const CreateInvoice = () => {
       const formattedDate = formatDate(date);
 
       if (quotationId) {
-        axios.put(`http://localhost:8081/edit/${quotationId}`, {
+        axios.put(`https://chaicode-6vsbc.ondigitalocean.app/edit/${quotationId}`, {
           name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
@@ -175,7 +175,7 @@ const CreateInvoice = () => {
           });
       } else {
         // Create new quotation
-        axios.post(`http://localhost:8081/create`, {
+        axios.post(`https://chaicode-6vsbc.ondigitalocean.app/create`, {
           name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
@@ -196,7 +196,7 @@ const CreateInvoice = () => {
   useEffect(() => {
     if (quotationId) {
       // Fetch the existing data for the quotation
-      axios.get(`http://localhost:8081/pdf/${quotationId}`)
+      axios.get(`https://chaicode-6vsbc.ondigitalocean.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
           console.log("fatched data:", data)

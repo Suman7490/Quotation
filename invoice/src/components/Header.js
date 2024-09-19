@@ -22,12 +22,12 @@ const Header = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/createinvoice">Create Invoice</Link>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <Link className="nav-link" to="/register">Registration</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/login">Login</Link>
-                        </li>
+                        </li> */}
                     </ul>
                     <form className="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
