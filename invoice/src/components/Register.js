@@ -3,18 +3,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-
-
-const genderOptions = [
-    { text: 'Male', value: 'male' },
-    { text: 'Female', value: 'female' },
-    { text: 'Other', value: 'other' },
-]
-const Role = [
-    { text: 'Admin', value: 'Admin' },
-    { text: 'Team Head', value: 'Team Head' },
-    { text: 'Employee', value: 'Employee' },
-]
 const Register = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
@@ -58,12 +46,12 @@ const Register = () => {
             return;
         }
         try {
-            const emailExists = await axios.post(`https://chaicode-6vsbc.ondigitalocean.app/check-email`, { email: formData.email });
+            const emailExists = await axios.post(`http://localhost:8081/check-email`, { email: formData.email });
             if (emailExists.data.exists) {
                 setErrors({ ...validationErrors, email: 'Email already exists' });
                 return;
             }
-            await axios.post('https://chaicode-6vsbc.ondigitalocean.app/register', formData);
+            await axios.post('http://localhost:8081/register', formData);
             alert('Registration successful');
             navigate('/');
         } catch (error) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { FormGroup, FormField, Form, Input, Checkbox, Button, Select, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
+import { FormGroup, FormField, Form, Input, Button, Select, Dropdown, Icon, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 const genderOptions = [
@@ -15,16 +15,22 @@ const ResearchDomain = [
   { text: 'Management', value: 'Management' },
 ]
 
+
+const WritingService = [
+  { text: "Research Paper", value: "Research Paper", price: 100000 },
+  { text: "Thesis", value: "Thesis", price: 300 },
+  { text: "Research Proposal", value: "Research Proposal", price: 200 },
+  { text: "Book", value: "Book", price: 150 },
+];
+
 const CreateInvoice = () => {
-  // ****** Start Set the input values ******
   const { id: quotationId } = useParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
   const [date, setDate] = useState(null);
   const [domain, setDomain] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [entitle, setEntitle] = useState("");
+  const [selectService, setSelectedService] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
@@ -33,9 +39,11 @@ const CreateInvoice = () => {
   const [grandTotal, setGrandTotal] = useState(0);
   const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
-  const [checkbox, setCheckbox] = useState(false);
   const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
+  const [addNumberOfService, setAddNumberOfService] = useState([
+    { service: '', price: 0, discount: 0, grandTotal: 0 }
+  ])
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
 
@@ -47,7 +55,7 @@ const CreateInvoice = () => {
 
     if (!name) newErrors.name = 'Name is required';
     if (!description) newErrors.description = 'Description is required';
-    if (!designation) newErrors.designation = 'Desingnation is required';
+    if (!selectService) newErrors.selectService = 'Service is required';
     if (!domain) newErrors.domain = 'Research Area / Domain is required';
     if (!gender) newErrors.gender = 'Gender is required';
     if (!date) newErrors.setDate = 'Current date is required';
@@ -64,7 +72,6 @@ const CreateInvoice = () => {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Email is invalid';
     }
-    if (!checkbox) newErrors.checkbox = 'You must agree to the terms & conditions';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -76,8 +83,6 @@ const CreateInvoice = () => {
     const formattedDate = formatDate(selectedDate);
     setDate(formattedDate);
   };
-
-  // Format date to YYYY-MM-DD
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
@@ -88,28 +93,39 @@ const CreateInvoice = () => {
 
 
 
-  // **************** Calculation Events *******************
-  const handlePrice = (event) => {
-    const value = parseInt(event.target.value) || 0;
-    setPrice(value);
-    const subtotal = value * quantity;
-    setTotal(subtotal);
-    setGrandTotal(subtotal - discount);
+
+
+  // ******************* Discount Calculation ************
+  const handleDiscount = (index, value) => {
+    const discountValue = value === '' ? 0 : parseInt(value);
+    const updatedRow = addNumberOfService.map((row, i) =>
+      i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
+    )
+    setAddNumberOfService(updatedRow)
+    setGrandTotal(price - discountValue);
   }
 
-  const handleQuantity = (event) => {
-    const value = parseInt(event.target.value) || 0;
-    setQuantity(value);
-    const subtotal = value * price;
-    setTotal(subtotal);
-    setGrandTotal(subtotal - discount);
+  // ****************** Total of grandtotals *****************
+  const totalAmount = () => {
+    return addNumberOfService.reduce((total, row)=> total + row.grandTotal, 0)
   }
 
-  const handleDiscount = (event) => {
-    const value = parseInt(event.target.value) || 0;
-    setDiscount(value);
-    setGrandTotal(total - value);
+  //  *************** Handle Writing Service Change for each row ***************
+  const handleServiceChange = (index, value) => {
+    const selected = WritingService.find((service) => service.value === value);
+    const updatedRow = addNumberOfService.map((row, i) =>
+      i === index ? { ...row, service: value, price: selected ? selected.price : 0, grandTotal: selected ? selected.price - (row.discount || 0) : 0 } : row)
+    setAddNumberOfService(updatedRow)
   }
+  // **************** Add Service ************
+  const addService = () => {
+    setAddNumberOfService([...addNumberOfService, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
+  }
+  const removeService = (index) => {
+    setAddNumberOfService(addNumberOfService.filter((_, i) => i !== index));
+  }
+
+
 
 
 
@@ -161,8 +177,8 @@ const CreateInvoice = () => {
       const formattedDate = formatDate(date);
 
       if (quotationId) {
-        axios.put(`https://chaicode-6vsbc.ondigitalocean.app/edit/${quotationId}`, {
-          name, email, gender, date: formattedDate, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
+        axios.put(`http://localhost:8081/edit/${quotationId}`, {
+          name, email, gender, date: formattedDate, domain, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
           .then((response) => {
@@ -175,8 +191,8 @@ const CreateInvoice = () => {
           });
       } else {
         // Create new quotation
-        axios.post(`https://chaicode-6vsbc.ondigitalocean.app/create`, {
-          name, email, gender, date: date, designation, domain, entitle, description, price, quantity, total, discount, grandTotal, inputCount,
+        axios.post(`http://localhost:8081/create`, {
+          name, email, gender, date: date, domain, description, price, quantity, total, discount, grandTotal, inputCount,
           installments,
         })
           .then((response) => {
@@ -196,7 +212,7 @@ const CreateInvoice = () => {
   useEffect(() => {
     if (quotationId) {
       // Fetch the existing data for the quotation
-      axios.get(`https://chaicode-6vsbc.ondigitalocean.app/pdf/${quotationId}`)
+      axios.get(`http://localhost:8081/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
           console.log("fatched data:", data)
@@ -204,9 +220,7 @@ const CreateInvoice = () => {
           setEmail(data.email || "");
           setGender(data.gender || "");
           setDate(new Date(data.date));
-          setDesignation(data.designation || "");
           setDomain(data.domain || "");
-          setEntitle(data.entitle || "");
           setDescription(data.description || "");
           setPrice(data.price || 0);
           setQuantity(data.quantity || 0);
@@ -242,39 +256,41 @@ const CreateInvoice = () => {
                 <FormField control={Input} label='Full Name' placeholder='Full Name' value={name} onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
-                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
               </FormGroup>
               <FormGroup widths='equal'>
+                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
                 <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' value={domain} options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />
-                <FormField control={Input} label='Designation' placeholder='Designation' value={designation} onChange={(e) => setDesignation(e.target.value)} error={errors.designation ? { content: errors.designation } : null} />
-                <FormField control={Input} label='Entitle' placeholder='Entitle' value={entitle} onChange={(e) => setEntitle(e.target.value)} />
               </FormGroup>
               <Table celled padded>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderCell singleLine>DESCRIPTION</TableHeaderCell>
                     <TableHeaderCell>PRICE</TableHeaderCell>
-                    <TableHeaderCell>QUANTITY</TableHeaderCell>
-                    <TableHeaderCell>SUBTOTAL</TableHeaderCell>
+                    <TableHeaderCell>DISCOUNT</TableHeaderCell>
+                    <TableHeaderCell>GRAND TOTAL</TableHeaderCell>
+                    <TableHeaderCell>Delete</TableHeaderCell>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
 
+                  {addNumberOfService.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell><FormField><Dropdown placeholder="Select a service" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} /></FormField></TableCell>
+                      <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} /></TableCell>
+                      <TableCell><FormField placeholder="Enter Descount" control={Input} type='number' value={row.discount} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /></TableCell>
+                      <TableCell><FormField placeholder="Grand Total" onChange={(e) => setGrandTotal(e.target.value)} error={errors.grandTotal ? { content: errors.grandTotal } : null} />{row.grandTotal}</TableCell>
+                      <TableCell><Button className='text-danger' onClick={() => removeService(index)}><Icon className="trash" size="large" /></Button></TableCell>
+                    </TableRow>
+                  ))}
+
                   <TableRow>
-                    <TableCell><FormField type='text' placeholder='Enter Description' control={Input} value={description} onChange={(e) => setDescription(e.target.value)} error={errors.description ? { content: errors.description } : null} /></TableCell>
-                    <TableCell><FormField type='number' placeholder='Enter Price' control={Input} value={price} onChange={handlePrice} error={errors.price ? { content: errors.price } : null} /></TableCell>
-                    <TableCell><FormField type='number' placeholder='Enter Price' control={Input} value={quantity} onChange={handleQuantity} error={errors.quantity ? { content: errors.quantity } : null} /></TableCell>
-                    <TableCell><FormField placeholder='BasePrice' onChange={(e) => setTotal(e.target.value)} error={errors.total ? { content: errors.total } : null} />{total}</TableCell>
+                    <TableCell colSpan="4">ADD SERVICE:</TableCell>
+                    <TableCell className='text-right border'><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan={3}><p>DISCOUNT:</p></TableCell>
-                    <TableCell><FormField placeholder="Enter Descount" control={Input} type='number' value={discount} onChange={handleDiscount} error={errors.discount ? { content: errors.discount } : null} /></TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell colSpan={3}><p>GRAND TOTAL:</p></TableCell>
-                    <TableCell><FormField placeholder="Grand Total" onChange={(e) => setGrandTotal(e.target.value)} error={errors.grandTotal ? { content: errors.grandTotal } : null} />{grandTotal}</TableCell>
+                    <TableCell colSpan="3">TOTAL:</TableCell>
+                    <TableCell><FormField control={Input} value={totalAmount()} /></TableCell>
                   </TableRow>
 
                   <TableRow>
@@ -291,8 +307,6 @@ const CreateInvoice = () => {
                   ))}
                 </TableBody>
               </Table>
-
-              <Checkbox label='I agree to the Terms and Conditions' onChange={(e) => setCheckbox(!checkbox)} error={errors.checkbox ? { content: errors.checkbox } : null} />
               <FormField control={Button} content='Submit' onClick={postData} />
             </Form>
           </div>

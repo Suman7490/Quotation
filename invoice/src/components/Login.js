@@ -34,7 +34,7 @@ const Login = () => {
       return;
     }
 
-    axios.post('https://chaicode-6vsbc.ondigitalocean.app/login', formData)
+    axios.post('http://localhost:8081/login', formData)
       .then(response => {
         alert('Login successful');
         // You can store the JWT token in localStorage or state for authenticated requests

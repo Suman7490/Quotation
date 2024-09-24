@@ -10,7 +10,7 @@ const Home = () => {
 
 
     useEffect(() => {
-        axios.get('https://chaicode-6vsbc.ondigitalocean.app/')
+        axios.get('http://localhost:8081/')
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
@@ -37,7 +37,7 @@ const Home = () => {
 
     const deleteQuotation = (quotationId) => {
         if (window.confirm('Are you sure you want to delete this quotation?')) {
-            axios.delete(`https://chaicode-6vsbc.ondigitalocean.app/delete/${quotationId}`)
+            axios.delete(`http://localhost:8081/delete/${quotationId}`)
                 .then((response) => {
                     alert('Quotation deleted successfully');
                     // Remove the deleted quotation from the state

@@ -26,7 +26,7 @@ const Pdf = () => {
 
     useEffect(() => {
         // Fetch the data from the server
-        axios.get(`https://chaicode-6vsbc.ondigitalocean.app/pdf/${id}`)
+        axios.get(`http://localhost:8081/pdf/${id}`)
             .then((response) => {
                 setData(response.data);
                 setLoading(false);
@@ -168,6 +168,7 @@ const Pdf = () => {
                                     </table>
                                 </div>
                             </div>
+                            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                             <div className='row pt-5 mt-5'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
