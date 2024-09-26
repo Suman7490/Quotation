@@ -107,14 +107,14 @@ const Register = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Password</label>
+                                <label htmlFor='Password'>Password</label>
                                 <input type="password" name="password" className='form-control' value={formData.password} onChange={handleChange} />
                                 {errors.password && <span className='text-danger'> {errors.password}</span>}
                             </div>
 
                             <div className="form-group">
                                 <input type="checkbox" name="checkbox" className='form-check-input' checked={formData.terms} onChange={handleChange} />
-                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                <label htmlFor='Checkbox' class="form-check-label" for="exampleCheck1">Check me out</label>
                                 {errors.checkbox && <span className='text-danger'> {errors.checkbox}</span>}
                             </div>
 
