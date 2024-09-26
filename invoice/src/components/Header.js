@@ -7,12 +7,12 @@ const Header = () => {
 
 
     const changeIcon = () => {
-        if(icon == true){
+        if (icon == true) {
             setIcon(false)
-        }else(
+        } else (
             setIcon(true)
         )
-        
+
     }
 
     return (
@@ -26,23 +26,22 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto">
                         <li className="nav-item active">
-                            <Link className="nav-link" to="/">View <span class="sr-only">(current)</span></Link>
+                            <Link className="nav-link" to="/">View</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/createinvoice">Create Invoice</Link>
+                            <Link className="nav-link underline" to="/createinvoice">Create Invoice</Link>
                         </li>
-                        {/* <li className="nav-item">
+                        <li className="nav-item">
                             <Link className="nav-link" to="/register">Registration</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/login">Login</Link>
-                        </li> */}
+                        </li>
                     </ul>
-                    <form className="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                    <button className='btn' onClick={changeIcon} style={{borderRadius: "100px"}}>
+
+              
+
+                    <button className='btn bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300' onClick={changeIcon}>
                         {icon ?
                             (<Icon className='moon' size='large' />)
                             :
@@ -50,6 +49,7 @@ const Header = () => {
                     </button>
                 </div>
             </nav>
+
 
         </>
     )

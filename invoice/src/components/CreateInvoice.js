@@ -279,7 +279,7 @@ const CreateInvoice = () => {
                       <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} /></TableCell>
                       <TableCell><FormField placeholder="Enter Descount" control={Input} type='number' value={row.discount} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /></TableCell>
                       <TableCell><FormField placeholder="Grand Total" onChange={(e) => setGrandTotal(e.target.value)} error={errors.grandTotal ? { content: errors.grandTotal } : null} />{row.grandTotal}</TableCell>
-                      <TableCell><Button className='text-danger' onClick={() => removeService(index)}><Icon className="trash" size="large" /></Button></TableCell>
+                      <TableCell><Icon className="trash text-danger" size="large" style={{cursor: "pointer"}} onClick={() => removeService(index)} /></TableCell>
                     </TableRow>
                   ))}
 

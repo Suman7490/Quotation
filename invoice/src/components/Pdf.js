@@ -79,19 +79,19 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell>
                                                 <div className='header'>
-                                                    <p style={{ fontSize: '25px' }}>
-                                                        <span style={{ color: 'darkblue' }}>KALP </span>
-                                                        <span style={{ color: 'red' }}>RESEARCH </span>
-                                                        <span style={{ color: 'darkblue' }}>WORK</span>
+                                                    <p style={{ fontSize: '25px'}} className='font-weight-bold'>
+                                                        <strong style={{ color: 'darkblue' }}>KALP </strong>
+                                                        <strong style={{ color: 'red' }}>RESEARCH </strong>
+                                                        <strong style={{ color: 'darkblue' }}>WORK</strong>
                                                         <strong> - </strong>
-                                                        <span style={{ color: 'darkblue' }}>K</span>
-                                                        <span style={{ color: 'red' }}>R</span>
-                                                        <span style={{ color: 'darkblue' }}>W</span>
+                                                        <strong style={{ color: 'darkblue' }}>K</strong>
+                                                        <strong style={{ color: 'red' }}>R</strong>
+                                                        <strong style={{ color: 'darkblue' }}>W</strong>
                                                     </p>
-                                                    <p>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
-                                                    <p> +91 - 7037663686</p>
-                                                    <p> info@kalpresearchwork.com</p>
-                                                    <p> www.kalpresearchwork.com</p>
+                                                    <p className='m-0'>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
+                                                    <p className='m-0'> +91 - 7037663686</p>
+                                                    <p className='m-0'> info@kalpresearchwork.com</p>
+                                                    <p className='m-0'> www.kalpresearchwork.com</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right'>
@@ -107,19 +107,19 @@ const Pdf = () => {
                                     <Table className='border-0'>
                                         <TableRow>
                                             <TableCell>
-                                                <div className='header'>
-                                                    <p>Quotation To:</p>
-                                                    <p className='p-0 mb-3' style={{ color: 'red', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
-                                                    <p>Designation: {data.designation}</p>
-                                                    <p>Research Area/Domain: {data.domain}</p>
-                                                    <p>Entitle: {data.entitle}</p>
-                                                    <p>Service required: {data.description}</p>
+                                                <div className='header m-0 p-0'>
+                                                    <p className='m-0'>Quotation To:</p>
+                                                    <p className='p-0 m-0' style={{ color: 'red', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
+                                                    <p className='m-0'>Designation: {data.designation}</p>
+                                                    <p className='m-0'>Research Area/Domain: {data.domain}</p>
+                                                    <p className='m-0'>Entitle: {data.entitle}</p>
+                                                    <p className='m-0'>Service required: {data.description}</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right'>
                                                 <div className='header'>
-                                                    <p>NO KRW/Q-{data.id}</p>
-                                                    <p>DATE: {formatDate(data.date)}</p>
+                                                    <p className='m-0'>NO KRW/Q-{data.id}</p>
+                                                    <p className='m-0'>DATE: {formatDate(data.date)}</p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -159,7 +159,7 @@ const Pdf = () => {
                                             {data.installments.map((installment, idx) => (
                                                 <tr key={idx} style={{ backgroundColor: '#0722ad', color: 'white' }}>
                                                     <td colSpan={3} style={{ textTransform: 'uppercase' }}>
-                                                        {installment.label} : {installment.when}
+                                                        {installment.label} :{installment.dueWhen} {installment.when}
                                                     </td>
                                                     <td>Rs. {installment.installmentAmount}</td>
                                                 </tr>
@@ -168,22 +168,22 @@ const Pdf = () => {
                                     </table>
                                 </div>
                             </div>
-                            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                            <div className='row pt-5 mt-5'>
+                            
+                            <div className='row pt-5 mt-5 d-flex flex-wrap align-content-end'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
                                             <TableCell className='border-0'>
                                                 <div className='header'>
                                                     <h3 className='p-3' style={{ backgroundColor: 'lightpink', width: '50%' }}>PAYMENT METHOD</h3>
-                                                    <p>Account Details: 20005393359</p>
-                                                    <p>IFSC: SBIN0002502</p>
-                                                    <p>Branch: Pratap Bajar Vrindavan Mathura</p>
+                                                    <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
+                                                    <p className='m-0'>IFSC: SBIN0002502</p>
+                                                    <p className='m-0'>Account Details: 20005393359</p>
                                                 </div>
                                                 <div className='header mt-4'>
                                                     <h3 className='p-3' style={{ backgroundColor: 'lightpink', width: '50%' }}>TERMS AND CONDITION</h3>
-                                                    <p>Please send payment within 30 days of receiving this invoice.</p>
-                                                    <p>There will be a 10% interest charge per month on late invoices.</p>
+                                                    <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
+                                                    <p className='m-0'>There will be a 10% interest charge per month on late invoices.</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='border-0 text-center'>

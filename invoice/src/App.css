@@ -1,6 +1,19 @@
+*{
+  font-family: "PT Serif", serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.form-control:focus{
+  outline: none;
+  box-shadow: none;
+}
 .light{
   background-color: lightgray;
 }
 .dark{
   background-color: black;
+}
+.active-nav-item {
+  color: #f00;
+  font-weight: bold;
 }
