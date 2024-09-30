@@ -13,7 +13,12 @@
 .dark{
   background-color: black;
 }
-.active-nav-item {
-  color: #f00;
+
+nav.navbar .navbar-nav .nav-link{
+  font-size: 20px;
+}
+nav.navbar .navbar-nav .nav-link.active {
+  color: blue !important;
   font-weight: bold;
+  border-bottom: 3px solid blue;
 }

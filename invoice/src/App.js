@@ -10,7 +10,7 @@ import Home from "./components/Home";
 import Pdf from "./components/Pdf";
 import Register from "./components/Register";
 import Login from "./components/Login";
-
+import './App.css'
 function App(props) {
   return (
     <>
