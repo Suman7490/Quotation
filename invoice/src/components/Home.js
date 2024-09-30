@@ -77,10 +77,9 @@ const Home = () => {
                             <TableCell>{row.domain}</TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                    <span>{row.totalService}</span>
                                     {row.services.map((service, idx) => (
                                         <li key={idx}>
-                                            {service.serviceName}: P: {service.price} - D: {service.discount} = G: {service.grandTotal}
+                                            {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
                                         </li>
                                     ))}
                                 </ul>

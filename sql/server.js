@@ -145,7 +145,6 @@ app.post('/create', (req, res) => {
 // ********************* Edit Data ****************
 app.put('/edit/:id', (req, res) => {
     const quotationId = req.params.id;
-
     const { name, email, gender, date, domain, total, totalService, inputCount, services, installments } = req.body;
 
     console.log('Received data for update:', req.body);
@@ -156,9 +155,7 @@ app.put('/edit/:id', (req, res) => {
       WHERE quotation_id = ?
     `;
 
-    const quotationValues = [
-        name, email, gender, date, domain, total, totalService, inputCount, quotationId
-    ];
+    const quotationValues = [name, email, gender, date, domain, total, totalService, inputCount, quotationId];
 
 
     db.query(updateQuotationSql, quotationValues, (err, result) => {
@@ -197,22 +194,30 @@ app.put('/edit/:id', (req, res) => {
                     console.error('Error inserting services:', err);
                     return res.status(500).json({ message: 'Error inserting services', error: err });
                 }
-                const insertInstallmentsSql = `INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-                    VALUES ?`;
-                const installmentsData = installments.map(installment => [
-                    quotationId,
-                    installment.label,
-                    installment.dueWhen,  // Assuming `dueWhen` is correctly formatted
-                    installment.installmentAmount
-                ]);
-                db.query(insertInstallmentsSql, [installmentsData], (err, result) => {
+
+                db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
                     if (err) {
                         console.error('Error inserting installments:', err);
                         return res.status(500).json({ message: 'Error inserting installments', error: err });
                     }
+                    const insertInstallmentsSql = `INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) VALUES ?`;
 
-                    // Everything was successful
-                    return res.json({ message: 'Quotation, services, and installments updated successfully' });
+                    const installmentsData = installments.map(installment => [
+                        quotationId,
+                        installment.label,
+                        installment.dueWhen,  // Assuming `dueWhen` is correctly formatted
+                        installment.installmentAmount
+                    ]);
+
+                    db.query(insertInstallmentsSql, [installmentsData], (err, result) => {
+                        if (err) {
+                            console.error('Error inserting installments:', err);
+                            return res.status(500).json({ message: 'Error inserting installments', error: err });
+                        }
+
+                        // Everything was successful
+                        return res.json({ message: 'Quotation, services, and installments updated successfully' });
+                    });
                 });
             });
         });

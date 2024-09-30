@@ -84,7 +84,6 @@ const CreateInvoice = () => {
   // *************** Date Formate ***************
   const handleDateChange = (event, data) => {
     const selectedDate = data.value; // Capturing the selected date
-    console.log('Selected date:', selectedDate);
     const formattedDate = formatDate(selectedDate);
     setDate(formattedDate);
   };
@@ -316,7 +315,8 @@ const CreateInvoice = () => {
 
                   <TableRow>
                     <TableCell colSpan="4">ADD SERVICE:</TableCell>
-                    <TableCell className='text-right border'><span>{totalService}</span><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
+                    <TableCell className='text-right border'><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
+                    {/* <span onChange={(e) => setTotalService(e.target.value)}>{totalService}</span> */}
                   </TableRow>
 
                   <TableRow>
