@@ -18,9 +18,9 @@ const ResearchDomain = [
 
 const WritingService = [
   { text: "Research Paper", value: "Research Paper", price: 100000 },
-  { text: "Thesis", value: "Thesis", price: 300 },
-  { text: "Research Proposal", value: "Research Proposal", price: 200 },
-  { text: "Book", value: "Book", price: 150 },
+  { text: "Thesis", value: "Thesis", price: 150000 },
+  { text: "Research Proposal", value: "Research Proposal", price: 50000 },
+  { text: "Book", value: "Book", price: 80000 },
 ];
 
 const CreateInvoice = () => {
@@ -30,20 +30,18 @@ const CreateInvoice = () => {
   const [gender, setGender] = useState("");
   const [date, setDate] = useState(null);
   const [domain, setDomain] = useState("");
-  const [selectService, setSelectedService] = useState("");
-  const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [installments, setInstallments] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [installments, setInstallments] = useState([{ dueWhen: '', installmentAmount: '' }]);
   const [inputCount, setInputCount] = useState(0);
   const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
-  const [addNumberOfService, setAddNumberOfService] = useState([
+  const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
+  const [totalService, setTotalService] = useState(1)
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
 
@@ -54,25 +52,32 @@ const CreateInvoice = () => {
     const newErrors = {};
 
     if (!name) newErrors.name = 'Name is required';
-    if (!description) newErrors.description = 'Description is required';
-    if (!selectService) newErrors.selectService = 'Service is required';
-    if (!domain) newErrors.domain = 'Research Area / Domain is required';
+    if (!email) { newErrors.email = 'Email is required'; }
+    else if (!/\S+@\S+\.\S+/.test(email)) { newErrors.email = 'Email is invalid'; }
     if (!gender) newErrors.gender = 'Gender is required';
-    if (!date) newErrors.setDate = 'Current date is required';
-    if (!price) newErrors.price = 'Price is required';
-    if (!quantity) newErrors.quantity = 'Quantity is required';
-    if (!total) newErrors.total = 'Total is required';
-    if (!discount) newErrors.discount = 'Discount is required';
-    if (!grandTotal) newErrors.grandTotal = 'GrandTotal is required';
-    if (!inputCount) newErrors.inputCount = 'Installment is required';
-    if (!installments) newErrors.installments = 'When will be the installment paid';
+    if (!date) newErrors.date = 'Date is required';
+    if (!domain) newErrors.domain = 'Research Area / Domain is required';
+    if (!inputCount) newErrors.inputCount = 'At least 1 installment is required';
 
-    if (!email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
+    services.forEach((service, index) => {
+      if (!service.service) newErrors[`service_${index}`] = 'Service is required';
+      if (!service.price && service.price !== 0) newErrors[`price_${index}`] = 'Price is required';
+      if (!service.grandTotal && service.grandTotal !== 0) newErrors[`grandTotal_${index}`] = 'Grand Total is required';
+    });
+
+    if (inputCount > 0) {
+      rows.forEach((row, index) => {
+        if (!row.dueWhen) {
+          newErrors[`installment_${index}_dueWhen`] = `Installment ${index + 1} due date is required`;
+        }
+        if (!row.installmentAmount) {
+          newErrors[`installment_${index}_installmentAmount`] = `Installment ${index + 1} amount is required`;
+        }
+      });
     }
+
     setErrors(newErrors);
+    console.log(newErrors)
     return Object.keys(newErrors).length === 0;
   }
 
@@ -98,31 +103,33 @@ const CreateInvoice = () => {
   // ******************* Discount Calculation ************
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseInt(value);
-    const updatedRow = addNumberOfService.map((row, i) =>
+    const updatedRow = services.map((row, i) =>
       i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
     )
-    setAddNumberOfService(updatedRow)
+    setServices(updatedRow)
     setGrandTotal(price - discountValue);
   }
 
   // ****************** Total of grandtotals *****************
   const totalAmount = () => {
-    return addNumberOfService.reduce((total, row)=> total + row.grandTotal, 0)
+    return services.reduce((total, row) => total + row.grandTotal, 0)
   }
 
   //  *************** Handle Writing Service Change for each row ***************
   const handleServiceChange = (index, value) => {
     const selected = WritingService.find((service) => service.value === value);
-    const updatedRow = addNumberOfService.map((row, i) =>
+    const updatedRow = services.map((row, i) =>
       i === index ? { ...row, service: value, price: selected ? selected.price : 0, grandTotal: selected ? selected.price - (row.discount || 0) : 0 } : row)
-    setAddNumberOfService(updatedRow)
+    setServices(updatedRow)
   }
   // **************** Add Service ************
   const addService = () => {
-    setAddNumberOfService([...addNumberOfService, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
+    setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
+    setTotalService(totalService + 1);
   }
   const removeService = (index) => {
-    setAddNumberOfService(addNumberOfService.filter((_, i) => i !== index));
+    setServices(services.filter((_, i) => i !== index));
+    setTotalService(totalService - 1);
   }
 
 
@@ -145,6 +152,7 @@ const CreateInvoice = () => {
   const handleInstallmentChange = (index, field, value) => {
     const updatedRows = [...rows]; // Clone the current rows state
     const updatedInstallments = [...installments]; // Clone the current installments state
+    const updatedErrors = { ...errors };
 
     // Ensure the row exists before updating
     if (!updatedRows[index]) {
@@ -162,9 +170,19 @@ const CreateInvoice = () => {
     // Update the field in the corresponding installment
     updatedInstallments[index][field] = value;
 
+
+    if (field === 'dueWhen' && value) {
+      delete updatedErrors[`installment_${index}_dueWhen`];
+    }
+
+    if (field === 'installmentAmount' && value) {
+      delete updatedErrors[`installment_${index}_installmentAmount`];
+    }
+
     // Update state with the modified rows and installments
     setRows(updatedRows);
     setInstallments(updatedInstallments);
+    setErrors(updatedErrors)
   };
 
 
@@ -178,7 +196,8 @@ const CreateInvoice = () => {
 
       if (quotationId) {
         axios.put(`http://localhost:8081/edit/${quotationId}`, {
-          name, email, gender, date: formattedDate, domain, description, price, quantity, total, discount, grandTotal, inputCount,
+          name, email, gender, date: formattedDate, domain, total: totalAmount(), totalService, inputCount,
+          services,
           installments,
         })
           .then((response) => {
@@ -192,19 +211,23 @@ const CreateInvoice = () => {
       } else {
         // Create new quotation
         axios.post(`http://localhost:8081/create`, {
-          name, email, gender, date: date, domain, description, price, quantity, total, discount, grandTotal, inputCount,
+          name, email, gender, date: formattedDate, domain, total: totalAmount(), totalService, inputCount,
+          services,
           installments,
         })
           .then((response) => {
-            alert('Quotation created successfully');
+            alert('Quotation updated successfully');
             window.location.href = '/';
           })
           .catch((error) => {
             console.log('Error posting data:', error)
+            alert("Failed to update quotation")
           })
       }
     }
   };
+
+
 
 
 
@@ -221,19 +244,27 @@ const CreateInvoice = () => {
           setGender(data.gender || "");
           setDate(new Date(data.date));
           setDomain(data.domain || "");
-          setDescription(data.description || "");
-          setPrice(data.price || 0);
-          setQuantity(data.quantity || 0);
           setTotal(data.total || 0);
-          setDiscount(data.discount || 0);
-          setGrandTotal(data.grandTotal || 0);
-          setInputCount(data.inputCount || 0);
+          setServices(data.services || []);
           setInstallments(data.installments || []);
+          setInputCount(data.inputCount || 0);
+          setTotalService(data.totalService || 0);
+
+
+          const serviceData = data.services.map(service => ({
+            service: service.service,
+            price: service.price,
+            discount: service.discount,
+            grandTotal: service.grandTotal,
+          }));
+
           const rowsData = data.installments.map(installment => ({
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-          console.log("Rows Data: ", rowsData);
+
+          console.log("Rows Data (Installments):", rowsData);
+          console.log("Service Data:", serviceData);
           setRows(rowsData);
         })
         .catch((error) => console.log('Error fetching data:', error));
@@ -258,13 +289,13 @@ const CreateInvoice = () => {
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
               </FormGroup>
               <FormGroup widths='equal'>
-                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date, pointing: 'below' } : null} />
+                <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date } : null} />
                 <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' value={domain} options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />
               </FormGroup>
               <Table celled padded>
                 <TableHeader>
                   <TableRow>
-                    <TableHeaderCell singleLine>DESCRIPTION</TableHeaderCell>
+                    <TableHeaderCell singleLine>SERVICES</TableHeaderCell>
                     <TableHeaderCell>PRICE</TableHeaderCell>
                     <TableHeaderCell>DISCOUNT</TableHeaderCell>
                     <TableHeaderCell>GRAND TOTAL</TableHeaderCell>
@@ -273,19 +304,19 @@ const CreateInvoice = () => {
                 </TableHeader>
                 <TableBody>
 
-                  {addNumberOfService.map((row, index) => (
+                  {services.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell><FormField><Dropdown placeholder="Select a service" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} /></FormField></TableCell>
-                      <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} /></TableCell>
-                      <TableCell><FormField placeholder="Enter Descount" control={Input} type='number' value={row.discount} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /></TableCell>
-                      <TableCell><FormField placeholder="Grand Total" onChange={(e) => setGrandTotal(e.target.value)} error={errors.grandTotal ? { content: errors.grandTotal } : null} />{row.grandTotal}</TableCell>
-                      <TableCell><Icon className="trash text-danger" size="large" style={{cursor: "pointer"}} onClick={() => removeService(index)} /></TableCell>
+                      <TableCell><FormField><Dropdown placeholder="Select a service" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
+                      <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} error={errors.price ? { content: errors.price } : null} /></TableCell>
+                      <TableCell><FormField control={Input} placeholder="Enter Discount" value={row.discount ? `${row.discount}` : ""} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /></TableCell>
+                      <TableCell><FormField control={Input} placeholder="Grand Total" value={row.grandTotal ? `${row.grandTotal}` : ""} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
+                      <TableCell><Icon className="trash text-danger" size="large" style={{ cursor: "pointer" }} onClick={() => removeService(index)} /></TableCell>
                     </TableRow>
                   ))}
 
                   <TableRow>
                     <TableCell colSpan="4">ADD SERVICE:</TableCell>
-                    <TableCell className='text-right border'><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
+                    <TableCell className='text-right border'><span>{totalService}</span><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
                   </TableRow>
 
                   <TableRow>
@@ -301,8 +332,8 @@ const CreateInvoice = () => {
                   {rows.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
-                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} error={errors.installments ? { content: errors.installments } : null} /></TableCell>
-                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} error={errors.installmentAmount ? { content: errors.installmentAmount } : null} /></TableCell>
+                      <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
+                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

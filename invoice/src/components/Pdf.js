@@ -79,14 +79,14 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell>
                                                 <div className='header'>
-                                                    <p style={{ fontSize: '25px'}} className='font-weight-bold'>
-                                                        <strong style={{ color: 'darkblue' }}>KALP </strong>
-                                                        <strong style={{ color: 'red' }}>RESEARCH </strong>
-                                                        <strong style={{ color: 'darkblue' }}>WORK</strong>
+                                                    <p style={{ fontSize: '25px' }}>
+                                                        <span style={{ color: 'darkblue' }}>KALP </span>
+                                                        <span style={{ color: 'red' }}>RESEARCH </span>
+                                                        <span style={{ color: 'darkblue' }}>WORK</span>
                                                         <strong> - </strong>
-                                                        <strong style={{ color: 'darkblue' }}>K</strong>
-                                                        <strong style={{ color: 'red' }}>R</strong>
-                                                        <strong style={{ color: 'darkblue' }}>W</strong>
+                                                        <span style={{ color: 'darkblue' }}>K</span>
+                                                        <span style={{ color: 'red' }}>R</span>
+                                                        <span style={{ color: 'darkblue' }}>W</span>
                                                     </p>
                                                     <p className='m-0'>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
                                                     <p className='m-0'> +91 - 7037663686</p>
@@ -107,13 +107,10 @@ const Pdf = () => {
                                     <Table className='border-0'>
                                         <TableRow>
                                             <TableCell>
-                                                <div className='header m-0 p-0'>
+                                                <div className='header'>
                                                     <p className='m-0'>Quotation To:</p>
-                                                    <p className='p-0 m-0' style={{ color: 'red', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
-                                                    <p className='m-0'>Designation: {data.designation}</p>
+                                                    <p className='m-0' style={{ color: 'red', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
                                                     <p className='m-0'>Research Area/Domain: {data.domain}</p>
-                                                    <p className='m-0'>Entitle: {data.entitle}</p>
-                                                    <p className='m-0'>Service required: {data.description}</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right'>
@@ -131,26 +128,24 @@ const Pdf = () => {
                                     <table className='table table-stripped'>
                                         <thead>
                                             <tr className='table-header' style={{ backgroundColor: '#d70202', color: 'white' }}>
-                                                <th>DESCRIPTION</th>
+                                                <th>SERVICES</th>
                                                 <th>PRICE</th>
-                                                <th>QUANTITY</th>
-                                                <th>SUBTOTAL</th>
+                                                <th>DISCOUNT</th>
+                                                <th>GRAND TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>{data.description}</td>
-                                                <td>Rs. {data.price}</td>
-                                                <td>{data.quantity}</td>
-                                                <td>BASE PRICE: Rs. {data.total}</td>
-                                            </tr>
-                                            <tr style={{ backgroundColor: '#0722ad', color: 'white' }}>
-                                                <td colSpan={3}>DISCOUNT :</td>
-                                                <td>Rs. {data.discount}</td>
-                                            </tr>
+                                            {data.services.map((service, idx) => (
+                                                <tr key={idx}  style={{ backgroundColor: '#0722ad', color: 'white' }}>
+                                                    <td>{service.service}</td>
+                                                    <td>{service.Price}</td>
+                                                    <td>{service.discount}</td>
+                                                    <td>{service.grandTotal}</td>
+                                                </tr>
+                                            ))}
                                             <tr style={{ backgroundColor: '#d70202', color: 'white' }}>
-                                                <td colSpan={3}>GRAND TOTAL :</td>
-                                                <td>Rs. {data.grandTotal}</td>
+                                                <td colSpan={3}>TOTAL AMOUNT OF ALL SERVICES :</td>
+                                                <td>{data.total}</td>
                                             </tr>
                                             <tr style={{ backgroundColor: '#d70202', color: 'white' }}>
                                                 <td colSpan={3}>TOTAL INSTALLMENTS :</td>
@@ -159,7 +154,7 @@ const Pdf = () => {
                                             {data.installments.map((installment, idx) => (
                                                 <tr key={idx} style={{ backgroundColor: '#0722ad', color: 'white' }}>
                                                     <td colSpan={3} style={{ textTransform: 'uppercase' }}>
-                                                        {installment.label} :{installment.dueWhen} {installment.when}
+                                                        {installment.label} : {installment.dueWhen} {installment.when}
                                                     </td>
                                                     <td>Rs. {installment.installmentAmount}</td>
                                                 </tr>
@@ -168,17 +163,17 @@ const Pdf = () => {
                                     </table>
                                 </div>
                             </div>
-                            
-                            <div className='row pt-5 mt-5 d-flex flex-wrap align-content-end'>
+                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                            <div className='row pt-5 mt-5'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
                                             <TableCell className='border-0'>
                                                 <div className='header'>
                                                     <h3 className='p-3' style={{ backgroundColor: 'lightpink', width: '50%' }}>PAYMENT METHOD</h3>
-                                                    <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
-                                                    <p className='m-0'>IFSC: SBIN0002502</p>
                                                     <p className='m-0'>Account Details: 20005393359</p>
+                                                    <p className='m-0'>IFSC: SBIN0002502</p>
+                                                    <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
                                                 </div>
                                                 <div className='header mt-4'>
                                                     <h3 className='p-3' style={{ backgroundColor: 'lightpink', width: '50%' }}>TERMS AND CONDITION</h3>

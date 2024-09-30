@@ -61,12 +61,8 @@ const Home = () => {
                         <TableHeaderCell>Name</TableHeaderCell>
                         <TableHeaderCell>Email</TableHeaderCell>
                         <TableHeaderCell>Date</TableHeaderCell>
-                        <TableHeaderCell>Designation</TableHeaderCell>
                         <TableHeaderCell>Research Domain</TableHeaderCell>
-                        <TableHeaderCell>Description</TableHeaderCell>
-                        <TableHeaderCell>Price</TableHeaderCell>
-                        <TableHeaderCell>Discount</TableHeaderCell>
-                        <TableHeaderCell>Grand Total</TableHeaderCell>
+                        <TableHeaderCell>Services</TableHeaderCell>
                         <TableHeaderCell>Total Installments</TableHeaderCell>
                         <TableHeaderCell>Action</TableHeaderCell>
                     </TableRow>
@@ -78,12 +74,17 @@ const Home = () => {
                             <TableCell>{row.name}</TableCell>
                             <TableCell>{row.email}</TableCell>
                             <TableCell>{formatDate(row.date)}</TableCell>
-                            <TableCell>{row.designation}</TableCell>
                             <TableCell>{row.domain}</TableCell>
-                            <TableCell>{row.description}</TableCell>
-                            <TableCell>{row.price}</TableCell>
-                            <TableCell>{row.discount}</TableCell>
-                            <TableCell>{row.grandTotal}</TableCell>
+                            <TableCell>
+                                <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                    <span>{row.totalService}</span>
+                                    {row.services.map((service, idx) => (
+                                        <li key={idx}>
+                                            {service.serviceName}: P: {service.price} - D: {service.discount} = G: {service.grandTotal}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
                                     <span>{row.inputCount}</span>

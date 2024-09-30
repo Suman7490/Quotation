@@ -21,17 +21,18 @@ const db = mysql.createConnection({
 // ************* Get Data *************
 app.get('/', (req, res) => {
     const sql = `
-        SELECT q.quotation_id, q.name, q.email, q.gender, q.designation, q.domain, q.description, 
-               q.price, q.quantity, q.date, q.entitle, q.total, q.discount, q.grandTotal, q.inputCount,
-               p.label, p.dueWhen, p.installmentAmount
+        SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalService, q.inputCount,
+               p.label, p.dueWhen, p.installmentAmount,
+               s.serviceName, s.price, s.discount, s.grandTotal
         FROM quotation q
-        INNER JOIN payments p ON q.quotation_id = p.quotation_id
+        INNER JOIN services s ON q.quotation_id = s.quotation_id
+        INNER JOIN payments p ON q.quotation_id = p.quotation_id;
     `;
-
 
 
     db.query(sql, (err, result) => {
         if (err) return res.json({ Message: "Error inside server" });
+
         const data = {}
         result.forEach(row => {
             // If the quotation_id is not already in the data object, create it
@@ -42,23 +43,30 @@ app.get('/', (req, res) => {
                     email: row.email,
                     gender: row.gender,
                     date: row.date,
-                    designation: row.designation,
                     domain: row.domain,
-                    entitle: row.entitle,
-                    description: row.description,
-                    totalInstallment: 0,
-                    price: row.price,
-                    quantity: row.quantity,
                     total: row.total,
-                    discount: row.discount,
-                    grandTotal: row.grandTotal,
+                    totalService: row.totalService,
                     inputCount: row.inputCount,
-                    installments: []
+                    services: [],
+                    installments: [],
+                    totalServices: 0,
+                    totalInstallment: 0
                 };
             }
 
+            // Add the services data to the services array
+            if (row.serviceName && !data[row.quotation_id].services.some(s => s.serviceName === row.serviceName && s.price === row.price)) {
+                data[row.quotation_id].services.push({
+                    serviceName: row.serviceName,
+                    price: row.price,
+                    discount: row.discount,
+                    grandTotal: row.grandTotal
+                });
+                data[row.quotation_id].totalServices++;
+            }
+
             // Add the installment data to the installments array
-            if (row.label) {
+            if (row.label && !data[row.quotation_id].installments.some(i => i.label === row.label && i.installmentAmount === row.installmentAmount)) {
                 data[row.quotation_id].installments.push({
                     label: row.label,
                     dueWhen: row.dueWhen,
@@ -77,21 +85,15 @@ app.get('/', (req, res) => {
 
 // ************* Post Data ************
 app.post('/create', (req, res) => {
-    const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `date`, `designation`, `domain`, `entitle`, `description`, `price`, `quantity`, `total`, `discount`, `grandTotal`, `inputCount`) VALUES (?)";
+    const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `date`, `domain`, `total`, `totalService`, `inputCount`) VALUES (?)";
     const quotation_values = [
         req.body.name,
         req.body.email,
         req.body.gender,
         req.body.date,
-        req.body.designation,
         req.body.domain,
-        req.body.entitle,
-        req.body.description,
-        req.body.price,
-        req.body.quantity,
         req.body.total,
-        req.body.discount,
-        req.body.grandTotal,
+        req.body.totalService,
         req.body.inputCount
     ];
 
@@ -106,127 +108,150 @@ app.post('/create', (req, res) => {
             installment.installmentAmount
         ]);
 
+        const services = req.body.services.map(service => [
+            quotationId,
+            service.service,
+            service.price,
+            service.discount,
+            service.grandTotal
+        ]);
+
         const installmentsSql = `INSERT INTO payments 
         (\`quotation_id\`, \`label\`, \`dueWhen\`, \`installmentAmount\`) 
         VALUES ?`;
 
-        db.query(installmentsSql, [installments], (err, result) => {
+        const servicesSql = `INSERT INTO services 
+        (\`quotation_id\`, \`serviceName\`, \`price\`, \`discount\`, \`grandTotal\`) 
+        VALUES ?`;
+
+        db.query(servicesSql, [services], (err, servicesResult) => {
             if (err) return res.json(err);
 
-            return res.json(result);
-        });
-    });
-});
+            // Insert into the services table
+            db.query(installmentsSql, [installments], (err, installmentsResult) => {
+                if (err) return res.json(err);
 
-// ********************* Edit Data ****************
-app.put('/edit/:id', (req, res) => {
-    const quotationId = req.params.id;
-
-    const {
-        name, email, gender, date, designation, domain, entitle,
-        description, price, quantity, total, discount, grandTotal, inputCount, installments
-    } = req.body;  // Simplified to just update the name
-
-    console.log('Received data for update:', req.body);
-
-    const updateQuotationSql = `
-      UPDATE quotation 
-      SET name = ?, email = ?, gender = ?, date = ?, designation = ?, domain = ?, entitle = ?, description = ?,
-      price = ?, quantity = ?, total = ?, discount = ?, grandTotal = ?, inputCount = ?
-      WHERE quotation_id = ?
-    `;
-
-    const quotationValues = [
-        name, email, gender, date, designation, domain, entitle,
-        description, price, quantity, total, discount, grandTotal, inputCount, quotationId
-    ];
-
-
-    db.query(updateQuotationSql, quotationValues, (err, result) => {
-        if (err) {
-            console.error('Error updating quotation:', err);
-            return res.status(500).json({ message: 'Error updating quotation', error: err });
-        }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Quotation not found' });
-        }
-
-        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
-        db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
-            if (err) {
-                console.error('Error deleting old installments:', err);
-                return res.status(500).json({ message: 'Error deleting old installments', error: err });
-            }
-            const insertInstallmentsSql = `
-            INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-            VALUES ?
-        `;
-
-            const installmentsData = installments.map(installment => [
-                quotationId,
-                installment.label,
-                installment.dueWhen,  // Assuming `dueWhen` is correctly formatted
-                installment.installmentAmount
-            ]);
-
-            db.query(insertInstallmentsSql, [installmentsData], (err, result) => {
-                if (err) {
-                    console.error('Error inserting installments:', err);
-                    return res.status(500).json({ message: 'Error inserting installments', error: err });
-                }
-
-                // Both the quotation and the installments were successfully updated/inserted
-                return res.json({ message: 'Quotation and installments updated successfully' });
+                return res.json({
+                    message: 'Quotation, Installments, and Services added successfully!',
+                    quotationId: quotationId,
+                    servicesResult,
+                    installmentsResult
+                });
             });
         });
     });
 });
 
+// ********************* Edit Data ****************
+// app.put('/edit/:id', (req, res) => {
+//     const quotationId = req.params.id;
+
+//     const {
+//         name, email, gender, date, designation, domain, entitle,
+//         description, price, quantity, total, discount, grandTotal, inputCount, installments
+//     } = req.body;  // Simplified to just update the name
+
+//     console.log('Received data for update:', req.body);
+
+//     const updateQuotationSql = `
+//       UPDATE quotation 
+//       SET name = ?, email = ?, gender = ?, date = ?, designation = ?, domain = ?, entitle = ?, description = ?,
+//       price = ?, quantity = ?, total = ?, discount = ?, grandTotal = ?, inputCount = ?
+//       WHERE quotation_id = ?
+//     `;
+
+//     const quotationValues = [
+//         name, email, gender, date, designation, domain, entitle,
+//         description, price, quantity, total, discount, grandTotal, inputCount, quotationId
+//     ];
+
+
+//     db.query(updateQuotationSql, quotationValues, (err, result) => {
+//         if (err) {
+//             console.error('Error updating quotation:', err);
+//             return res.status(500).json({ message: 'Error updating quotation', error: err });
+//         }
+
+//         if (result.affectedRows === 0) {
+//             return res.status(404).json({ message: 'Quotation not found' });
+//         }
+
+//         const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
+//         db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
+//             if (err) {
+//                 console.error('Error deleting old installments:', err);
+//                 return res.status(500).json({ message: 'Error deleting old installments', error: err });
+//             }
+//             const insertInstallmentsSql = `
+//             INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
+//             VALUES ?
+//         `;
+
+//             const installmentsData = installments.map(installment => [
+//                 quotationId,
+//                 installment.label,
+//                 installment.dueWhen,  // Assuming `dueWhen` is correctly formatted
+//                 installment.installmentAmount
+//             ]);
+
+//             db.query(insertInstallmentsSql, [installmentsData], (err, result) => {
+//                 if (err) {
+//                     console.error('Error inserting installments:', err);
+//                     return res.status(500).json({ message: 'Error inserting installments', error: err });
+//                 }
+
+//                 // Both the quotation and the installments were successfully updated/inserted
+//                 return res.json({ message: 'Quotation and installments updated successfully' });
+//             });
+//         });
+//     });
+// });
+
 
 
 
 // ************** Delete data ***************
-app.delete('/delete/:id', (req, res) => {
-    const quotationId = req.params.id;
+// app.delete('/delete/:id', (req, res) => {
+//     const quotationId = req.params.id;
 
-    // SQL query to delete the quotation
-    const deleteQuotationSql = `DELETE FROM quotation WHERE quotation_id = ?`;
+//     // SQL query to delete the quotation
+//     const deleteQuotationSql = `DELETE FROM quotation WHERE quotation_id = ?`;
 
-    db.query(deleteQuotationSql, [quotationId], (err, result) => {
-        if (err) {
-            console.error('Error deleting quotation:', err);
-            return res.status(500).json({ message: 'Error deleting quotation', error: err });
-        }
+//     db.query(deleteQuotationSql, [quotationId], (err, result) => {
+//         if (err) {
+//             console.error('Error deleting quotation:', err);
+//             return res.status(500).json({ message: 'Error deleting quotation', error: err });
+//         }
 
-        // Check if any rows were affected (i.e., if the delete was successful)
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Quotation not found' });
-        }
+//         // Check if any rows were affected (i.e., if the delete was successful)
+//         if (result.affectedRows === 0) {
+//             return res.status(404).json({ message: 'Quotation not found' });
+//         }
 
-        // Delete associated installments
-        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
-        db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
-            if (err) {
-                console.error('Error deleting installments:', err);
-                return res.status(500).json({ message: 'Error deleting installments', error: err });
-            }
+//         // Delete associated installments
+//         const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
+//         db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
+//             if (err) {
+//                 console.error('Error deleting installments:', err);
+//                 return res.status(500).json({ message: 'Error deleting installments', error: err });
+//             }
 
-            return res.json({ message: "Quotation and installments deleted successfully" });
-        });
-    });
-});
+//             return res.json({ message: "Quotation and installments deleted successfully" });
+//         });
+//     });
+// });
 
 
 // ************* Get Data by Quotation ID *************
 app.get('/pdf/:id', (req, res) => {
     const quotationId = req.params.id;
     const sql = `
-        SELECT q.quotation_id, q.name, q.email, q.gender, q.designation, q.domain, q.description, 
-               q.price, q.quantity, q.date, q.entitle, q.total, q.discount, q.grandTotal, q.inputCount,
-               p.label, p.dueWhen, p.installmentAmount
+         SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalService, q.inputCount,
+               p.label, p.dueWhen, p.installmentAmount,
+               s.serviceName, s.price, s.discount, s.grandTotal
         FROM quotation q
         LEFT JOIN payments p ON q.quotation_id = p.quotation_id
+        LEFT JOIN services s ON q.quotation_id = s.quotation_id
         WHERE q.quotation_id = ?
     `;
 
@@ -243,27 +268,35 @@ app.get('/pdf/:id', (req, res) => {
             email: result[0].email,
             gender: result[0].gender,
             date: result[0].date,
-            designation: result[0].designation,
             domain: result[0].domain,
-            entitle: result[0].entitle,
-            description: result[0].description,
-            totalInstallment: 0,
-            price: result[0].price,
-            quantity: result[0].quantity,
             total: result[0].total,
-            discount: result[0].discount,
-            grandTotal: result[0].grandTotal,
             inputCount: result[0].inputCount,
-            installments: []
+            services: [],
+            installments: [],
+            totalServices: 0,
+            totalInstallment: 0
         };
 
+  const addedInstallments = new Set();
+
         result.forEach(row => {
-            if (row.label) {
+            if (row.serviceName && !addedInstallments.has(row.serviceName)) {
+                data.services.push({
+                    service: row.serviceName,
+                    Price: row.price,
+                    discount: row.discount,
+                    grandTotal: row.grandTotal
+                });
+                addedInstallments.add(row.serviceName);
+                data.totalServices++;
+            }
+            if (row.label && !addedInstallments.has(row.label)) {
                 data.installments.push({
                     label: row.label,
                     dueWhen: row.dueWhen,
                     installmentAmount: row.installmentAmount
                 });
+                addedInstallments.add(row.label);
                 data.totalInstallment++;
             }
         });
@@ -331,50 +364,50 @@ app.post('/check-email', (req, res) => {
             console.error('Error checking email:', err);
             return res.status(500).json({ error: 'Internal server error' });
         }
-        
+
         const emailExists = results[0].count > 0;
         res.json({ exists: emailExists });
     });
 });
-    // ****************** Login Form **************
-    app.post('/login', (req, res) => {
-        const { email, password } = req.body;
-      
-        const query = 'SELECT * FROM employees WHERE email = ?';
-        db.query(query, [email], (err, results) => {
-          if (err) {
+// ****************** Login Form **************
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    const query = 'SELECT * FROM employees WHERE email = ?';
+    db.query(query, [email], (err, results) => {
+        if (err) {
             console.error('Error finding user:', err);
             return res.status(500).json({ message: 'Error finding user', error: err });
-          }
-      
-          if (results.length === 0) {
+        }
+
+        if (results.length === 0) {
             return res.status(401).json({ message: 'Invalid email or password' });
-          }
-      
-          const user = results[0];
-          bcrypt.compare(password, user.password, (err, isMatch) => {
+        }
+
+        const user = results[0];
+        bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) {
-              console.error('Error comparing passwords:', err);
-              return res.status(500).json({ message: 'Error comparing passwords', error: err });
+                console.error('Error comparing passwords:', err);
+                return res.status(500).json({ message: 'Error comparing passwords', error: err });
             }
-      
+
             if (!isMatch) {
-              return res.status(401).json({ message: 'Invalid email or password' });
+                return res.status(401).json({ message: 'Invalid email or password' });
             }
-      
+
             // Generate JWT
             const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, secretKey, { expiresIn: '1h' });
             res.json({ message: 'Login successful', token });
-          });
         });
-      });
-      
+    });
+});
 
 
 
 
-    // *********************************************************************
-    const port = process.env.PORT || 8081
-    app.listen(port, () => {
-        console.log("Listening")
-    })
+
+// *********************************************************************
+const port = process.env.PORT || 8081
+app.listen(port, () => {
+    console.log("Listening")
+})
