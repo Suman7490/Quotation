@@ -143,103 +143,121 @@ app.post('/create', (req, res) => {
 });
 
 // ********************* Edit Data ****************
-// app.put('/edit/:id', (req, res) => {
-//     const quotationId = req.params.id;
+app.put('/edit/:id', (req, res) => {
+    const quotationId = req.params.id;
 
-//     const {
-//         name, email, gender, date, designation, domain, entitle,
-//         description, price, quantity, total, discount, grandTotal, inputCount, installments
-//     } = req.body;  // Simplified to just update the name
+    const { name, email, gender, date, domain, total, totalService, inputCount, services, installments } = req.body;
 
-//     console.log('Received data for update:', req.body);
+    console.log('Received data for update:', req.body);
 
-//     const updateQuotationSql = `
-//       UPDATE quotation 
-//       SET name = ?, email = ?, gender = ?, date = ?, designation = ?, domain = ?, entitle = ?, description = ?,
-//       price = ?, quantity = ?, total = ?, discount = ?, grandTotal = ?, inputCount = ?
-//       WHERE quotation_id = ?
-//     `;
+    const updateQuotationSql = `
+      UPDATE quotation 
+      SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
+      WHERE quotation_id = ?
+    `;
 
-//     const quotationValues = [
-//         name, email, gender, date, designation, domain, entitle,
-//         description, price, quantity, total, discount, grandTotal, inputCount, quotationId
-//     ];
+    const quotationValues = [
+        name, email, gender, date, domain, total, totalService, inputCount, quotationId
+    ];
 
 
-//     db.query(updateQuotationSql, quotationValues, (err, result) => {
-//         if (err) {
-//             console.error('Error updating quotation:', err);
-//             return res.status(500).json({ message: 'Error updating quotation', error: err });
-//         }
+    db.query(updateQuotationSql, quotationValues, (err, result) => {
+        if (err) {
+            console.error('Error updating quotation:', err);
+            return res.status(500).json({ message: 'Error updating quotation', error: err });
+        }
 
-//         if (result.affectedRows === 0) {
-//             return res.status(404).json({ message: 'Quotation not found' });
-//         }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Quotation not found' });
+        }
 
-//         const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
-//         db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
-//             if (err) {
-//                 console.error('Error deleting old installments:', err);
-//                 return res.status(500).json({ message: 'Error deleting old installments', error: err });
-//             }
-//             const insertInstallmentsSql = `
-//             INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-//             VALUES ?
-//         `;
+        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
+        const deleteServicesSql = `DELETE FROM services WHERE quotation_id = ?`;
 
-//             const installmentsData = installments.map(installment => [
-//                 quotationId,
-//                 installment.label,
-//                 installment.dueWhen,  // Assuming `dueWhen` is correctly formatted
-//                 installment.installmentAmount
-//             ]);
+        db.query(deleteServicesSql, [quotationId], (err, result) => {
+            if (err) {
+                console.error('Error deleting old services:', err);
+                return res.status(500).json({ message: 'Error deleting old services', error: err });
+            }
+            const insertServicesSql = `
+            INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) 
+            VALUES ?
+        `;
 
-//             db.query(insertInstallmentsSql, [installmentsData], (err, result) => {
-//                 if (err) {
-//                     console.error('Error inserting installments:', err);
-//                     return res.status(500).json({ message: 'Error inserting installments', error: err });
-//                 }
+            const serviceData = services.map(service => [
+                quotationId,
+                service.service,
+                service.price,
+                service.discount,
+                service.grandTotal
+            ]);
 
-//                 // Both the quotation and the installments were successfully updated/inserted
-//                 return res.json({ message: 'Quotation and installments updated successfully' });
-//             });
-//         });
-//     });
-// });
+            db.query(insertServicesSql, [serviceData], (err, result) => {
+                if (err) {
+                    console.error('Error inserting services:', err);
+                    return res.status(500).json({ message: 'Error inserting services', error: err });
+                }
+                const insertInstallmentsSql = `INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
+                    VALUES ?`;
+                const installmentsData = installments.map(installment => [
+                    quotationId,
+                    installment.label,
+                    installment.dueWhen,  // Assuming `dueWhen` is correctly formatted
+                    installment.installmentAmount
+                ]);
+                db.query(insertInstallmentsSql, [installmentsData], (err, result) => {
+                    if (err) {
+                        console.error('Error inserting installments:', err);
+                        return res.status(500).json({ message: 'Error inserting installments', error: err });
+                    }
 
-
+                    // Everything was successful
+                    return res.json({ message: 'Quotation, services, and installments updated successfully' });
+                });
+            });
+        });
+    });
+});
 
 
 // ************** Delete data ***************
-// app.delete('/delete/:id', (req, res) => {
-//     const quotationId = req.params.id;
+app.delete('/delete/:id', (req, res) => {
+    const quotationId = req.params.id;
 
-//     // SQL query to delete the quotation
-//     const deleteQuotationSql = `DELETE FROM quotation WHERE quotation_id = ?`;
+    // SQL query to delete the quotation
+    const deleteQuotationSql = `DELETE FROM quotation WHERE quotation_id = ?`;
 
-//     db.query(deleteQuotationSql, [quotationId], (err, result) => {
-//         if (err) {
-//             console.error('Error deleting quotation:', err);
-//             return res.status(500).json({ message: 'Error deleting quotation', error: err });
-//         }
+    db.query(deleteQuotationSql, [quotationId], (err, result) => {
+        if (err) {
+            console.error('Error deleting quotation:', err);
+            return res.status(500).json({ message: 'Error deleting quotation', error: err });
+        }
 
-//         // Check if any rows were affected (i.e., if the delete was successful)
-//         if (result.affectedRows === 0) {
-//             return res.status(404).json({ message: 'Quotation not found' });
-//         }
+        // Check if any rows were affected (i.e., if the delete was successful)
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Quotation not found' });
+        }
 
-//         // Delete associated installments
-//         const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
-//         db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
-//             if (err) {
-//                 console.error('Error deleting installments:', err);
-//                 return res.status(500).json({ message: 'Error deleting installments', error: err });
-//             }
+        // Delete associated installments
+        const deleteInstallmentsSql = `DELETE FROM payments WHERE quotation_id = ?`;
+        const deleteServicesSql = `DELETE FROM services WHERE quotation_id = ?`;
+        db.query(deleteInstallmentsSql, [quotationId], (err, result) => {
+            if (err) {
+                console.error('Error deleting installments:', err);
+                return res.status(500).json({ message: 'Error deleting installments', error: err });
+            }
 
-//             return res.json({ message: "Quotation and installments deleted successfully" });
-//         });
-//     });
-// });
+            db.query(deleteServicesSql, [quotationId], (err, result) => {
+                if (err) {
+                    console.error('Error deleting services:', err);
+                    return res.status(500).json({ message: 'Error deleting services', error: err });
+                }
+
+                return res.json({ message: "Quotation, installments, and services deleted successfully" });
+            });
+        });
+    });
+});
 
 
 // ************* Get Data by Quotation ID *************
@@ -277,13 +295,13 @@ app.get('/pdf/:id', (req, res) => {
             totalInstallment: 0
         };
 
-  const addedInstallments = new Set();
+        const addedInstallments = new Set();
 
         result.forEach(row => {
             if (row.serviceName && !addedInstallments.has(row.serviceName)) {
                 data.services.push({
                     service: row.serviceName,
-                    Price: row.price,
+                    price: row.price,
                     discount: row.discount,
                     grandTotal: row.grandTotal
                 });

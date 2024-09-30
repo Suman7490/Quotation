@@ -34,7 +34,7 @@ const CreateInvoice = () => {
   const [discount, setDiscount] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
   const [total, setTotal] = useState(0);
-  const [installments, setInstallments] = useState([{ dueWhen: '', installmentAmount: '' }]);
+  const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
   const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
@@ -216,7 +216,7 @@ const CreateInvoice = () => {
           installments,
         })
           .then((response) => {
-            alert('Quotation updated successfully');
+            alert('Quotation created successfully');
             window.location.href = '/';
           })
           .catch((error) => {
