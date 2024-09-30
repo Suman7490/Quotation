@@ -86,7 +86,7 @@ const Home = () => {
                             </TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                    <span>{row.inputCount}</span>
+                                    {/* <span>{row.inputCount}</span> */}
                                     {row.installments.map((installment, idx) => (
                                         <li key={idx}>
                                             {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
