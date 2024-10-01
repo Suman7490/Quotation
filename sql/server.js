@@ -13,10 +13,10 @@ const saltRounds = 10;
 
 
 const db = mysql.createConnection({
-    host: "localhost",
+    host: "mysql.railway.internal",
     user: "root",
-    password: "",
-    database: "KRW"
+    password: "aseFdvjpyrJPlqqQgaiePwzxjDFXSYXL",
+    database: "railway"
 })
 // ************* Get Data *************
 app.get('/', (req, res) => {
@@ -415,7 +415,8 @@ app.post('/login', (req, res) => {
 
 
 // *********************************************************************
-const port = process.env.PORT || 8081
-app.listen(port, () => {
+// const port = process.env.PORT || 8081
+const PORT = 3306
+app.listen(PORT, () => {
     console.log("Listening")
 })
