@@ -23,6 +23,11 @@ db.connect(err => {
     }
     console.log('Connected to MySQL database on Railway');
 });
+
+
+app.get('/', (req, res) => {
+    res.send('Server is running and connected to MySQL');
+});
 // ************* Get Data *************
 // app.get('/', (req, res) => {
 //     const sql = `
