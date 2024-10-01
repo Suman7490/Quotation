@@ -28,7 +28,7 @@ db.connect(err => {
 
 
 app.get('/', (req, res) => {
-    res.send('Server is running and connected to MySQL');
+    res.send(`Server is running and connected to MySQL ${PORT}`);
 });
 
 app.get('/data', (req, res) => {
