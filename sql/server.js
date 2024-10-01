@@ -2,7 +2,7 @@
 import express from 'express';
 import mysql from 'mysql';
 import cors from 'cors';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt.js';
 // const { check, validationResult } = 'express-validator';
 import { check, validationResult } from 'express-validator';
 
