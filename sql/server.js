@@ -28,6 +28,17 @@ db.connect(err => {
 app.get('/', (req, res) => {
     res.send('Server is running and connected to MySQL');
 });
+app.get('/data', (req, res) => {
+    const sql = 'SELECT * FROM users';  // Replace 'your_table' with your actual table name
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching data from MySQL:', err);
+            res.status(500).json({ error: 'Database query error' });
+            return;
+        }
+        res.json(results);
+    });
+});
 // ************* Get Data *************
 // app.get('/', (req, res) => {
 //     const sql = `
@@ -336,7 +347,7 @@ app.get('/', (req, res) => {
 
 // *********************************************************************
 // const port = process.env.PORT || 8081
-const port = process.env.PORT
+const port = process.env.PORT || 8081
 app.listen(port, () => {
     console.log("Listening")
 })
