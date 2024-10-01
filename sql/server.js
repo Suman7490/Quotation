@@ -79,6 +79,7 @@ const db = mysql.createConnection({
 // });
 
 app.get('/', (req, res)=>{
+res.send({
     db.connect((err) => {
         if (err) {
             console.error('Error connecting to the database:', err);
@@ -86,6 +87,7 @@ app.get('/', (req, res)=>{
             console.log('Database connected successfully');
         }
     });
+})
 })
 
 
