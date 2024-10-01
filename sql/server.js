@@ -15,80 +15,69 @@ const db = mysql.createConnection({
     database: process.env.DB_NAME
 })
 // ************* Get Data *************
-// app.get('/', (req, res) => {
-//     const sql = `
-//         SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalService, q.inputCount,
-//                p.label, p.dueWhen, p.installmentAmount,
-//                s.serviceName, s.price, s.discount, s.grandTotal
-//         FROM quotation q
-//         INNER JOIN services s ON q.quotation_id = s.quotation_id
-//         INNER JOIN payments p ON q.quotation_id = p.quotation_id;
-//     `;
+app.get('/', (req, res) => {
+    const sql = `
+        SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalService, q.inputCount,
+               p.label, p.dueWhen, p.installmentAmount,
+               s.serviceName, s.price, s.discount, s.grandTotal
+        FROM quotation q
+        INNER JOIN services s ON q.quotation_id = s.quotation_id
+        INNER JOIN payments p ON q.quotation_id = p.quotation_id;
+    `;
 
 
-//     db.query(sql, (err, result) => {
-//         if (err) return res.json({ Message: "Error inside server" });
+    db.query(sql, (err, result) => {
+        if (err) return res.json({ Message: "Error inside server" });
 
-//         const data = {}
-//         result.forEach(row => {
-//             // If the quotation_id is not already in the data object, create it
-//             if (!data[row.quotation_id]) {
-//                 data[row.quotation_id] = {
-//                     id: row.quotation_id,
-//                     name: row.name,
-//                     email: row.email,
-//                     gender: row.gender,
-//                     date: row.date,
-//                     domain: row.domain,
-//                     total: row.total,
-//                     totalService: row.totalService,
-//                     inputCount: row.inputCount,
-//                     services: [],
-//                     installments: [],
-//                     totalServices: 0,
-//                     totalInstallment: 0
-//                 };
-//             }
+        const data = {}
+        result.forEach(row => {
+            // If the quotation_id is not already in the data object, create it
+            if (!data[row.quotation_id]) {
+                data[row.quotation_id] = {
+                    id: row.quotation_id,
+                    name: row.name,
+                    email: row.email,
+                    gender: row.gender,
+                    date: row.date,
+                    domain: row.domain,
+                    total: row.total,
+                    totalService: row.totalService,
+                    inputCount: row.inputCount,
+                    services: [],
+                    installments: [],
+                    totalServices: 0,
+                    totalInstallment: 0
+                };
+            }
 
-//             // Add the services data to the services array
-//             if (row.serviceName && !data[row.quotation_id].services.some(s => s.serviceName === row.serviceName && s.price === row.price)) {
-//                 data[row.quotation_id].services.push({
-//                     serviceName: row.serviceName,
-//                     price: row.price,
-//                     discount: row.discount,
-//                     grandTotal: row.grandTotal
-//                 });
-//                 data[row.quotation_id].totalServices++;
-//             }
+            // Add the services data to the services array
+            if (row.serviceName && !data[row.quotation_id].services.some(s => s.serviceName === row.serviceName && s.price === row.price)) {
+                data[row.quotation_id].services.push({
+                    serviceName: row.serviceName,
+                    price: row.price,
+                    discount: row.discount,
+                    grandTotal: row.grandTotal
+                });
+                data[row.quotation_id].totalServices++;
+            }
 
-//             // Add the installment data to the installments array
-//             if (row.label && !data[row.quotation_id].installments.some(i => i.label === row.label && i.installmentAmount === row.installmentAmount)) {
-//                 data[row.quotation_id].installments.push({
-//                     label: row.label,
-//                     dueWhen: row.dueWhen,
-//                     installmentAmount: row.installmentAmount
-//                 });
-//                 data[row.quotation_id].totalInstallment++;
-//             }
-//         });
+            // Add the installment data to the installments array
+            if (row.label && !data[row.quotation_id].installments.some(i => i.label === row.label && i.installmentAmount === row.installmentAmount)) {
+                data[row.quotation_id].installments.push({
+                    label: row.label,
+                    dueWhen: row.dueWhen,
+                    installmentAmount: row.installmentAmount
+                });
+                data[row.quotation_id].totalInstallment++;
+            }
+        });
 
-//         // Convert the object into an array if necessary
-//         const response = Object.values(data);
-//         return res.json(response);
-//     });
-// });
-
-app.get('/', (req, res)=>{
-res.send({
-    db.connect((err) => {
-        if (err) {
-            console.error('Error connecting to the database:', err);
-        } else {
-            console.log('Database connected successfully');
-        }
+        // Convert the object into an array if necessary
+        const response = Object.values(data);
+        return res.json(response);
     });
-})
-})
+});
+
 
 
 
