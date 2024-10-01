@@ -2,7 +2,7 @@
   "name": "sql",
   "version": "1.0.0",
   "phases": {
-    "install": "npm install"
+    "install": "npm install && npm rebuild bcrypt"
   },
   "main": "index.js",
   "type": "module",
