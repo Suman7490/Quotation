@@ -28,6 +28,7 @@ db.connect(err => {
 app.get('/', (req, res) => {
     res.send('Server is running and connected to MySQL');
 });
+
 app.get('/data', (req, res) => {
     const sql = 'SELECT * FROM users';  // Replace 'your_table' with your actual table name
     db.query(sql, (err, results) => {
@@ -347,7 +348,7 @@ app.get('/data', (req, res) => {
 
 // *********************************************************************
 // const port = process.env.PORT || 8081
-const port = process.env.PORT || 8081
-app.listen(port, () => {
+const PORT = process.env.PORT || 8081
+app.listen(PORT, () => {
     console.log("Listening")
 })
