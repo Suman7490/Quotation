@@ -1,6 +1,9 @@
 {
   "name": "sql",
   "version": "1.0.0",
+  "phases": {
+    "install": "npm install"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
