@@ -30,17 +30,7 @@ app.get('/', (req, res) => {
         console.log('Connected to MySQL database on Railway');
     });
 });
-// app.get('/data', (req, res) => {
-//     const sql = 'SELECT * FROM users';
-//     db.query(sql, (err, results) => {
-//         if (err) {
-//             console.error('Error fetching data from MySQL:', err.sqlMessage || err);
-//             res.status(500).json({ error: 'Database query error', details: err.sqlMessage });
-//             return;
-//         }
-//         res.json(results);
-//     });
-// });
+
 // ************* Get Data *************
 // app.get('/', (req, res) => {
 //     const sql = `
