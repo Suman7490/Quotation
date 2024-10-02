@@ -24,15 +24,15 @@ const db = mysql.createConnection({
 app.get('/', (req, res) => {
     res.send("Hello")
 });
-app.get('/test-db-connection', (req, res) => {
-    db.connect((err) => {
-        if (err) {
-            console.error('Error connecting to MySQL:', err.message);
-            return res.status(500).json({ error: 'Connection failed', details: err.message });
-        }
-        res.send('Successfully connected to MySQL!');
-    });
-});
+// app.get('/test-db-connection', (req, res) => {
+//     db.connect((err) => {
+//         if (err) {
+//             console.error('Error connecting to MySQL:', err.message);
+//             return res.status(500).json({ error: 'Connection failed', details: err.message });
+//         }
+//         res.send('Successfully connected to MySQL!');
+//     });
+// });
 
 // ************* Get Data *************
 // app.get('/', (req, res) => {
