@@ -18,7 +18,13 @@ const db = mysql.createPool({
     database: process.env.DB_NAME
 })
 
-
+console.log({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    PORT: process.env.PORT
+})
 
 
 
@@ -35,13 +41,12 @@ app.get('/test-db-connection', (req, res) => {
     });
 });
 app.get('/data', (req, res) => {
-    const sql = 'SELECT * FROM users';
-    db.query(sql, (err, results) => {
+    db.query('SELECT 1 + 1 AS solution', (err, results) => {
         if (err) {
-            console.error('Error fetching data from MySQL:', err.sqlMessage || err);
-            return res.status(500).json({ error: 'Database query error', details: err.sqlMessage });
+            console.error('Error executing query:', err.message);
+            return res.status(500).json({ error: 'Query failed', details: err.message });
         }
-        res.json(results);
+        res.json({ message: 'Successfully connected to MySQL!', solution: results[0].solution });
     });
 });
 // ************* Get Data *************
@@ -351,8 +356,15 @@ app.get('/data', (req, res) => {
 
 
 // *********************************************************************
-// const port = process.env.PORT || 8081
+
 const PORT = process.env.PORT || 8081
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`)
+    console.log({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.PORT
+    });
 })
