@@ -22,17 +22,17 @@ const db = mysql.createConnection({
 
 
 app.get('/', (req, res) => {
-res.send("Hello")
+    res.send("Hello")
 });
-app.get('/data', (res,res)=>{
-    db.connect(err => {
+app.get('/test-db-connection', (req, res) => {
+    db.connect((err) => {
         if (err) {
-            console.error('Error connecting to MySQL:', err);
-            return;
+            console.error('Error connecting to MySQL:', err.message);
+            return res.status(500).json({ error: 'Connection failed', details: err.message });
         }
-        console.log('Connected to MySQL database on Railway');
+        res.send('Successfully connected to MySQL!');
     });
-})
+});
 
 // ************* Get Data *************
 // app.get('/', (req, res) => {
@@ -175,7 +175,7 @@ app.get('/data', (res,res)=>{
 //       SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
 //       WHERE quotation_id = ?
 //     `;
-    
+
 //     const quotationValues = [name, email, gender, date, domain, total, totalService, inputCount, quotationId];
 
 //     try {
