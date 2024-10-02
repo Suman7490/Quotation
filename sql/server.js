@@ -30,18 +30,26 @@ db.connect(err => {
 app.get('/', (req, res) => {
     res.send(`Server is running and connected to MySQL ${PORT}`);
 });
-
-app.get('/data', (req, res) => {
-    const sql = 'SELECT * FROM users';
-    db.query(sql, (err, results) => {
+app.get('/test-db-connection', (req, res) => {
+    db.connect((err) => {
         if (err) {
-            console.error('Error fetching data from MySQL:', err.sqlMessage || err);
-            res.status(500).json({ error: 'Database query error', details: err.sqlMessage });
-            return;
+            console.error('Error connecting to MySQL:', err.message);
+            return res.status(500).json({ error: 'Connection failed', details: err.message });
         }
-        res.json(results);
+        res.send('Successfully connected to MySQL!');
     });
 });
+// app.get('/data', (req, res) => {
+//     const sql = 'SELECT * FROM users';
+//     db.query(sql, (err, results) => {
+//         if (err) {
+//             console.error('Error fetching data from MySQL:', err.sqlMessage || err);
+//             res.status(500).json({ error: 'Database query error', details: err.sqlMessage });
+//             return;
+//         }
+//         res.json(results);
+//     });
+// });
 // ************* Get Data *************
 // app.get('/', (req, res) => {
 //     const sql = `
