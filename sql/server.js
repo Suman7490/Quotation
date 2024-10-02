@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     res.send("Hello")
 });
 app.get('/test-db-connection', (req, res) => {
-    db.connect((err) => {
+    db.getConnection((err) => {
         if (err) {
             console.error('Error connecting to MySQL:', err.message);
             return res.status(500).json({ error: 'Connection failed', details: err.message });
