@@ -22,6 +22,9 @@ const db = mysql.createConnection({
 
 
 app.get('/', (req, res) => {
+res.send("Hello")
+});
+app.get('/data', (res,res)=>{
     db.connect(err => {
         if (err) {
             console.error('Error connecting to MySQL:', err);
@@ -29,7 +32,7 @@ app.get('/', (req, res) => {
         }
         console.log('Connected to MySQL database on Railway');
     });
-});
+})
 
 // ************* Get Data *************
 // app.get('/', (req, res) => {
