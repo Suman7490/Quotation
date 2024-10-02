@@ -18,25 +18,16 @@ const db = mysql.createConnection({
 })
 
 
-db.connect(err => {
-    if (err) {
-        console.error('Error connecting to MySQL:', err);
-        return;
-    }
-    console.log('Connected to MySQL database on Railway');
-});
+
 
 
 app.get('/', (req, res) => {
-    res.send(`Server is running and connected to MySQL ${PORT}`);
-});
-app.get('/test-db-connection', (req, res) => {
-    db.connect((err) => {
+    db.connect(err => {
         if (err) {
-            console.error('Error connecting to MySQL:', err.message);
-            return res.status(500).json({ error: 'Connection failed', details: err.message });
+            console.error('Error connecting to MySQL:', err);
+            return;
         }
-        res.send('Successfully connected to MySQL!');
+        console.log('Connected to MySQL database on Railway');
     });
 });
 // app.get('/data', (req, res) => {
