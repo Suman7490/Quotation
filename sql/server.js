@@ -32,11 +32,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/data', (req, res) => {
-    const sql = 'SELECT * FROM users';  // Replace 'your_table' with your actual table name
+    const sql = 'SELECT * FROM users';
     db.query(sql, (err, results) => {
         if (err) {
-            console.error('Error fetching data from MySQL:', err);
-            res.status(500).json({ error: 'Database query error' });
+            console.error('Error fetching data from MySQL:', err.sqlMessage || err);
+            res.status(500).json({ error: 'Database query error', details: err.sqlMessage });
             return;
         }
         res.json(results);
