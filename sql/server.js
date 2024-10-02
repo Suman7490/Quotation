@@ -34,7 +34,16 @@ app.get('/test-db-connection', (req, res) => {
         res.send('Successfully connected to MySQL!');
     });
 });
-
+app.get('/data', (req, res) => {
+    const sql = 'SELECT * FROM users';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching data from MySQL:', err.sqlMessage || err);
+            return res.status(500).json({ error: 'Database query error', details: err.sqlMessage });
+        }
+        res.json(results);
+    });
+});
 // ************* Get Data *************
 // app.get('/', (req, res) => {
 //     const sql = `
