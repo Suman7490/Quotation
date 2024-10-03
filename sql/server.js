@@ -13,10 +13,10 @@ const saltRounds = 10;
 
 
 const db = mysql.createConnection({
-    host: "mysql.railway.internal",
+    host: "localhost",
     user: "root",
-    password: "aseFdvjpyrJPlqqQgaiePwzxjDFXSYXL",
-    database: "railway"
+    password: "",
+    database: "KRW"
 })
 // ************* Get Data *************
 app.get('/', (req, res) => {
@@ -166,8 +166,12 @@ app.put('/edit/:id', async (req, res) => {
         }
 
         // Delete old services and installments
-        await db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId]);
-        await db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId]);
+        const deleteServicesResult = await db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId]);
+        console.log('Deleted services:', deleteServicesResult.affectedRows);  // Debug log
+
+        const deleteInstallmentsResult = await db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId]);
+        console.log('Deleted installments:', deleteInstallmentsResult.affectedRows);  // Debug log
+
 
         // Insert new services
         const insertServicesSql = `
@@ -181,7 +185,9 @@ app.put('/edit/:id', async (req, res) => {
             service.discount,
             service.grandTotal
         ]);
-        await db.query(insertServicesSql, [serviceData]);
+        if (serviceData.length > 0) {
+            await db.query(insertServicesSql, [serviceData]);
+        }
 
         // Insert new installments
         const insertInstallmentsSql = `
@@ -194,8 +200,10 @@ app.put('/edit/:id', async (req, res) => {
             installment.dueWhen,
             installment.installmentAmount
         ]);
-        await db.query(insertInstallmentsSql, [installmentsData]);
-
+        if (installmentsData.length > 0) {
+            await db.query(insertInstallmentsSql, [installmentsData]);
+        }
+           
         // Everything was successful
         return res.json({ message: 'Quotation, services, and installments updated successfully' });
 
@@ -204,6 +212,7 @@ app.put('/edit/:id', async (req, res) => {
         return res.status(500).json({ message: 'Error during update process', error: err });
     }
 });
+
 
 
 
@@ -415,8 +424,8 @@ app.post('/login', (req, res) => {
 
 
 // *********************************************************************
-// const port = process.env.PORT || 8081
-const PORT = 3306
-app.listen(PORT, () => {
+const port = process.env.PORT || 8081
+// const PORT = 3306
+app.listen(port, () => {
     console.log("Listening")
 })
