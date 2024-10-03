@@ -2,10 +2,13 @@
 import express from 'express';
 import mysql from 'mysql';
 import cors from 'cors';
+import bcrypt from 'bcrypt';
+import { check, validationResult } from 'express-validator';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+const saltRounds = 10;
 
 
 const db = mysql.createConnection({
@@ -158,23 +161,27 @@ app.put('/edit/:id', async (req, res) => {
       SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
       WHERE quotation_id = ?
     `;
-
+    
     const quotationValues = [name, email, gender, date, domain, total, totalService, inputCount, quotationId];
 
     try {
-        // Update quotation
+        // Start transaction
+        await db.query('START TRANSACTION');
+
+        // Delete old installments (this ensures any extra installments are removed)
+        const deleteInstallmentsResult = await db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId]);
+        console.log(`Deleted installments for quotation_id ${quotationId}:`, deleteInstallmentsResult.affectedRows);
+
+        // Delete old services
+        const deleteServicesResult = await db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId]);
+        console.log('Deleted services:', deleteServicesResult.affectedRows);
+
+        // Proceed to update the quotation
         const result = await db.query(updateQuotationSql, quotationValues);
         if (result.affectedRows === 0) {
+            await db.query('ROLLBACK');  // Rollback transaction in case of failure
             return res.status(404).json({ message: 'Quotation not found' });
         }
-
-        // Delete old services and installments
-        const deleteServicesResult = await db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId]);
-        console.log('Deleted services:', deleteServicesResult.affectedRows);  // Debug log
-
-        const deleteInstallmentsResult = await db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId]);
-        console.log('Deleted installments:', deleteInstallmentsResult.affectedRows);  // Debug log
-
 
         // Insert new services
         const insertServicesSql = `
@@ -206,15 +213,22 @@ app.put('/edit/:id', async (req, res) => {
         if (installmentsData.length > 0) {
             await db.query(insertInstallmentsSql, [installmentsData]);
         }
-           
+
+        // Commit the transaction
+        await db.query('COMMIT');
+
         // Everything was successful
         return res.json({ message: 'Quotation, services, and installments updated successfully' });
 
     } catch (err) {
+        // Rollback the transaction on error
+        await db.query('ROLLBACK');
         console.error('Error during update:', err);
         return res.status(500).json({ message: 'Error during update process', error: err });
     }
 });
+
+
 
 
 
@@ -326,15 +340,108 @@ app.get('/pdf/:id', (req, res) => {
 });
 
 
+// ************************ Register form ************************
+app.post('/register', [
+    check('email').isEmail().withMessage('Invalid email format'),
+], (req, res) => {
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email, password, gender, role } = req.body;
+    const checkEmailQuery = 'SELECT * FROM employees WHERE email = ?';
+
+    // Hash the password
+    db.query(checkEmailQuery, [email], (err, result) => {
+        if (err) {
+            console.error('Error checking email:', err);
+            return res.status(500).json({ message: 'Error checking email', error: err });
+        }
+
+        if (result.length > 0) {
+            // Email already exists
+            return res.status(409).json({ message: 'Email already in use' });
+        }
+
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error hashing password', error: err });
+            }
+
+            const query = 'INSERT INTO employees (name, email, password, gender, role) VALUES (?, ?, ?, ?, ?)';
+            db.query(query, [name, email, hash, gender, role], (err, result) => {
+                if (err) {
+                    console.error('Error registering user:', err);
+                    return res.status(500).json({ message: 'Error registering user', error: err });
+                }
+                res.status(201).json({ message: 'User registered successfully' });
+            });
+        });
+
+
+
+    })
+
+});
+
+
+
+// ************* Check email exists or not ******************
+app.post('/check-email', (req, res) => {
+    const { email } = req.body;
+
+    const checkEmailQuery = 'SELECT COUNT(*) as count FROM employees WHERE email = ?';
+    db.query(checkEmailQuery, [email], (err, results) => {
+        if (err) {
+            console.error('Error checking email:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        const emailExists = results[0].count > 0;
+        res.json({ exists: emailExists });
+    });
+});
+// ****************** Login Form **************
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    const query = 'SELECT * FROM employees WHERE email = ?';
+    db.query(query, [email], (err, results) => {
+        if (err) {
+            console.error('Error finding user:', err);
+            return res.status(500).json({ message: 'Error finding user', error: err });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        const user = results[0];
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                console.error('Error comparing passwords:', err);
+                return res.status(500).json({ message: 'Error comparing passwords', error: err });
+            }
+
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Invalid email or password' });
+            }
+
+            // Generate JWT
+            const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, secretKey, { expiresIn: '1h' });
+            res.json({ message: 'Login successful', token });
+        });
+    });
+});
 
 
 
 
 
 // *********************************************************************
-// const port = process.env.PORT || 8081
-const PORT = 3306
-app.listen(PORT, () => {
+const port = process.env.PORT || 8081
+app.listen(port, () => {
     console.log("Listening")
 })

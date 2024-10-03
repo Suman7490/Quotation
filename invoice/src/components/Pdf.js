@@ -70,7 +70,7 @@ const Pdf = () => {
         <>
             {data ? (
                 <div>
-                    <ReactToPrint trigger={() => <Icon name='print' size='large' />} content={() => componentRef.current} pageStyle={pageStyle} />
+                    <ReactToPrint trigger={() => <Icon name='print' size='large' style={{cursor: 'pointer'}}/>} content={() => componentRef.current} pageStyle={pageStyle} />
                     <div ref={componentRef}>
                         <div className='container pdf'>
                             <div className='row'>
@@ -138,7 +138,7 @@ const Pdf = () => {
                                             {data.services.map((service, idx) => (
                                                 <tr key={idx}  style={{ backgroundColor: '#0722ad', color: 'white' }}>
                                                     <td>{service.service}</td>
-                                                    <td>{service.Price}</td>
+                                                    <td>{service.price}</td>
                                                     <td>{service.discount}</td>
                                                     <td>{service.grandTotal}</td>
                                                 </tr>
