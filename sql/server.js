@@ -161,16 +161,12 @@ app.put('/edit/:id', async (req, res) => {
       SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
       WHERE quotation_id = ?
     `;
-    
+
     const quotationValues = [name, email, gender, date, domain, total, totalService, inputCount, quotationId];
 
     try {
         // Start transaction
         await db.query('START TRANSACTION');
-
-        // Delete old installments (this ensures any extra installments are removed)
-        const deleteInstallmentsResult = await db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId]);
-        console.log(`Deleted installments for quotation_id ${quotationId}:`, deleteInstallmentsResult.affectedRows);
 
         // Delete old services
         const deleteServicesResult = await db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId]);
@@ -181,6 +177,20 @@ app.put('/edit/:id', async (req, res) => {
         if (result.affectedRows === 0) {
             await db.query('ROLLBACK');  // Rollback transaction in case of failure
             return res.status(404).json({ message: 'Quotation not found' });
+        }
+
+        // Check how many installments exist for this quotation
+        const existingInstallments = await db.query(`SELECT COUNT(*) AS count FROM payments WHERE quotation_id = ?`, [quotationId]);
+        const existingCount = existingInstallments[0].count;
+
+        // If the new inputCount is less than the current installment count, delete the excess installments
+        if (existingCount > inputCount) {
+            const deleteExcessInstallmentsSql = `
+                DELETE FROM payments WHERE quotation_id = ? ORDER BY id DESC LIMIT ?
+            `;
+            const excessCount = existingCount - inputCount;
+            await db.query(deleteExcessInstallmentsSql, [quotationId, excessCount]);
+            console.log(`Deleted ${excessCount} excess installments for quotation_id ${quotationId}`);
         }
 
         // Insert new services
@@ -227,6 +237,7 @@ app.put('/edit/:id', async (req, res) => {
         return res.status(500).json({ message: 'Error during update process', error: err });
     }
 });
+
 
 
 

@@ -76,7 +76,8 @@ const Home = () => {
                             <TableCell>{formatDate(row.date)}</TableCell>
                             <TableCell>{row.domain}</TableCell>
                             <TableCell>
-                                <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                <ul className='p-0 m-0' style={{ listStyle: 'none', }}> 
+                                     <span>{row.totalServices}</span>
                                     {row.services.map((service, idx) => (
                                         <li key={idx}>
                                             {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
@@ -86,7 +87,7 @@ const Home = () => {
                             </TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                    {/* <span>{row.inputCount}</span> */}
+                                    <span>{row.inputCount}</span>
                                     {row.installments.map((installment, idx) => (
                                         <li key={idx}>
                                             {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
