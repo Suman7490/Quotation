@@ -185,9 +185,8 @@ app.put('/edit/:id', (req, res) => {
             // Check if installments exist before trying to insert
             if (installments && installments.length > 0) {
                 const insertInstallmentsSql = `
-                            INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-                            VALUES ?
-                        `;
+                INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
+                VALUES ?`;
                 const installmentsData = installments.map(installment => [
                     quotationId,
                     installment.label,
@@ -215,7 +214,7 @@ app.put('/edit/:id', (req, res) => {
             const insertServicesSql = `INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) VALUES ? `;
             const serviceData = services.map(service => [
                 quotationId,
-                service.serviceName,
+                service.service,
                 service.price,
                 service.discount,
                 service.grandTotal
@@ -232,7 +231,7 @@ app.put('/edit/:id', (req, res) => {
         }
         res.json({ message: 'Quotation, services, and installments updated successfully' });
     });
-});
+}); 
 
 
 
