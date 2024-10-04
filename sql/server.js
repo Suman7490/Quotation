@@ -150,93 +150,105 @@ app.post('/create', (req, res) => {
 
 // ********************* Edit Data ****************
 
-app.put('/edit/:id', async (req, res) => {
+app.put('/edit/:id', (req, res) => {
     const quotationId = req.params.id;
     const { name, email, gender, date, domain, total, totalService, inputCount, services, installments } = req.body;
 
     console.log('Received data for update:', req.body);
 
     const updateQuotationSql = `
-      UPDATE quotation 
-      SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
-      WHERE quotation_id = ?
+        UPDATE quotation 
+        SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
+        WHERE quotation_id = ?
     `;
-
     const quotationValues = [name, email, gender, date, domain, total, totalService, inputCount, quotationId];
 
-    try {
-        // Start transaction
-        await db.query('START TRANSACTION');
+    // Start by updating the quotation
+    console.log("SQL Query:", updateQuotationSql, "Data:", quotationValues);
+    db.query(updateQuotationSql, quotationValues, (err, result) => {
+        if (err) {
+            console.error('Error updating quotation:', err);
+            return res.status(500).json({ message: 'Error updating quotation' });
+        }
 
-        // Delete old services
-        const deleteServicesResult = await db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId]);
-        console.log('Deleted services:', deleteServicesResult.affectedRows);
-
-        // Proceed to update the quotation
-        const result = await db.query(updateQuotationSql, quotationValues);
         if (result.affectedRows === 0) {
-            await db.query('ROLLBACK');  // Rollback transaction in case of failure
             return res.status(404).json({ message: 'Quotation not found' });
         }
 
-        // Check how many installments exist for this quotation
-        const existingInstallments = await db.query(`SELECT COUNT(*) AS count FROM payments WHERE quotation_id = ?`, [quotationId]);
-        const existingCount = existingInstallments[0].count;
+        // Delete old services
+        db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId], (err) => {
+            if (err) {
+                console.error('Error deleting services:', err);
+                return res.status(500).json({ message: 'Error deleting services', error: err });
+            }
 
-        // If the new inputCount is less than the current installment count, delete the excess installments
-        if (existingCount > inputCount) {
-            const deleteExcessInstallmentsSql = `
-                DELETE FROM payments WHERE quotation_id = ? ORDER BY id DESC LIMIT ?
-            `;
-            const excessCount = existingCount - inputCount;
-            await db.query(deleteExcessInstallmentsSql, [quotationId, excessCount]);
-            console.log(`Deleted ${excessCount} excess installments for quotation_id ${quotationId}`);
-        }
+            // Check if services exist before trying to insert
+            if (services && services.length > 0) {
+                const insertServicesSql = `
+                    INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) 
+                    VALUES ?
+                `;
+                const serviceData = services.map(service => [
+                    quotationId,
+                    service.serviceName,
+                    service.price,
+                    service.discount,
+                    service.grandTotal
+                ]);
 
-        // Insert new services
-        const insertServicesSql = `
-            INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) 
-            VALUES ?
-        `;
-        const serviceData = services.map(service => [
-            quotationId,
-            service.service,
-            service.price,
-            service.discount,
-            service.grandTotal
-        ]);
-        if (serviceData.length > 0) {
-            await db.query(insertServicesSql, [serviceData]);
-        }
+                console.log("SQL Query:", insertServicesSql, "Data:", [serviceData]);
 
-        // Insert new installments
-        const insertInstallmentsSql = `
-            INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-            VALUES ?
-        `;
-        const installmentsData = installments.map(installment => [
-            quotationId,
-            installment.label,
-            installment.dueWhen,
-            installment.installmentAmount
-        ]);
-        if (installmentsData.length > 0) {
-            await db.query(insertInstallmentsSql, [installmentsData]);
-        }
+                db.query(insertServicesSql, [serviceData], (err) => {
+                    if (err) {
+                        console.error('Error inserting services:', err);
+                        return res.status(500).json({ message: 'Error inserting services', error: err });
+                    }
 
-        // Commit the transaction
-        await db.query('COMMIT');
+                    // Delete old installments
+                    db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId], (err) => {
+                        if (err) {
+                            console.error('Error deleting installments:', err);
+                            return res.status(500).json({ message: 'Error deleting installments', error: err });
+                        }
 
-        // Everything was successful
-        return res.json({ message: 'Quotation, services, and installments updated successfully' });
+                        // Check if installments exist before trying to insert
+                        if (installments && installments.length > 0) {
+                            const insertInstallmentsSql = `
+                                INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
+                                VALUES ?
+                            `;
+                            const installmentsData = installments.map(installment => [
+                                quotationId,
+                                installment.label,
+                                installment.dueWhen,
+                                installment.installmentAmount
+                            ]);
 
-    } catch (err) {
-        // Rollback the transaction on error
-        await db.query('ROLLBACK');
-        console.error('Error during update:', err);
-        return res.status(500).json({ message: 'Error during update process', error: err });
-    }
+                            console.log("SQL Query:", insertInstallmentsSql, "Data:", [installmentsData]);
+
+                            db.query(insertInstallmentsSql, [installmentsData], (err) => {
+                                if (err) {
+                                    console.error('Error inserting installments:', err);
+                                    return res.status(500).json({ message: 'Error inserting installments', error: err });
+                                }
+
+                                // All done!
+                                res.json({ message: 'Quotation, services, and installments updated successfully' });
+                            });
+                        } else {
+                            // No installments to insert
+                            res.json({ message: 'Quotation updated successfully without installments' });
+                        }
+                    });
+                });
+            } else {
+                // No services to insert
+                res.json({ message: 'Quotation updated successfully without services' });
+            }
+        });
+    });
 });
+
 
 
 

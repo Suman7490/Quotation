@@ -263,7 +263,6 @@ const CreateInvoice = () => {
           }));
 
           console.log("Rows Data (Installments):", rowsData);
-          console.log("Service Data:", serviceData);
           setRows(rowsData);
         })
         .catch((error) => console.log('Error fetching data:', error));
