@@ -249,21 +249,18 @@ const CreateInvoice = () => {
           setInputCount(data.inputCount || 0);
           setTotalService(data.totalService || 0);
 
-
           const serviceData = data.services.map(service => ({
-            service: service.service,
+            serviceName: service.serviceName,
             price: service.price,
             discount: service.discount,
             grandTotal: service.grandTotal,
           }));
-
           const rowsData = data.installments.map(installment => ({
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-
-          console.log("Rows Data (Installments):", rowsData);
-          setRows(rowsData);
+          console.log("service Data: ", serviceData)
+          setRows(rowsData, serviceData);
         })
         .catch((error) => console.log('Error fetching data:', error));
     }

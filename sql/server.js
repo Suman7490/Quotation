@@ -175,77 +175,62 @@ app.put('/edit/:id', (req, res) => {
             return res.status(404).json({ message: 'Quotation not found' });
         }
 
-        // Delete old services
-        db.query(`DELETE FROM services WHERE quotation_id = ?`, [quotationId], (err) => {
-            if (err) {
-                console.error('Error deleting services:', err);
-                return res.status(500).json({ message: 'Error deleting services', error: err });
-            }
 
-            // Check if services exist before trying to insert
-            if (services && services.length > 0) {
-                const insertServicesSql = `
-                    INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) 
-                    VALUES ?
-                `;
-                const serviceData = services.map(service => [
+        db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId], (err) => {
+            if (err) {
+                console.error('Error deleting installments:', err);
+                return res.status(500).json({ message: 'Error deleting installments', error: err });
+            }
+            console.log('Old installments deleted');
+            // Check if installments exist before trying to insert
+            if (installments && installments.length > 0) {
+                const insertInstallmentsSql = `
+                            INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
+                            VALUES ?
+                        `;
+                const installmentsData = installments.map(installment => [
                     quotationId,
-                    service.serviceName,
-                    service.price,
-                    service.discount,
-                    service.grandTotal
+                    installment.label,
+                    installment.dueWhen,
+                    installment.installmentAmount
                 ]);
 
-                console.log("SQL Query:", insertServicesSql, "Data:", [serviceData]);
+                console.log("SQL Query:", insertInstallmentsSql, "Data:", [installmentsData]);
 
-                db.query(insertServicesSql, [serviceData], (err) => {
+                db.query(insertInstallmentsSql, [installmentsData], (err) => {
                     if (err) {
-                        console.error('Error inserting services:', err);
-                        return res.status(500).json({ message: 'Error inserting services', error: err });
+                        console.error('Error inserting installments:', err);
+                        return res.status(500).json({ message: 'Error inserting installments', error: err });
                     }
 
-                    // Delete old installments
-                    db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId], (err) => {
-                        if (err) {
-                            console.error('Error deleting installments:', err);
-                            return res.status(500).json({ message: 'Error deleting installments', error: err });
-                        }
-
-                        // Check if installments exist before trying to insert
-                        if (installments && installments.length > 0) {
-                            const insertInstallmentsSql = `
-                                INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-                                VALUES ?
-                            `;
-                            const installmentsData = installments.map(installment => [
-                                quotationId,
-                                installment.label,
-                                installment.dueWhen,
-                                installment.installmentAmount
-                            ]);
-
-                            console.log("SQL Query:", insertInstallmentsSql, "Data:", [installmentsData]);
-
-                            db.query(insertInstallmentsSql, [installmentsData], (err) => {
-                                if (err) {
-                                    console.error('Error inserting installments:', err);
-                                    return res.status(500).json({ message: 'Error inserting installments', error: err });
-                                }
-
-                                // All done!
-                                res.json({ message: 'Quotation, services, and installments updated successfully' });
-                            });
-                        } else {
-                            // No installments to insert
-                            res.json({ message: 'Quotation updated successfully without installments' });
-                        }
-                    });
+                    console.log('New installments inserted');
                 });
             } else {
-                // No services to insert
-                res.json({ message: 'Quotation updated successfully without services' });
+                console.log('No installments provided');
             }
         });
+
+        // Check if services exist before trying to insert
+        if (services && services.length > 0) {
+            const insertServicesSql = `INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) VALUES ? `;
+            const serviceData = services.map(service => [
+                quotationId,
+                service.serviceName,
+                service.price,
+                service.discount,
+                service.grandTotal
+            ]);
+            db.query(insertServicesSql, [serviceData], (err) => {
+                if (err) {
+                    console.error('Error inserting services:', err);
+                    return res.status(500).json({ message: 'Error inserting services', error: err });
+                }
+                console.log('Services inserted without deleting old services');
+            });
+        } else {
+            console.log('No services provided');
+        }
+        res.json({ message: 'Quotation, services, and installments updated successfully' });
     });
 });
 
