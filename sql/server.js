@@ -83,20 +83,6 @@ app.get('/', (req, res) => {
         return res.json(response);
     });
 });
-// ******************* Get Services *******************
-
-
-app.get('/servicesData', (req, res) => {
-    const sql = 'SELECT * FROM services';
-
-    db.query(sql, (err, result) => {
-        if (err) {
-            console.error('Error fetching quotations:', err);
-            return res.status(500).json({ error: err });
-        }
-        res.json(result); // Send the result as a JSON response
-    });
-});
 
 
 
@@ -162,92 +148,6 @@ app.post('/create', (req, res) => {
 });
 
 // ********************* Edit Data ****************
-
-// app.put('/edit/:id', (req, res) => {
-//     const quotationId = req.params.id;
-//     const { name, email, gender, date, domain, total, totalService, inputCount, services, installments } = req.body;
-
-//     console.log('Received data for update:', req.body);
-
-//     const updateQuotationSql = `
-//         UPDATE quotation 
-//         SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ?
-//         WHERE quotation_id = ?
-//     `;
-//     const quotationValues = [name, email, gender, date, domain, total, totalService, inputCount, quotationId];
-
-//     // Start by updating the quotation
-//     console.log("SQL Query:", updateQuotationSql, "Data:", quotationValues);
-//     db.query(updateQuotationSql, quotationValues, (err, result) => {
-//         if (err) {
-//             console.error('Error updating quotation:', err);
-//             return res.status(500).json({ message: 'Error updating quotation' });
-//         }
-
-//         if (result.affectedRows === 0) {
-//             return res.status(404).json({ message: 'Quotation not found' });
-//         }
-
-
-//         db.query(`DELETE FROM payments WHERE quotation_id = ?`, [quotationId], (err) => {
-//             if (err) {
-//                 console.error('Error deleting installments:', err);
-//                 return res.status(500).json({ message: 'Error deleting installments', error: err });
-//             }
-//             console.log('Old installments deleted');
-//             // Check if installments exist before trying to insert
-//             if (installments && installments.length > 0) {
-//                 const insertInstallmentsSql = `
-//                 INSERT INTO payments (quotation_id, label, dueWhen, installmentAmount) 
-//                 VALUES ?`;
-//                 const installmentsData = installments.map(installment => [
-//                     quotationId,
-//                     installment.label,
-//                     installment.dueWhen,
-//                     installment.installmentAmount
-//                 ]);
-
-//                 console.log("SQL Query:", insertInstallmentsSql, "Data:", [installmentsData]);
-
-//                 db.query(insertInstallmentsSql, [installmentsData], (err) => {
-//                     if (err) {
-//                         console.error('Error inserting installments:', err);
-//                         return res.status(500).json({ message: 'Error inserting installments', error: err });
-//                     }
-
-//                     console.log('New installments inserted');
-//                 });
-//             } else {
-//                 console.log('No installments provided');
-//             }
-//         });
-
-//         // Check if services exist before trying to insert
-//         if (services && services.length > 0) {
-//             const insertServicesSql = `INSERT INTO services (quotation_id, serviceName, price, discount, grandTotal) VALUES ? `;
-//             const serviceData = services.map(service => [
-//                 quotationId,
-//                 service.service,
-//                 service.price,
-//                 service.discount,
-//                 service.grandTotal
-//             ]);
-//             db.query(insertServicesSql, [serviceData], (err) => {
-//                 if (err) {
-//                     console.error('Error inserting services:', err);
-//                     return res.status(500).json({ message: 'Error inserting services', error: err });
-//                 }
-//                 console.log('Services inserted without deleting old services');
-//             });
-//         } else {
-//             console.log('No services provided');
-//         }
-//         res.json({ message: 'Quotation, services, and installments updated successfully' });
-//     });
-// });
-
-
-// ********************** Another edit Data ***********************
 app.put('/update/:id', (req, res) => {
     const quotationId = req.params.id;
 
@@ -328,7 +228,7 @@ app.put('/update/:id', (req, res) => {
             console.log("servicesSql: ", servicesSql, [services.map(service => service)])
             db.query(servicesSql, [services.map(service => service)], (err, result) => {
                 if (err) return res.json(err);
-                serviceUpdateResult = result; 
+                serviceUpdateResult = result;
                 // **Handling installments**
                 handleInstallments();
             });
@@ -347,7 +247,7 @@ app.put('/update/:id', (req, res) => {
 
             let installmentsToKeep = installments
                 .map(installment => installment[1])
-                .filter(id => id != null);  
+                .filter(id => id != null);
 
             console.log("Installments to keep (by ID):", installmentsToKeep);
 
@@ -449,27 +349,6 @@ app.delete('/delete/:id', (req, res) => {
     });
 });
 
-// ************** Delete Service ***************
-app.delete('/serviceDelete/:id', (req, res) => {
-    const { id } = req.params;
-    console.log('Service ID to delete:', id);  // Log the id being deleted
-
-    const deleteSql = 'DELETE FROM services WHERE id = ?';
-
-    db.query(deleteSql, [id], (err, result) => {
-        if (err) {
-            console.error('Error deleting service:', err);
-            return res.status(500).json({ error: err });
-        }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Service not found' });
-        }
-
-        console.log(`Deleted service with ID: ${id}`);  // Log successful deletion
-        res.json({ message: `Service with ID ${id} deleted successfully` });
-    });
-});
 
 
 // ************* Get Data by Quotation ID *************
@@ -575,11 +454,7 @@ app.post('/register', [
                 res.status(201).json({ message: 'User registered successfully' });
             });
         });
-
-
-
     })
-
 });
 
 
