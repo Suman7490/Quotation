@@ -32,14 +32,11 @@ const Header = () => {
                         <li className="nav-item">
                             <NavLink className="nav-link underline" to="/createinvoice" activeClassName="active-nav">Create Invoice</NavLink>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <NavLink className="nav-link" to="/register" activeClassName="active-nav">Registration</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/login" activeClassName="active-nav">Login</NavLink>
-                        </li>
-                        {/* <li className="nav-item">
-                            <NavLink className="nav-link" to="/serviceview" activeClassName="active-nav">Services</NavLink>
                         </li> */}
                     </ul>
 
