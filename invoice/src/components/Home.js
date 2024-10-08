@@ -7,6 +7,7 @@ const Home = () => {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
     const [quotations, setQuotations] = useState([]);
+    const [services, setServices] = useState([]);
 
 
     useEffect(() => {
@@ -32,7 +33,7 @@ const Home = () => {
         navigate(`/pdf/${id}`); // Pass the selected row ID to the next page
     };
     const edit = (id) => {
-        navigate(`/edit/${id}`); // Pass the selected row ID to the next page
+        navigate(`/update/${id}`); // Pass the selected row ID to the next page
     };
 
     const deleteQuotation = (quotationId) => {
@@ -50,7 +51,6 @@ const Home = () => {
                 });
         }
     };
-
 
     return (
         <>
@@ -77,7 +77,7 @@ const Home = () => {
                             <TableCell>{row.domain}</TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}> 
-                                     <span>{row.totalServices}</span>
+                                     {/* <span>{row.totalServices}</span> */}
                                     {row.services.map((service, idx) => (
                                         <li key={idx}>
                                             {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
@@ -87,7 +87,7 @@ const Home = () => {
                             </TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                    <span>{row.inputCount}</span>
+                                    {/* <span>{row.inputCount}</span> */}
                                     {row.installments.map((installment, idx) => (
                                         <li key={idx}>
                                             {installment.label}: {installment.dueWhen} - {installment.installmentAmount}

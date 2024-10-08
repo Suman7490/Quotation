@@ -135,6 +135,7 @@ const CreateInvoice = () => {
 
 
 
+
   // ************** Start Row Increament on change the Total Installment ****************
   const handleInputChange = (event) => {
     const value = parseInt(event.target.value, 10);
@@ -157,76 +158,97 @@ const CreateInvoice = () => {
     if (!updatedRows[index]) {
       updatedRows[index] = { label: labels[index] };
     }
+    if (!updatedRows[index]) {
+      updatedRows[index] = {}
+    }
 
     // Update the field in the row
     updatedRows[index][field] = value;
+    setRows(updatedRows);
 
     // Ensure the installment exists before updating
     if (!updatedInstallments[index]) {
       updatedInstallments[index] = { label: labels[index] };
     }
 
+    if (!updatedInstallments[index]) {
+      updatedInstallments[index] = {};
+    }
     // Update the field in the corresponding installment
     updatedInstallments[index][field] = value;
-
-
-    if (field === 'dueWhen' && value) {
-      delete updatedErrors[`installment_${index}_dueWhen`];
-    }
-
-    if (field === 'installmentAmount' && value) {
-      delete updatedErrors[`installment_${index}_installmentAmount`];
-    }
-
-    // Update state with the modified rows and installments
-    setRows(updatedRows);
     setInstallments(updatedInstallments);
-    setErrors(updatedErrors)
   };
 
 
 
+  // **************** Add Installments **************
 
-  // ****** Post Data into API ******
-  const postData = (e) => {
+  const removeInstallment = (index) => {
+    const updatedRows = rows.filter((_, i) => i !== index);
+    const updatedInstallments = installments.filter((_, i) => i !== index);
+
+    setRows(updatedRows);
+    setInstallments(updatedInstallments);
+    setInputCount(inputCount - 1);
+  };
+
+
+ 
+  const postData = async (e) => {
     e.preventDefault();
+
+    // Validate input data
     if (Validate()) {
+      // Format the date before sending
       const formattedDate = formatDate(date);
 
-      if (quotationId) {
-        axios.put(`http://localhost:8081/edit/${quotationId}`, {
-          name, email, gender, date: formattedDate, domain, total: totalAmount(), totalService, inputCount,
-          services,
-          installments,
-        })
-          .then((response) => {
-            alert('Quotation updated successfully');
-            window.location.href = '/';
-          })
-          .catch((error) => {
-            console.error('Error updating quotation:', error);
-            alert('Failed to update quotation');
+      try {
+        // Check if we're updating an existing quotation
+        if (quotationId) {
+          // Use async/await for the PUT request
+          const response = await axios.put(`http://localhost:8081/update/${quotationId}`, {
+            name,
+            email,
+            gender,
+            date: formattedDate,
+            domain,
+            total: totalAmount(),
+            totalService,
+            inputCount,
+            services,
+            installments,
           });
-      } else {
-        // Create new quotation
-        axios.post(`http://localhost:8081/create`, {
-          name, email, gender, date: formattedDate, domain, total: totalAmount(), totalService, inputCount,
-          services,
-          installments,
-        })
-          .then((response) => {
-            alert('Quotation created successfully');
-            window.location.href = '/';
-          })
-          .catch((error) => {
-            console.log('Error posting data:', error)
-            alert("Failed to update quotation")
-          })
+
+          // Handle successful response
+          alert('Quotation updated successfully');
+          window.location.href = '/';
+
+        } else {
+          // Use async/await for the POST request (creating a new quotation)
+          const response = await axios.post(`http://localhost:8081/create`, {
+            name,
+            email,
+            gender,
+            date: formattedDate,
+            domain,
+            total: totalAmount(),
+            totalService,
+            inputCount,
+            services,
+            installments,
+          });
+
+          // Handle successful response
+          alert('Quotation created successfully');
+          window.location.href = '/';
+        }
+      } catch (error) {
+        // Handle errors
+        console.error('Error during API request:', error);
+        alert('Failed to update or create quotation');
       }
     }
   };
-
-
 
 
 
@@ -250,7 +272,7 @@ const CreateInvoice = () => {
           setTotalService(data.totalService || 0);
 
           const serviceData = data.services.map(service => ({
-            serviceName: service.serviceName,
+            serviceName: service.service,
             price: service.price,
             discount: service.discount,
             grandTotal: service.grandTotal,
@@ -312,7 +334,7 @@ const CreateInvoice = () => {
                   <TableRow>
                     <TableCell colSpan="4">ADD SERVICE:</TableCell>
                     <TableCell className='text-right border'><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
-                    {/* <span onChange={(e) => setTotalService(e.target.value)}>{totalService}</span> */}
+                    <span onChange={(e) => setTotalService(e.target.value)}>{totalService}</span>
                   </TableRow>
 
                   <TableRow>
@@ -322,7 +344,7 @@ const CreateInvoice = () => {
 
                   <TableRow>
                     <TableCell colSpan={3}><p>TOTAL INSTALLMENT:</p></TableCell>
-                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell>
+                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell> {/* <TableCell className='text-right border'><Button className='btn' onClick={addInsallments} onChange={handleInputChange} >Add Service</Button></TableCell> */}
                   </TableRow>
 
                   {rows.map((row, index) => (
@@ -330,6 +352,7 @@ const CreateInvoice = () => {
                       <TableCell><p>{labels[index]}:</p></TableCell>
                       <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} /></TableCell>
+                      <TableCell><Icon className="trash text-danger" size="large"style={{ cursor: "pointer" }}onClick={() => removeInstallment(index)} /> </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
