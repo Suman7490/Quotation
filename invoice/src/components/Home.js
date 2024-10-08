@@ -97,7 +97,7 @@ const Home = () => {
                             </TableCell>
                             <TableCell>
                                 <Icon name='edit' size='large' onClick={() => edit(row.id)} className='text-primary' style={{ cursor: 'pointer' }} />
-                                <Icon name='trash' size='large' className='text-danger' onClick={() => deleteQuotation(row.id)} />
+                                <Icon name='trash' size='large' onClick={() => deleteQuotation(row.id)} className='text-danger' style={{ cursor: 'pointer' }} />
                                 <Icon name='eye' size='large' onClick={() => pdf(row.id)} className='text-success' style={{ cursor: 'pointer' }} />
                             </TableCell>
                         </TableRow>

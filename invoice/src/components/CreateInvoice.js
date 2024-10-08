@@ -334,7 +334,7 @@ const CreateInvoice = () => {
                   <TableRow>
                     <TableCell colSpan="4">ADD SERVICE:</TableCell>
                     <TableCell className='text-right border'><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
-                    <span onChange={(e) => setTotalService(e.target.value)}>{totalService}</span>
+                    {/* <span onChange={(e) => setTotalService(e.target.value)}>{totalService}</span> */}
                   </TableRow>
 
                   <TableRow>
