@@ -141,7 +141,19 @@ const CreateInvoice = () => {
     const value = parseInt(event.target.value, 10);
     if (!isNaN(value)) {
       setInputCount(value);
-      setRows(Array(value).fill(''));
+
+      const total = totalAmount(); // Get the total amount from services
+      const installmentValue = Math.floor(total / value / 100) * 100; // Calculate each installment rounded to the nearest 100
+      const remainder = total - (installmentValue * value); // Calculate any remaining amount after rounding
+
+      // Distribute the remainder to the first installment
+      const updatedRows = Array(value).fill('').map((_, index) => ({
+        label: labels[index],
+        dueWhen: index === 0 ? 'On Advance' : '',
+        installmentAmount: index === 0 ? installmentValue + remainder : installmentValue, // Add remainder to first installment
+      }));
+      // setRows(Array(value).fill(''));
+      setRows(updatedRows)
     } else {
       setInputCount(0);
       setRows([]);
@@ -193,7 +205,7 @@ const CreateInvoice = () => {
   };
 
 
- 
+
   const postData = async (e) => {
     e.preventDefault();
 
@@ -352,7 +364,7 @@ const CreateInvoice = () => {
                       <TableCell><p>{labels[index]}:</p></TableCell>
                       <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} /></TableCell>
-                      <TableCell><Icon className="trash text-danger" size="large"style={{ cursor: "pointer" }}onClick={() => removeInstallment(index)} /> </TableCell>
+                      <TableCell><Icon className="trash text-danger" size="large" style={{ cursor: "pointer" }} onClick={() => removeInstallment(index)} /> </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
