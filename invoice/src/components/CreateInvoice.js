@@ -23,6 +23,11 @@ const WritingService = [
   { text: "Book", value: "Book", price: 80000 },
 ];
 
+const discountTypeOptions = [
+  { key: 'amount', value: 'amount', text: 'Amount' },
+  { key: 'percentage', value: 'percentage', text: 'Percentage' },
+];
+
 const CreateInvoice = () => {
   const { id: quotationId } = useParams();
   const [name, setName] = useState("");
@@ -38,6 +43,7 @@ const CreateInvoice = () => {
   const [inputCount, setInputCount] = useState(0);
   const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
+  const [discountType, setDiscountType] = useState("amount");
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
@@ -100,14 +106,34 @@ const CreateInvoice = () => {
 
 
   // ******************* Discount Calculation ************
+  // const handleDiscount = (index, value) => {
+  //   const discountValue = value === '' ? 0 : parseInt(value);
+  //   const updatedRow = services.map((row, i) =>
+  //     i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
+  //   )
+  //   setServices(updatedRow)
+  //   setGrandTotal(price - discountValue);
+  // }
   const handleDiscount = (index, value) => {
-    const discountValue = value === '' ? 0 : parseInt(value);
-    const updatedRow = services.map((row, i) =>
-      i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
-    )
-    setServices(updatedRow)
-    setGrandTotal(price - discountValue);
-  }
+    const discountValue = value === '' ? 0 : parseFloat(value);
+    let updatedRow = [];
+
+    if (discountType === 'percentage') {
+      // If discount is percentage, calculate n% of price
+      updatedRow = services.map((row, i) =>
+        i === index
+          ? { ...row, discount: discountValue, grandTotal: row.price - (row.price * discountValue) / 100 }
+          : row
+      );
+    } else {
+      // If discount is amount, directly subtract the discount from price
+      updatedRow = services.map((row, i) =>
+        i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
+      );
+    }
+
+    setServices(updatedRow);
+  };
 
   // ****************** Total of grandtotals *****************
   const totalAmount = () => {
@@ -337,7 +363,14 @@ const CreateInvoice = () => {
                     <TableRow key={index}>
                       <TableCell><FormField><Dropdown placeholder="Select a service" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
                       <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} error={errors.price ? { content: errors.price } : null} /></TableCell>
-                      <TableCell><FormField control={Input} placeholder="Enter Discount" value={row.discount ? `${row.discount}` : ""} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /></TableCell>
+                      <TableCell>
+                     {/* <FormField
+                       control={Input} placeholder="Enter Discount" value={row.discount ? `${row.discount}` : ""} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /> */}
+                      <FormField>
+                          <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} />
+                          <Input placeholder="Discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
+                        </FormField>
+                      </TableCell>
                       <TableCell><FormField control={Input} placeholder="Grand Total" value={row.grandTotal ? `${row.grandTotal}` : ""} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
                       <TableCell><Icon className="trash text-danger" size="large" style={{ cursor: "pointer" }} onClick={() => removeService(index)} /></TableCell>
                     </TableRow>
