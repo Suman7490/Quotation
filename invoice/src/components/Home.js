@@ -54,7 +54,7 @@ const Home = () => {
 
     return (
         <>
-            <Table celled>
+            <Table celled striped>
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell>ID</TableHeaderCell>

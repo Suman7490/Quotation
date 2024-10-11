@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { FormGroup, FormField, Form, Input, Button, Select, Dropdown, Icon, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
+import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, Icon, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 const genderOptions = [
@@ -24,8 +24,8 @@ const WritingService = [
 ];
 
 const discountTypeOptions = [
-  { key: 'amount', value: 'amount', text: 'Amount' },
-  { key: 'percentage', value: 'percentage', text: 'Percentage' },
+  { key: 'amount', value: 'amount', text: 'Rs.' },
+  { key: 'percentage', value: 'percentage', text: '%' },
 ];
 
 const CreateInvoice = () => {
@@ -35,15 +35,15 @@ const CreateInvoice = () => {
   const [gender, setGender] = useState("");
   const [date, setDate] = useState(null);
   const [domain, setDomain] = useState("");
-  const [price, setPrice] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [grandTotal, setGrandTotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
   const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
+  const [totalDiscount, setTotalDiscount] = useState(0);
   const [discountType, setDiscountType] = useState("amount");
+  const [finalAmount, setFinalAmount] = useState(0);
+  const [totalDiscountType, setTotalDiscountType] = useState("amount");
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
@@ -106,14 +106,6 @@ const CreateInvoice = () => {
 
 
   // ******************* Discount Calculation ************
-  // const handleDiscount = (index, value) => {
-  //   const discountValue = value === '' ? 0 : parseInt(value);
-  //   const updatedRow = services.map((row, i) =>
-  //     i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
-  //   )
-  //   setServices(updatedRow)
-  //   setGrandTotal(price - discountValue);
-  // }
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
     let updatedRow = [];
@@ -135,6 +127,24 @@ const CreateInvoice = () => {
     setServices(updatedRow);
   };
 
+  // ***************** Handle Total Discount *****************
+  const handleTotalDiscount = (value) => {
+    const discountValue = value === '' ? 0 : parseFloat(value);
+
+    // Calculate total discount based on the selected total discount type (amount or percentage)
+    let discountAmount = 0;
+    const total = totalAmount();
+
+    if (totalDiscountType === 'percentage') {
+      discountAmount = (total * discountValue) / 100; // Calculate percentage discount
+    } else {
+      discountAmount = discountValue; // Flat discount amount
+    }
+
+    const finalTotal = total - discountAmount; // Deduct discount from the total amount
+    setFinalAmount(finalTotal < 0 ? 0 : finalTotal); // Ensure finalAmount doesn't go below 0
+    setTotalDiscount(discountValue);
+  };
   // ****************** Total of grandtotals *****************
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
@@ -329,10 +339,10 @@ const CreateInvoice = () => {
 
   return (
     <>
-      <div className='container border border-warning rounded p-5'>
+      <div className='container border rounded p-5 ui blue'>
         <div className='row'>
           <div className='col-md-12 text-center pb-5'>
-            <h2 className='text-warning'>Quotation Manager</h2>
+            <Header as='h1' color='blue'>Quotation Manager</Header>
           </div>
         </div>
         <div className='row'>
@@ -361,34 +371,47 @@ const CreateInvoice = () => {
 
                   {services.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell><FormField><Dropdown placeholder="Select a service" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
+                      <TableCell width={10}><FormField><Dropdown placeholder="Services" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
                       <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} error={errors.price ? { content: errors.price } : null} /></TableCell>
                       <TableCell>
-                     {/* <FormField
-                       control={Input} placeholder="Enter Discount" value={row.discount ? `${row.discount}` : ""} onChange={(e, { value }) => handleDiscount(index, e.target.value)} error={errors.discount ? { content: errors.discount } : null} /> */}
-                      <FormField>
-                          <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} />
+                        <FormField className='d-flex'>
+                          <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '5em' }} />
                           <Input placeholder="Discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
                         </FormField>
                       </TableCell>
                       <TableCell><FormField control={Input} placeholder="Grand Total" value={row.grandTotal ? `${row.grandTotal}` : ""} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
-                      <TableCell><Icon className="trash text-danger" size="large" style={{ cursor: "pointer" }} onClick={() => removeService(index)} /></TableCell>
+                      <TableCell><Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button></TableCell>
                     </TableRow>
                   ))}
 
                   <TableRow>
                     <TableCell colSpan="4">ADD SERVICE:</TableCell>
-                    <TableCell className='text-right border'><Button className='btn' onClick={addService}>Add Service</Button></TableCell>
-                    {/* <span onChange={(e) => setTotalService(e.target.value)}>{totalService}</span> */}
+                    <TableCell className='border'><Button className='ui green button w-100' onClick={addService}>Add Service</Button></TableCell>
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan="3">TOTAL:</TableCell>
+                    <TableCell colSpan="4">TOTAL:</TableCell>
                     <TableCell><FormField control={Input} value={totalAmount()} /></TableCell>
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan={3}><p>TOTAL INSTALLMENT:</p></TableCell>
+                    <TableCell colSpan="4">DISCOUNT:</TableCell>
+                    <TableCell>
+                      <FormField className='d-flex'>
+                        <Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} />
+                        <Input placeholder="Discount" value={totalDiscount} onChange={(e) => handleTotalDiscount(e.target.value)} />
+                      </FormField>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
+                    <TableCell><FormField>
+                      <Input value={finalAmount} readOnly />
+                    </FormField></TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>
                     <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell> {/* <TableCell className='text-right border'><Button className='btn' onClick={addInsallments} onChange={handleInputChange} >Add Service</Button></TableCell> */}
                   </TableRow>
 
@@ -397,12 +420,12 @@ const CreateInvoice = () => {
                       <TableCell><p>{labels[index]}:</p></TableCell>
                       <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} /></TableCell>
-                      <TableCell><Icon className="trash text-danger" size="large" style={{ cursor: "pointer" }} onClick={() => removeInstallment(index)} /> </TableCell>
+                      <TableCell><Button className='ui red button w-100' onClick={() => removeInstallment(index)}>Delete Row</Button></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              <FormField control={Button} content='Submit' onClick={postData} />
+              <center> <Button className='ui blue button w-75 text-large' onClick={postData}>Submit</Button></center>
             </Form>
           </div>
         </div>
