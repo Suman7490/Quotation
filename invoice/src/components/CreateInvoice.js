@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, Icon, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
+import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, Icon, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody, Checkbox } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 const genderOptions = [
@@ -44,6 +44,7 @@ const CreateInvoice = () => {
   const [discountType, setDiscountType] = useState("amount");
   const [finalAmount, setFinalAmount] = useState(0);
   const [totalDiscountType, setTotalDiscountType] = useState("amount");
+  const [show, hide] = useState(true)
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
@@ -103,7 +104,11 @@ const CreateInvoice = () => {
 
 
 
-
+  // ******************* Show or Hide Discount **********
+  const changeIcon = () => {
+    if (show == true) { hide(false) }
+    else (hide(true))
+  }
 
   // ******************* Discount Calculation ************
   const handleDiscount = (index, value) => {
@@ -395,20 +400,34 @@ const CreateInvoice = () => {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan="4">DISCOUNT:</TableCell>
-                    <TableCell>
-                      <FormField className='d-flex'>
-                        <Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} />
-                        <Input placeholder="Discount" value={totalDiscount} onChange={(e) => handleTotalDiscount(e.target.value)} />
-                      </FormField>
-                    </TableCell>
+                    <TableCell colSpan="5"> <Checkbox label='Do you want to provide discount on total amount ?' onClick={changeIcon} /></TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
-                    <TableCell><FormField>
-                      <Input value={finalAmount} readOnly />
-                    </FormField></TableCell>
-                  </TableRow>
+
+
+                  {show ?
+                    (console.log('notjhing')) : (
+                      <>
+                        <TableRow>
+                          <TableCell colSpan="4">DISCOUNT:</TableCell>
+                          <TableCell>
+                            <FormField className='d-flex'>
+                              <Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} />
+                              <Input placeholder="Discount" value={totalDiscount} onChange={(e) => handleTotalDiscount(e.target.value)} />
+                            </FormField>
+                          </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                          <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
+                          <TableCell><FormField>
+                            <Input value={finalAmount} readOnly />
+                          </FormField></TableCell>
+                        </TableRow></>
+                    )
+                  }
+
+
+
 
                   <TableRow>
                     <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>
