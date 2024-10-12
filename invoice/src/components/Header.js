@@ -6,14 +6,9 @@ import '../App.css'
 const Header = () => {
     const [icon, setIcon] = useState(true)
 
-
     const changeIcon = () => {
-        if (icon == true) {
-            setIcon(false)
-        } else (
-            setIcon(true)
-        )
-
+        if (icon == true) { setIcon(false) }
+        else (setIcon(true))
     }
 
     return (
@@ -39,9 +34,6 @@ const Header = () => {
                             <NavLink className="nav-link" to="/login" activeClassName="active-nav">Login</NavLink>
                         </li> */}
                     </ul>
-
-              
-
                     <button className='btn' onClick={changeIcon}>
                         {icon ?
                             (<Icon className='moon' size='large' />)
