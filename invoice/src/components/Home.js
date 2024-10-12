@@ -7,7 +7,6 @@ const Home = () => {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
     const [quotations, setQuotations] = useState([]);
-    const [services, setServices] = useState([]);
 
 
     useEffect(() => {
