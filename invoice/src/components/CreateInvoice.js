@@ -247,65 +247,109 @@ const CreateInvoice = () => {
 
 
 
+  // const postData = async (e) => {
+  //   e.preventDefault();
+
+  //   // Validate input data
+  //   if (Validate()) {
+  //     // Format the date before sending
+  //     const formattedDate = formatDate(date);
+
+  //     try {
+  //       // Check if we're updating an existing quotation
+  //       if (quotationId) {
+  //         // Use async/await for the PUT request
+  //         const response = await axios.put(`http://localhost:8081/update/${quotationId}`, {
+  //           name,
+  //           email,
+  //           gender,
+  //           date: formattedDate,
+  //           domain,
+  //           total: totalAmount(),
+  //           totalService,
+  //           inputCount,
+  //           services,
+  //           installments,
+  //         });
+
+  //         // Handle successful response
+  //         alert('Quotation updated successfully');
+  //         window.location.href = '/';
+
+  //       } else {
+  //         // Use async/await for the POST request (creating a new quotation)
+  //         const response = await axios.post(`http://localhost:8081/create`, {
+  //           name,
+  //           email,
+  //           gender,
+  //           date: formattedDate,
+  //           domain,
+  //           total: totalAmount(),
+  //           totalService,
+  //           inputCount,
+  //           services,
+  //           installments,
+  //         });
+
+  //         // Handle successful response
+  //         alert('Quotation created successfully');
+  //         window.location.href = '/';
+  //       }
+  //     } catch (error) {
+  //       // Handle errors
+  //       console.error('Error during API request:', error);
+  //       alert('Failed to update or create quotation');
+  //     }
+  //   }
+  // };
+
+
+
+  // **************** Upadate **************
+ 
   const postData = async (e) => {
     e.preventDefault();
-
+  
     // Validate input data
     if (Validate()) {
+      // Ensure that all rows have correct data
+      console.log("Final rows before submission:", rows);
+      
       // Format the date before sending
       const formattedDate = formatDate(date);
-
+  
       try {
+        const payload = {
+          name,
+          email,
+          gender,
+          date: formattedDate,
+          domain,
+          total: totalAmount(),
+          totalService,
+          inputCount,
+          services,
+          installments: rows,  // Send the rows data containing installments
+        };
+  
         // Check if we're updating an existing quotation
         if (quotationId) {
-          // Use async/await for the PUT request
-          const response = await axios.put(`http://localhost:8081/update/${quotationId}`, {
-            name,
-            email,
-            gender,
-            date: formattedDate,
-            domain,
-            total: totalAmount(),
-            totalService,
-            inputCount,
-            services,
-            installments,
-          });
-
-          // Handle successful response
+          const response = await axios.put(`http://localhost:8081/update/${quotationId}`, payload);
           alert('Quotation updated successfully');
           window.location.href = '/';
-
         } else {
-          // Use async/await for the POST request (creating a new quotation)
-          const response = await axios.post(`http://localhost:8081/create`, {
-            name,
-            email,
-            gender,
-            date: formattedDate,
-            domain,
-            total: totalAmount(),
-            totalService,
-            inputCount,
-            services,
-            installments,
-          });
-
-          // Handle successful response
+          const response = await axios.post(`http://localhost:8081/create`, payload);
           alert('Quotation created successfully');
           window.location.href = '/';
         }
       } catch (error) {
-        // Handle errors
         console.error('Error during API request:', error);
         alert('Failed to update or create quotation');
       }
     }
   };
-
-
-
-  // **************** Upadate **************
+  
+ 
   useEffect(() => {
     if (quotationId) {
       // Fetch the existing data for the quotation
@@ -438,7 +482,7 @@ const CreateInvoice = () => {
                     <TableRow key={index}>
                       <TableCell><p>{labels[index]}:</p></TableCell>
                       <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
-                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', e.target.value)} /></TableCell>
+                      <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', parseFloat(e.target.value))} /></TableCell>
                       <TableCell><Button className='ui red button w-100' onClick={() => removeInstallment(index)}>Delete Row</Button></TableCell>
                     </TableRow>
                   ))}

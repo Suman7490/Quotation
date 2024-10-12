@@ -101,7 +101,7 @@ app.post('/create', (req, res) => {
         req.body.totalService,
         req.body.inputCount
     ];
-
+    console.log("Received data:", quotation_values);
     db.query(quotation_sql, [quotation_values], (err, result) => {
         if (err) return res.json(err);
 
