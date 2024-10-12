@@ -120,9 +120,6 @@ const Register = () => {
 
                             <button className='btn btn-large btn-warning' type='submit'>Register</button>
                         </form>
-
-
-
                     </div>
 
                     <div className='col-md-2'></div>

@@ -10,7 +10,6 @@ import Home from "./components/Home";
 import Pdf from "./components/Pdf";
 import Register from "./components/Register";
 import Login from "./components/Login";
-// import ServiceView from "./components/ServiceView";
 import './App.css'
 function App(props) {
   return (
@@ -27,7 +26,6 @@ function App(props) {
           <Route path="/delete/:id" element={<Home/>}></Route>
           <Route path="/register" element={<Register/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
-          {/* <Route path="/ServiceView" element={<ServiceView/>}></Route> */}
         </Routes>
       </Router>
     </>
