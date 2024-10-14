@@ -79,14 +79,14 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell>
                                                 <div className='header'>
-                                                    <p style={{ fontSize: '25px' }}>
-                                                        <span style={{ color: 'darkblue' }}>KALP </span>
-                                                        <span style={{ color: 'red' }}>RESEARCH </span>
-                                                        <span style={{ color: 'darkblue' }}>WORK</span>
+                                                    <p style={{ fontSize: '25px', margin:'0' }}>
+                                                        <strong style={{ color: 'darkblue' }}>KALP </strong>
+                                                        <strong style={{ color: 'red' }}>RESEARCH </strong>
+                                                        <strong style={{ color: 'darkblue' }}>WORK</strong>
                                                         <strong> - </strong>
-                                                        <span style={{ color: 'darkblue' }}>K</span>
-                                                        <span style={{ color: 'red' }}>R</span>
-                                                        <span style={{ color: 'darkblue' }}>W</span>
+                                                        <strong style={{ color: 'darkblue' }}>K</strong>
+                                                        <strong style={{ color: 'red' }}>R</strong>
+                                                        <strong style={{ color: 'darkblue' }}>W</strong>
                                                     </p>
                                                     <p className='m-0'>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
                                                     <p className='m-0'> +91 - 7037663686</p>
@@ -102,7 +102,7 @@ const Pdf = () => {
                                 </div>
                             </div>
                             <hr style={{ border: '.2px solid black' }} />
-                            <div className='row pt-5'>
+                            <div className='row pt-1'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
@@ -123,7 +123,7 @@ const Pdf = () => {
                                     </Table>
                                 </div>
                             </div>
-                            <div className='row pt-5 mt-5 mb-5 pb-5'>
+                            <div className='row pt-1 mt-5 mb-5 pb-5'>
                                 <div className='col-12'>
                                     <table className='table table-stripped'>
                                         <thead>
@@ -164,7 +164,7 @@ const Pdf = () => {
                                 </div>
                             </div>
                             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                            <div className='row pt-5 mt-5'>
+                            <div className='row pt-5 mt-5 fixed-bottom'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
