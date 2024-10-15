@@ -131,27 +131,9 @@ const CreateInvoice = () => {
     setServices(updatedRow);
   };
 
-  // ***************** Handle Total Discount for total Amount *****************
-  // const handleTotalDiscount = (value) => {
-  //   const discountValue = value === '' ? 0 : parseFloat(value);
-
-  //   // Calculate total discount based on the selected total discount type (amount or percentage)
-  //   let discountAmount = 0;
-  //   const total = totalAmount();
-
-  //   if (totalDiscountType === 'percentage') {
-  //     discountAmount = (total * discountValue) / 100; // Calculate percentage discount
-  //   } else {
-  //     discountAmount = discountValue; // Flat discount amount
-  //   }
-
-  //   const finalTotal = total - discountAmount; // Deduct discount from the total amount
-  //   setFinalAmount(finalTotal < 0 ? 0 : finalTotal); // Ensure finalAmount doesn't go below 0
-  //   setTotalDiscount(discountValue);
-  // };
 
   const handleTotalDiscount = (value) => {
-    const discountValue = value === '' ? 0 : parseFloat(value);  // Parse discount value as number or 0
+    const discountValue = value === '' ? 0 : parseFloat(value);
   
     // Get the total amount from services
     const total = totalAmount();
@@ -159,9 +141,9 @@ const CreateInvoice = () => {
     // Calculate the discount amount based on type (percentage or flat amount)
     let discountAmount = 0;
     if (totalDiscountType === 'percentage') {
-      discountAmount = (total * discountValue) / 100;  // Calculate percentage-based discount
+      discountAmount = (total * discountValue) / 100;
     } else {
-      discountAmount = discountValue;  // Flat discount amount
+      discountAmount = discountValue;
     }
   
     // Set finalAmount equal to total if totalDiscount is 0, otherwise subtract discountAmount
@@ -202,31 +184,9 @@ const CreateInvoice = () => {
 
 
   // ************** Start Row Increament on change the Total Installment ****************
-  // const handleInputChange = (event) => {
-  //   const value = parseInt(event.target.value, 10);
-  //   if (!isNaN(value)) {
-  //     setInputCount(value);
-
-  //     const total = totalAmount(); // Get the total amount from services
-  //     const installmentValue = Math.floor(total / value / 100) * 100; // Calculate each installment rounded to the nearest 100
-  //     const remainder = total - (installmentValue * value); // Calculate any remaining amount after rounding
-
-  //     // Distribute the remainder to the first installment
-  //     const updatedRows = Array(value).fill('').map((_, index) => ({
-  //       label: labels[index],
-  //       dueWhen: index === 0 ? 'On Advance' : '',
-  //       installmentAmount: index === 0 ? installmentValue + remainder : installmentValue, // Add remainder to first installment
-  //     }));
-  //     // setRows(Array(value).fill(''));
-  //     setRows(updatedRows)
-  //   } else {
-  //     setInputCount(0);
-  //     setRows([]);
-  //   }
-  // };
-
+ 
   const handleInputChange = (event) => {
-    const value = parseInt(event.target.value, 10); // Number of installments
+    const value = parseInt(event.target.value, 10);
     if (!isNaN(value)) {
       setInputCount(value);
   
@@ -234,20 +194,20 @@ const CreateInvoice = () => {
       const amount = finalAmount > 0 ? finalAmount : totalAmount(); 
   
       // Calculate the installment amount
-      const installmentValue = Math.floor(amount / value / 100) * 100; // Round to nearest 100
-      const remainder = amount - (installmentValue * value); // Calculate remaining amount
+      const installmentValue = Math.floor(amount / value / 100) * 100;
+      const remainder = amount - (installmentValue * value);
   
       // Distribute the remainder to the first installment
       const updatedRows = Array(value).fill('').map((_, index) => ({
         label: labels[index],
         dueWhen: index === 0 ? 'On Advance' : '',
-        installmentAmount: index === 0 ? installmentValue + remainder : installmentValue, // Add remainder to first installment
+        installmentAmount: index === 0 ? installmentValue + remainder : installmentValue,
       }));
   
-      setRows(updatedRows); // Set rows to the calculated values
+      setRows(updatedRows);
     } else {
       setInputCount(0);
-      setRows([]); // Reset if invalid input
+      setRows([]);
     }
   };
   
@@ -255,8 +215,8 @@ const CreateInvoice = () => {
 
 
   const handleInstallmentChange = (index, field, value) => {
-    const updatedRows = [...rows]; // Clone the current rows state
-    const updatedInstallments = [...installments]; // Clone the current installments state
+    const updatedRows = [...rows];
+    const updatedInstallments = [...installments];
     const updatedErrors = { ...errors };
 
     // Ensure the row exists before updating
@@ -305,10 +265,7 @@ const CreateInvoice = () => {
   
     // Validate input data
     if (Validate()) {
-      // Ensure that all rows have correct data
       console.log("Final rows before submission:", rows);
-      
-      // Format the date before sending
       const formattedDate = formatDate(date);
   
       try {
@@ -324,7 +281,7 @@ const CreateInvoice = () => {
           totalService,
           inputCount,
           services,
-          installments: rows,  // Send the rows data containing installments
+          installments: rows,
         };
   
         // Check if we're updating an existing quotation
@@ -345,40 +302,6 @@ const CreateInvoice = () => {
   };
   
  
-  // useEffect(() => {
-  //   if (quotationId) {
-  //     // Fetch the existing data for the quotation
-  //     axios.get(`http://localhost:8081/pdf/${quotationId}`)
-  //       .then((response) => {
-  //         const data = response.data;
-  //         console.log("fatched data:", data)
-  //         setName(data.name || "");
-  //         setEmail(data.email || "");
-  //         setGender(data.gender || "");
-  //         setDate(new Date(data.date));
-  //         setDomain(data.domain || "");
-  //         setTotal(data.total || 0);
-  //         setServices(data.services || []);
-  //         setInstallments(data.installments || []);
-  //         setInputCount(data.inputCount || 0);
-  //         setTotalService(data.totalService || 0);
-
-  //         const serviceData = data.services.map(service => ({
-  //           serviceName: service.service,
-  //           price: service.price,
-  //           discount: service.discount,
-  //           grandTotal: service.grandTotal,
-  //         }));
-  //         const rowsData = data.installments.map(installment => ({
-  //           dueWhen: installment.dueWhen,
-  //           installmentAmount: installment.installmentAmount,
-  //         }));
-  //         console.log("service Data: ", serviceData)
-  //         setRows(rowsData, serviceData);
-  //       })
-  //       .catch((error) => console.log('Error fetching data:', error));
-  //   }
-  // }, [quotationId]);
 
   useEffect(() => {
     if (quotationId) {
@@ -405,7 +328,7 @@ const CreateInvoice = () => {
             discount: service.discount,
             grandTotal: service.grandTotal,
           }));
-          setServices(serviceData);  // Correctly set services data
+          setServices(serviceData);
   
           // Update rows state with fetched installments
           const rowsData = data.installments.map(installment => ({
@@ -413,11 +336,11 @@ const CreateInvoice = () => {
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-          setRows(rowsData);  // Correctly set rows data
+          setRows(rowsData);
   
           // Also update installments state to ensure correct mapping
-          setInstallments(rowsData);  // Map rows data to installments if needed
-          setInputCount(data.inputCount || 0);  // Set input count
+          setInstallments(rowsData);
+          setInputCount(data.inputCount || 0);
         })
         .catch((error) => console.log('Error fetching data:', error));
     }
@@ -489,10 +412,12 @@ const CreateInvoice = () => {
                     (console.log('notjhing')) : (
                       <>
                         <TableRow>
-                          <TableCell colSpan="4">DISCOUNT:</TableCell>
+                          <TableCell colSpan="3">DISCOUNT:</TableCell>
                           <TableCell>
-                            <FormField className='d-flex'>
-                              <Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} />
+                            <FormField><Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} /></FormField>
+                          </TableCell>
+                          <TableCell>
+                            <FormField>
                               <Input placeholder="Discount" value={totalDiscount} onChange={(e) => handleTotalDiscount(e.target.value)} />
                             </FormField>
                           </TableCell>
