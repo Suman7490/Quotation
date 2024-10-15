@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2024 at 10:19 AM
+-- Generation Time: Oct 15, 2024 at 12:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -40,13 +40,12 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `quotation_id`, `label`, `dueWhen`, `installmentAmount`) VALUES
-(234, 28, 'FIRST', 'On Advance', 50000),
-(235, 28, 'SECOND', 'On completion', 50000),
-(286, 26, 'FIRST', 'On Advance', 30000),
-(287, 26, 'SECOND', 'On receiving chapter 4 and 6', 30000),
-(288, 26, 'THIRD', 'On completion', 20000),
-(292, 25, 'FIRST', 'On Advance', 40000),
-(293, 25, 'SECOND', 'On completion', 40000);
+(374, 42, 'FIRST', 'On Advance', 100000),
+(375, 42, 'SECOND', 'On completion', 100000),
+(376, 43, 'FIRST', 'On Advance', 40000),
+(377, 43, 'SECOND', 'On completion', 40000),
+(378, 44, 'FIRST', 'On Advance', 60000),
+(379, 44, 'SECOND', 'On completion', 60000);
 
 --
 -- Indexes for dumped tables
@@ -66,7 +65,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=294;
+  MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=380;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

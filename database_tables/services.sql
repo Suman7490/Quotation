@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2024 at 10:18 AM
+-- Generation Time: Oct 15, 2024 at 12:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,14 +41,11 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `quotation_id`, `serviceName`, `price`, `discount`, `grandTotal`) VALUES
-(241, 28, 'Research Paper', 100000, 50000, 50000),
-(242, 28, 'Book', 80000, 30000, 50000),
-(257, 27, 'Thesis', 150000, 50000, 100000),
-(258, 27, 'Book', 80000, 50000, 30000),
-(276, 26, 'Research Paper', 100000, 50000, 50000),
-(277, 26, 'Book', 80000, 50000, 30000),
-(281, 25, 'Book', 80000, 30000, 50000),
-(282, 25, 'Research Proposal', 50000, 20000, 30000);
+(331, 42, 'Research Paper', 100000, 0, 100000),
+(332, 42, 'Thesis', 150000, 0, 150000),
+(333, 43, 'Research Paper', 100000, 50000, 50000),
+(334, 43, 'Book', 80000, 30000, 50000),
+(335, 44, 'Thesis', 150000, 20, 120000);
 
 --
 -- Indexes for dumped tables
@@ -68,7 +65,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=336;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2024 at 10:18 AM
+-- Generation Time: Oct 15, 2024 at 12:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -35,6 +35,8 @@ CREATE TABLE `quotation` (
   `date` date NOT NULL,
   `domain` varchar(255) NOT NULL,
   `total` decimal(10,2) NOT NULL,
+  `totalDiscount` int(11) NOT NULL,
+  `finalAmount` int(11) NOT NULL,
   `totalService` int(11) NOT NULL,
   `inputCount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -43,11 +45,10 @@ CREATE TABLE `quotation` (
 -- Dumping data for table `quotation`
 --
 
-INSERT INTO `quotation` (`quotation_id`, `name`, `email`, `gender`, `date`, `domain`, `total`, `totalService`, `inputCount`) VALUES
-(25, 'suman', 'suman@gmail.com', 'female', '2024-10-04', 'Life Science', 80000.00, 1, 2),
-(26, 'suman', 'suman@gmail.com', 'female', '2024-10-07', 'Engineering', 80000.00, 0, 3),
-(27, 'manu', 'manu@gmail.com', 'female', '2024-10-07', 'Life Science', 130000.00, 0, 2),
-(28, 'dheeraj rajput', 'dheeraj@gmail.com', 'male', '2024-10-07', 'Management', 100000.00, 1, 2);
+INSERT INTO `quotation` (`quotation_id`, `name`, `email`, `gender`, `date`, `domain`, `total`, `totalDiscount`, `finalAmount`, `totalService`, `inputCount`) VALUES
+(42, 'suman', 'suman@gmail.com', 'female', '2024-10-15', 'Life Science', 250000.00, 50000, 200000, 2, 2),
+(43, 'dheeraj', 'dheeraj@gmail.com', 'male', '2024-10-15', 'Management', 100000.00, 20000, 80000, 2, 2),
+(44, 'manu', 'manu@gmail.com', 'female', '2024-10-15', 'Engineering', 120000.00, 0, 0, 1, 2);
 
 --
 -- Indexes for dumped tables
@@ -67,7 +68,7 @@ ALTER TABLE `quotation`
 -- AUTO_INCREMENT for table `quotation`
 --
 ALTER TABLE `quotation`
-  MODIFY `quotation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `quotation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
