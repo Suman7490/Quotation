@@ -15,7 +15,6 @@ const ResearchDomain = [
   { text: 'Management', value: 'Management' },
 ]
 
-
 const WritingService = [
   { text: "Research Paper", value: "Research Paper", price: 100000 },
   { text: "Thesis", value: "Thesis", price: 150000 },
@@ -110,7 +109,7 @@ const CreateInvoice = () => {
     else (hide(true))
   }
 
-  // ******************* Discount Calculation ************
+  // ******************* Discount Calculation for each service ************
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
     let updatedRow = [];
@@ -132,7 +131,7 @@ const CreateInvoice = () => {
     setServices(updatedRow);
   };
 
-  // ***************** Handle Total Discount *****************
+  // ***************** Handle Total Discount for total Amount *****************
   const handleTotalDiscount = (value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
 
@@ -178,28 +177,56 @@ const CreateInvoice = () => {
 
 
   // ************** Start Row Increament on change the Total Installment ****************
+  // const handleInputChange = (event) => {
+  //   const value = parseInt(event.target.value, 10);
+  //   if (!isNaN(value)) {
+  //     setInputCount(value);
+
+  //     const total = totalAmount(); // Get the total amount from services
+  //     const installmentValue = Math.floor(total / value / 100) * 100; // Calculate each installment rounded to the nearest 100
+  //     const remainder = total - (installmentValue * value); // Calculate any remaining amount after rounding
+
+  //     // Distribute the remainder to the first installment
+  //     const updatedRows = Array(value).fill('').map((_, index) => ({
+  //       label: labels[index],
+  //       dueWhen: index === 0 ? 'On Advance' : '',
+  //       installmentAmount: index === 0 ? installmentValue + remainder : installmentValue, // Add remainder to first installment
+  //     }));
+  //     // setRows(Array(value).fill(''));
+  //     setRows(updatedRows)
+  //   } else {
+  //     setInputCount(0);
+  //     setRows([]);
+  //   }
+  // };
+
   const handleInputChange = (event) => {
-    const value = parseInt(event.target.value, 10);
+    const value = parseInt(event.target.value, 10); // Number of installments
     if (!isNaN(value)) {
       setInputCount(value);
-
-      const total = totalAmount(); // Get the total amount from services
-      const installmentValue = Math.floor(total / value / 100) * 100; // Calculate each installment rounded to the nearest 100
-      const remainder = total - (installmentValue * value); // Calculate any remaining amount after rounding
-
+  
+      // Determine which amount to use: finalAmount or totalAmount
+      const amount = finalAmount > 0 ? finalAmount : totalAmount(); 
+  
+      // Calculate the installment amount
+      const installmentValue = Math.floor(amount / value / 100) * 100; // Round to nearest 100
+      const remainder = amount - (installmentValue * value); // Calculate remaining amount
+  
       // Distribute the remainder to the first installment
       const updatedRows = Array(value).fill('').map((_, index) => ({
         label: labels[index],
         dueWhen: index === 0 ? 'On Advance' : '',
         installmentAmount: index === 0 ? installmentValue + remainder : installmentValue, // Add remainder to first installment
       }));
-      // setRows(Array(value).fill(''));
-      setRows(updatedRows)
+  
+      setRows(updatedRows); // Set rows to the calculated values
     } else {
       setInputCount(0);
-      setRows([]);
+      setRows([]); // Reset if invalid input
     }
   };
+  
+
 
 
   const handleInstallmentChange = (index, field, value) => {
