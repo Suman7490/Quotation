@@ -318,42 +318,82 @@ const CreateInvoice = () => {
   };
   
  
+  // useEffect(() => {
+  //   if (quotationId) {
+  //     // Fetch the existing data for the quotation
+  //     axios.get(`http://localhost:8081/pdf/${quotationId}`)
+  //       .then((response) => {
+  //         const data = response.data;
+  //         console.log("fatched data:", data)
+  //         setName(data.name || "");
+  //         setEmail(data.email || "");
+  //         setGender(data.gender || "");
+  //         setDate(new Date(data.date));
+  //         setDomain(data.domain || "");
+  //         setTotal(data.total || 0);
+  //         setServices(data.services || []);
+  //         setInstallments(data.installments || []);
+  //         setInputCount(data.inputCount || 0);
+  //         setTotalService(data.totalService || 0);
+
+  //         const serviceData = data.services.map(service => ({
+  //           serviceName: service.service,
+  //           price: service.price,
+  //           discount: service.discount,
+  //           grandTotal: service.grandTotal,
+  //         }));
+  //         const rowsData = data.installments.map(installment => ({
+  //           dueWhen: installment.dueWhen,
+  //           installmentAmount: installment.installmentAmount,
+  //         }));
+  //         console.log("service Data: ", serviceData)
+  //         setRows(rowsData, serviceData);
+  //       })
+  //       .catch((error) => console.log('Error fetching data:', error));
+  //   }
+  // }, [quotationId]);
+
   useEffect(() => {
     if (quotationId) {
       // Fetch the existing data for the quotation
       axios.get(`http://localhost:8081/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-          console.log("fatched data:", data)
+  
+          // Set the fetched data for the form fields
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
           setDate(new Date(data.date));
           setDomain(data.domain || "");
           setTotal(data.total || 0);
-          setServices(data.services || []);
-          setInstallments(data.installments || []);
-          setInputCount(data.inputCount || 0);
           setTotalService(data.totalService || 0);
-
+  
+          // Update services state with fetched services
           const serviceData = data.services.map(service => ({
-            serviceName: service.service,
+            service: service.service,
             price: service.price,
             discount: service.discount,
             grandTotal: service.grandTotal,
           }));
+          setServices(serviceData);  // Correctly set services data
+  
+          // Update rows state with fetched installments
           const rowsData = data.installments.map(installment => ({
+            label: installment.label,
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-          console.log("service Data: ", serviceData)
-          setRows(rowsData, serviceData);
+          setRows(rowsData);  // Correctly set rows data
+  
+          // Also update installments state to ensure correct mapping
+          setInstallments(rowsData);  // Map rows data to installments if needed
+          setInputCount(data.inputCount || 0);  // Set input count
         })
         .catch((error) => console.log('Error fetching data:', error));
     }
   }, [quotationId]);
-
-
+  
   return (
     <>
       <div className='container border rounded p-5 ui blue'>
