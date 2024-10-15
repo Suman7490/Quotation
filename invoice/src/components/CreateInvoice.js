@@ -50,9 +50,6 @@ const CreateInvoice = () => {
   const [totalService, setTotalService] = useState(1);
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
-
-
-
   // *************** Form Validations **************
   const Validate = () => {
     const newErrors = {};
@@ -73,12 +70,8 @@ const CreateInvoice = () => {
 
     if (inputCount > 0) {
       rows.forEach((row, index) => {
-        if (!row.dueWhen) {
-          newErrors[`installment_${index}_dueWhen`] = `Installment ${index + 1} due date is required`;
-        }
-        if (!row.installmentAmount) {
-          newErrors[`installment_${index}_installmentAmount`] = `Installment ${index + 1} amount is required`;
-        }
+        if (!row.dueWhen) { newErrors[`installment_${index}_dueWhen`] = `Installment ${index + 1} due date is required`; }
+        if (!row.installmentAmount) { newErrors[`installment_${index}_installmentAmount`] = `Installment ${index + 1} amount is required`; }
       });
     }
 
@@ -127,35 +120,31 @@ const CreateInvoice = () => {
         i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
       );
     }
-
     setServices(updatedRow);
   };
 
 
   const handleTotalDiscount = (value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
-  
+
     // Get the total amount from services
     const total = totalAmount();
-  
+
     // Calculate the discount amount based on type (percentage or flat amount)
     let discountAmount = 0;
-    if (totalDiscountType === 'percentage') {
-      discountAmount = (total * discountValue) / 100;
-    } else {
-      discountAmount = discountValue;
-    }
-  
+    if (totalDiscountType === 'percentage') { discountAmount = (total * discountValue) / 100; }
+    else { discountAmount = discountValue; }
+
     // Set finalAmount equal to total if totalDiscount is 0, otherwise subtract discountAmount
-    const finalTotal = discountValue === 0 ? total : total - discountAmount;
-  
+    const finalTotal = discountValue === 0 ? 0 : total - discountAmount;
+
     // Ensure finalAmount doesn't go below 0
     setFinalAmount(finalTotal < 0 ? 0 : finalTotal);
-  
+
     // Update the discount value state
     setTotalDiscount(discountValue);
   };
-  
+
   // ****************** Total of grandtotals *****************
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
@@ -178,41 +167,32 @@ const CreateInvoice = () => {
     setTotalService(totalService - 1);
   }
 
-
-
-
-
-
   // ************** Start Row Increament on change the Total Installment ****************
- 
   const handleInputChange = (event) => {
     const value = parseInt(event.target.value, 10);
     if (!isNaN(value)) {
       setInputCount(value);
-  
+
       // Determine which amount to use: finalAmount or totalAmount
-      const amount = finalAmount > 0 ? finalAmount : totalAmount(); 
-  
+      const amount = finalAmount > 0 ? finalAmount : totalAmount();
+
       // Calculate the installment amount
       const installmentValue = Math.floor(amount / value / 100) * 100;
       const remainder = amount - (installmentValue * value);
-  
+
       // Distribute the remainder to the first installment
       const updatedRows = Array(value).fill('').map((_, index) => ({
         label: labels[index],
         dueWhen: index === 0 ? 'On Advance' : '',
         installmentAmount: index === 0 ? installmentValue + remainder : installmentValue,
       }));
-  
+
       setRows(updatedRows);
     } else {
       setInputCount(0);
       setRows([]);
     }
   };
-  
-
-
 
   const handleInstallmentChange = (index, field, value) => {
     const updatedRows = [...rows];
@@ -244,10 +224,7 @@ const CreateInvoice = () => {
     setInstallments(updatedInstallments);
   };
 
-
-
   // **************** Add Installments **************
-
   const removeInstallment = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     const updatedInstallments = installments.filter((_, i) => i !== index);
@@ -257,17 +234,14 @@ const CreateInvoice = () => {
     setInputCount(inputCount - 1);
   };
 
-
-
-  
   const postData = async (e) => {
     e.preventDefault();
-  
+
     // Validate input data
     if (Validate()) {
       console.log("Final rows before submission:", rows);
       const formattedDate = formatDate(date);
-  
+
       try {
         const payload = {
           name,
@@ -283,7 +257,7 @@ const CreateInvoice = () => {
           services,
           installments: rows,
         };
-  
+
         // Check if we're updating an existing quotation
         if (quotationId) {
           const response = await axios.put(`http://localhost:8081/update/${quotationId}`, payload);
@@ -300,8 +274,6 @@ const CreateInvoice = () => {
       }
     }
   };
-  
- 
 
   useEffect(() => {
     if (quotationId) {
@@ -309,7 +281,7 @@ const CreateInvoice = () => {
       axios.get(`http://localhost:8081/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-  
+
           // Set the fetched data for the form fields
           setName(data.name || "");
           setEmail(data.email || "");
@@ -318,9 +290,9 @@ const CreateInvoice = () => {
           setDomain(data.domain || "");
           setTotal(data.total || 0);
           setTotalDiscount(data.totalDiscount || 0);
-          setFinalAmount(data.finalAmount || 0);
+          setFinalAmount(data.totalDiscount === 0 ? 0 : data.finalAmount || 0); 
           setTotalService(data.totalService || 0);
-  
+          if (data.totalDiscount > 0 || data.finalAmount > 0) {hide(false);}
           // Update services state with fetched services
           const serviceData = data.services.map(service => ({
             service: service.service,
@@ -329,7 +301,7 @@ const CreateInvoice = () => {
             grandTotal: service.grandTotal,
           }));
           setServices(serviceData);
-  
+
           // Update rows state with fetched installments
           const rowsData = data.installments.map(installment => ({
             label: installment.label,
@@ -337,7 +309,7 @@ const CreateInvoice = () => {
             installmentAmount: installment.installmentAmount,
           }));
           setRows(rowsData);
-  
+
           // Also update installments state to ensure correct mapping
           setInstallments(rowsData);
           setInputCount(data.inputCount || 0);
@@ -345,7 +317,7 @@ const CreateInvoice = () => {
         .catch((error) => console.log('Error fetching data:', error));
     }
   }, [quotationId]);
-  
+
   return (
     <>
       <div className='container border rounded p-5 ui blue'>
@@ -404,33 +376,24 @@ const CreateInvoice = () => {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan="5"> <Checkbox label='Do you want to provide discount on total amount ?' onClick={changeIcon} /></TableCell>
+                    <TableCell colSpan="5"><Checkbox label='Do you want to provide discount on total amount ?'checked={!show}onClick={changeIcon}/></TableCell>
                   </TableRow>
 
+                  {!show && (
+                    <>
+                      <TableRow>
+                        <TableCell colSpan="3">DISCOUNT:</TableCell>
+                        <TableCell><FormField><Select options={discountTypeOptions} value={totalDiscountType}onChange={(e, { value }) => setTotalDiscountType(value)}style={{ minWidth: '5em' }}/></FormField></TableCell>
+                        <TableCell><FormField><Input placeholder="Discount"value={totalDiscount}onChange={(e) => handleTotalDiscount(e.target.value)}/></FormField></TableCell>
+                      </TableRow>
 
-                  {show ?
-                    (console.log('notjhing')) : (
-                      <>
-                        <TableRow>
-                          <TableCell colSpan="3">DISCOUNT:</TableCell>
-                          <TableCell>
-                            <FormField><Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} /></FormField>
-                          </TableCell>
-                          <TableCell>
-                            <FormField>
-                              <Input placeholder="Discount" value={totalDiscount} onChange={(e) => handleTotalDiscount(e.target.value)} />
-                            </FormField>
-                          </TableCell>
-                        </TableRow>
+                      <TableRow>
+                        <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
+                        <TableCell><FormField><Input value={finalAmount} readOnly /></FormField></TableCell>
+                      </TableRow>
+                    </>
+                  )}
 
-                        <TableRow>
-                          <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
-                          <TableCell><FormField>
-                            <Input value={finalAmount} readOnly />
-                          </FormField></TableCell>
-                        </TableRow></>
-                    )
-                  }
 
                   <TableRow>
                     <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>
