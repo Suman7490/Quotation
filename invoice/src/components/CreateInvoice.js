@@ -47,7 +47,7 @@ const CreateInvoice = () => {
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
-  const [totalService, setTotalService] = useState(1)
+  const [totalService, setTotalService] = useState(1);
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
 
@@ -132,23 +132,48 @@ const CreateInvoice = () => {
   };
 
   // ***************** Handle Total Discount for total Amount *****************
+  // const handleTotalDiscount = (value) => {
+  //   const discountValue = value === '' ? 0 : parseFloat(value);
+
+  //   // Calculate total discount based on the selected total discount type (amount or percentage)
+  //   let discountAmount = 0;
+  //   const total = totalAmount();
+
+  //   if (totalDiscountType === 'percentage') {
+  //     discountAmount = (total * discountValue) / 100; // Calculate percentage discount
+  //   } else {
+  //     discountAmount = discountValue; // Flat discount amount
+  //   }
+
+  //   const finalTotal = total - discountAmount; // Deduct discount from the total amount
+  //   setFinalAmount(finalTotal < 0 ? 0 : finalTotal); // Ensure finalAmount doesn't go below 0
+  //   setTotalDiscount(discountValue);
+  // };
+
   const handleTotalDiscount = (value) => {
-    const discountValue = value === '' ? 0 : parseFloat(value);
-
-    // Calculate total discount based on the selected total discount type (amount or percentage)
-    let discountAmount = 0;
+    const discountValue = value === '' ? 0 : parseFloat(value);  // Parse discount value as number or 0
+  
+    // Get the total amount from services
     const total = totalAmount();
-
+  
+    // Calculate the discount amount based on type (percentage or flat amount)
+    let discountAmount = 0;
     if (totalDiscountType === 'percentage') {
-      discountAmount = (total * discountValue) / 100; // Calculate percentage discount
+      discountAmount = (total * discountValue) / 100;  // Calculate percentage-based discount
     } else {
-      discountAmount = discountValue; // Flat discount amount
+      discountAmount = discountValue;  // Flat discount amount
     }
-
-    const finalTotal = total - discountAmount; // Deduct discount from the total amount
-    setFinalAmount(finalTotal < 0 ? 0 : finalTotal); // Ensure finalAmount doesn't go below 0
+  
+    // Set finalAmount equal to total if totalDiscount is 0, otherwise subtract discountAmount
+    const finalTotal = discountValue === 0 ? total : total - discountAmount;
+  
+    // Ensure finalAmount doesn't go below 0
+    setFinalAmount(finalTotal < 0 ? 0 : finalTotal);
+  
+    // Update the discount value state
     setTotalDiscount(discountValue);
   };
+  
   // ****************** Total of grandtotals *****************
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
@@ -294,6 +319,8 @@ const CreateInvoice = () => {
           date: formattedDate,
           domain,
           total: totalAmount(),
+          totalDiscount,
+          finalAmount,
           totalService,
           inputCount,
           services,
@@ -367,6 +394,8 @@ const CreateInvoice = () => {
           setDate(new Date(data.date));
           setDomain(data.domain || "");
           setTotal(data.total || 0);
+          setTotalDiscount(data.totalDiscount || 0);
+          setFinalAmount(data.finalAmount || 0);
           setTotalService(data.totalService || 0);
   
           // Update services state with fetched services

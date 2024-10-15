@@ -23,7 +23,7 @@ const db = mysql.createConnection({
 // ************* Get Data *************
 app.get('/', (req, res) => {
     const sql = `
-        SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalService, q.inputCount,
+        SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalDiscount, q.finalAmount, q.totalService, q.inputCount,
                p.label, p.dueWhen, p.installmentAmount,
                s.serviceName, s.price, s.discount, s.grandTotal
         FROM quotation q
@@ -47,6 +47,8 @@ app.get('/', (req, res) => {
                     date: row.date,
                     domain: row.domain,
                     total: row.total,
+                    totalDiscount: row.totalDiscount,
+                    finalAmount: row.finalAmount,
                     totalService: row.totalService,
                     inputCount: row.inputCount,
                     services: [],
@@ -90,7 +92,7 @@ app.get('/', (req, res) => {
 
 // ************* Post Data ************
 app.post('/create', (req, res) => {
-    const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `date`, `domain`, `total`, `totalService`, `inputCount`) VALUES (?)";
+    const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `date`, `domain`, `total`, `totalDiscount`, `finalAmount`, `totalService`, `inputCount`) VALUES (?)";
     const quotation_values = [
         req.body.name,
         req.body.email,
@@ -98,6 +100,8 @@ app.post('/create', (req, res) => {
         req.body.date,
         req.body.domain,
         req.body.total,
+        req.body.totalDiscount,
+        req.body.finalAmount,
         req.body.totalService,
         req.body.inputCount
     ];
@@ -154,7 +158,7 @@ app.put('/update/:id', (req, res) => {
     // Update quotation data
     const quotationSql = `
         UPDATE quotation 
-        SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalService = ?, inputCount = ? 
+        SET name = ?, email = ?, gender = ?, date = ?, domain = ?, total = ?, totalDiscount = ?, finalAmount = ?, totalService = ?, inputCount = ? 
         WHERE quotation_id = ?`;
 
     const quotationValues = [
@@ -164,6 +168,8 @@ app.put('/update/:id', (req, res) => {
         req.body.date,
         req.body.domain,
         req.body.total,
+        req.body.totalDiscount,
+        req.body.finalAmount,
         req.body.totalService,
         req.body.inputCount,
         quotationId
@@ -355,7 +361,7 @@ app.delete('/delete/:id', (req, res) => {
 app.get('/pdf/:id', (req, res) => {
     const quotationId = req.params.id;
     const sql = `
-         SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalService, q.inputCount,
+         SELECT q.quotation_id, q.name, q.email, q.gender, q.domain, q.date,  q.total, q.totalDiscount, q.finalAmount, q.totalService, q.inputCount,
                p.label, p.dueWhen, p.installmentAmount,
                s.serviceName, s.price, s.discount, s.grandTotal
         FROM quotation q
@@ -379,6 +385,8 @@ app.get('/pdf/:id', (req, res) => {
             date: result[0].date,
             domain: result[0].domain,
             total: result[0].total,
+            totalDiscount: result[0].totalDiscount,
+            finalAmount: result[0].finalAmount,
             inputCount: result[0].inputCount,
             services: [],
             installments: [],
