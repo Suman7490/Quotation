@@ -86,10 +86,6 @@ app.get('/', (req, res) => {
     });
 });
 
-
-
-
-
 // ************* Post Data ************
 app.post('/create', (req, res) => {
     const quotation_sql = "INSERT INTO quotation (`name`, `email`, `gender`, `date`, `domain`, `total`, `totalDiscount`, `finalAmount`, `totalService`, `inputCount`) VALUES (?)";
@@ -307,15 +303,6 @@ app.put('/update/:id', (req, res) => {
     });
 });
 
-
-
-
-
-
-
-
-
-
 // ************** Delete data ***************
 app.delete('/delete/:id', (req, res) => {
     const quotationId = req.params.id;
@@ -354,8 +341,6 @@ app.delete('/delete/:id', (req, res) => {
         });
     });
 });
-
-
 
 // ************* Get Data by Quotation ID *************
 app.get('/pdf/:id', (req, res) => {
@@ -421,7 +406,6 @@ app.get('/pdf/:id', (req, res) => {
         return res.json(data);
     });
 });
-
 
 // ************************ Register form ************************
 app.post('/register', [

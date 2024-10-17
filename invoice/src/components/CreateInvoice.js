@@ -260,11 +260,11 @@ const CreateInvoice = () => {
 
         // Check if we're updating an existing quotation
         if (quotationId) {
-          const response = await axios.put(`http://localhost:8081/update/${quotationId}`, payload);
+          const response = await axios.put(`https://railway-production-05a0.up.railway.app/update/${quotationId}`, payload);
           alert('Quotation updated successfully');
           window.location.href = '/';
         } else {
-          const response = await axios.post(`http://localhost:8081/create`, payload);
+          const response = await axios.post(`https://railway-production-05a0.up.railway.app/create`, payload);
           alert('Quotation created successfully');
           window.location.href = '/';
         }
@@ -278,7 +278,7 @@ const CreateInvoice = () => {
   useEffect(() => {
     if (quotationId) {
       // Fetch the existing data for the quotation
-      axios.get(`http://localhost:8081/pdf/${quotationId}`)
+      axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
 
