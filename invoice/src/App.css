@@ -13,12 +13,39 @@
 .dark{
   background-color: black;
 }
-
-nav.navbar .navbar-nav .nav-link{
-  font-size: 20px;
+nav.navbar{
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
+nav.navbar .navbar-nav .nav-link{
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: transparent;
+  margin: 0 15px;
+  text-align: center;
+  padding: 10px 15px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; 
+  /* box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; */
+  /* box-shadow: 0.2rem 0.2rem 0px black, -0.2rem -0.2rem #ccc; */
+  transition: .3s linear;
+  color: black;
+}
+nav.navbar .navbar-nav .nav-link:hover{
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+}
+
 nav.navbar .navbar-nav .nav-link.active {
-  color: blue !important;
-  font-weight: bold;
-  border-bottom: 3px solid blue;
+  background-color: #2E207D;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+}
+nav.navbar .btn{
+  background: none;
+}
+nav.navbar .icon{
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: transparent;
+  text-align: center;
+  /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;  */
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }

@@ -320,14 +320,14 @@ const CreateInvoice = () => {
 
   return (
     <>
-      <div className='container border rounded p-5 ui blue'>
+      <div className='container'>
         <div className='row'>
           <div className='col-md-12 text-center pb-5'>
-            <Header as='h1' color='blue'>Quotation Manager</Header>
+            <Header as='h1' style={{color: '#2E207D'}}>Quotation Manager</Header>
           </div>
         </div>
         <div className='row'>
-          <div className='col-md-12'>
+          <div className='col-md-12 border rounded p-5 ui blue'>
             <Form className=''>
               <FormGroup widths='equal'>
                 <FormField control={Input} label='Full Name' placeholder='Full Name' value={name} onChange={(e) => setName(e.target.value)} error={errors.name ? { content: errors.name } : null} />
@@ -410,7 +410,7 @@ const CreateInvoice = () => {
                   ))}
                 </TableBody>
               </Table>
-              <center> <Button className='ui blue button w-75 text-large' onClick={postData}>Submit</Button></center>
+              <center> <Button className='button w-75 text-large pt-3 pb-3 shadow' style={{backgroundColor: '#2E207D', color: 'white', fontSize: '20px'}} onClick={postData}>Submit</Button></center>
             </Form>
           </div>
         </div>
