@@ -126,22 +126,13 @@ const CreateInvoice = () => {
 
   const handleTotalDiscount = (value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
-
-    // Get the total amount from services
     const total = totalAmount();
-
-    // Calculate the discount amount based on type (percentage or flat amount)
     let discountAmount = 0;
     if (totalDiscountType === 'percentage') { discountAmount = (total * discountValue) / 100; }
     else { discountAmount = discountValue; }
-
-    // Set finalAmount equal to total if totalDiscount is 0, otherwise subtract discountAmount
-    const finalTotal = discountValue === 0 ? 0 : total - discountAmount;
-
-    // Ensure finalAmount doesn't go below 0
+    // const finalTotal = discountValue === 0 ? 0 : total - discountAmount;
+    const finalTotal = discountValue === 0 ? total : total - discountAmount; 
     setFinalAmount(finalTotal < 0 ? 0 : finalTotal);
-
-    // Update the discount value state
     setTotalDiscount(discountValue);
   };
 
@@ -172,14 +163,9 @@ const CreateInvoice = () => {
     const value = parseInt(event.target.value, 10);
     if (!isNaN(value)) {
       setInputCount(value);
-
-      // Determine which amount to use: finalAmount or totalAmount
       const amount = finalAmount > 0 ? finalAmount : totalAmount();
-
-      // Calculate the installment amount
       const installmentValue = Math.floor(amount / value / 100) * 100;
       const remainder = amount - (installmentValue * value);
-
       // Distribute the remainder to the first installment
       const updatedRows = Array(value).fill('').map((_, index) => ({
         label: labels[index],
@@ -200,26 +186,15 @@ const CreateInvoice = () => {
     const updatedErrors = { ...errors };
 
     // Ensure the row exists before updating
-    if (!updatedRows[index]) {
-      updatedRows[index] = { label: labels[index] };
-    }
-    if (!updatedRows[index]) {
-      updatedRows[index] = {}
-    }
+    if (!updatedRows[index]) {updatedRows[index] = { label: labels[index] };}
+    if (!updatedRows[index]) {updatedRows[index] = {}}
 
     // Update the field in the row
     updatedRows[index][field] = value;
     setRows(updatedRows);
-
     // Ensure the installment exists before updating
-    if (!updatedInstallments[index]) {
-      updatedInstallments[index] = { label: labels[index] };
-    }
-
-    if (!updatedInstallments[index]) {
-      updatedInstallments[index] = {};
-    }
-    // Update the field in the corresponding installment
+    if (!updatedInstallments[index]) {updatedInstallments[index] = { label: labels[index] };}
+    if (!updatedInstallments[index]) {updatedInstallments[index] = {};}
     updatedInstallments[index][field] = value;
     setInstallments(updatedInstallments);
   };
@@ -389,7 +364,7 @@ const CreateInvoice = () => {
 
                       <TableRow>
                         <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
-                        <TableCell><FormField><Input value={finalAmount} readOnly /></FormField></TableCell>
+                        <TableCell><FormField><Input value={finalAmount > 0 ? finalAmount : totalAmount()} readOnly /></FormField></TableCell>
                       </TableRow>
                     </>
                   )}
