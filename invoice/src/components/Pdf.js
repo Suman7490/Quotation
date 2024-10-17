@@ -26,7 +26,7 @@ const Pdf = () => {
 
     useEffect(() => {
         // Fetch the data from the server
-        axios.get(`http://localhost:8081/pdf/${id}`)
+        axios.get(`https://railway-production-05a0.up.railway.app/pdf/${id}`)
             .then((response) => {
                 setData(response.data);
                 setLoading(false);
