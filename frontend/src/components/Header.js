@@ -7,13 +7,15 @@ const Header = () => {
     const [icon, setIcon] = useState(true)
 
     const changeIcon = () => {
-        if (icon == true) { setIcon(false) }
+        if (icon == true) {
+             setIcon(false) 
+            }
         else (setIcon(true))
     }
 
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-light">
+            <nav className={`navbar navbar-expand-lg navbar-light ${icon ? 'light large bold' : 'dark small'}`}>
                 <NavLink className="navbar-brand" to="/"><img src={Logo} width="100px" alt='Logo' /></NavLink>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -22,10 +24,10 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto">
                         <li className="nav-item">
-                            <NavLink className="nav-link" exact to="/">View</NavLink>
+                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} exact to="/">View</NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/createinvoice">Create</NavLink>
+                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} to="/createinvoice">Create</NavLink>
                         </li>
                         {/* <li className="nav-item">
                             <NavLink className="nav-link" to="/register" activeClassName="active-nav">Registration</NavLink>
@@ -34,7 +36,7 @@ const Header = () => {
                             <NavLink className="nav-link" to="/login" activeClassName="active-nav">Login</NavLink>
                         </li> */}
                     </ul>
-                    <button className='btn icon' onClick={changeIcon}>
+                    <button className={`btn icon ${icon ? 'bold' : 'bg-white'}`} onClick={changeIcon}>
                         {icon ?
                             (<Icon className='moon' size='large' />)
                             :

@@ -372,7 +372,7 @@ const CreateInvoice = () => {
 
                   <TableRow>
                     <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>
-                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell> {/* <TableCell className='text-right border'><Button className='btn' onClick={addInsallments} onChange={handleInputChange} >Add Service</Button></TableCell> */}
+                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell> 
                   </TableRow>
 
                   {rows.map((row, index) => (
