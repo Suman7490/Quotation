@@ -164,7 +164,7 @@ const Pdf = () => {
                                 </div>
                             </div>
                             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                            <div className='row pt-5 mt-5'>
+                            <div className='row pt-5 mt-5 fixed flex flex-wrap'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
