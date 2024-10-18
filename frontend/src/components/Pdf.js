@@ -79,8 +79,7 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell>
                                                 <div className='header'>
-                                                    <p>Suman</p>
-                                                    {/* <p style={{ fontSize: '25px', margin:'0' }}>
+                                                    <p style={{ fontSize: '25px', margin:'0' }}>
                                                         <strong style={{ color: 'darkblue' }}>KALP </strong>
                                                         <strong style={{ color: 'red' }}>RESEARCH </strong>
                                                         <strong style={{ color: 'darkblue' }}>WORK</strong>
@@ -88,7 +87,7 @@ const Pdf = () => {
                                                         <strong style={{ color: 'darkblue' }}>K</strong>
                                                         <strong style={{ color: 'red' }}>R</strong>
                                                         <strong style={{ color: 'darkblue' }}>W</strong>
-                                                    </p> */}
+                                                    </p>
                                                     <p className='m-0'>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
                                                     <p className='m-0'> +91 - 7037663686</p>
                                                     <p className='m-0'> info@kalpresearchwork.com</p>
