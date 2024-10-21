@@ -129,12 +129,20 @@ const CreateInvoice = () => {
     const discountValue = value === '' ? 0 : parseFloat(value);
     const total = totalAmount();
     let discountAmount = 0;
-    if (totalDiscountType === 'percentage') { discountAmount = (total * discountValue) / 100; }
-    else { discountAmount = discountValue; }
-    // const finalTotal = discountValue === 0 ? 0 : total - discountAmount;
-    const finalTotal = discountValue === 0 ? total : total - discountAmount; 
+
+    if (totalDiscountType === 'percentage') {
+      discountAmount = (total * discountValue) / 100;
+    }
+    else {
+      discountAmount = discountValue;
+    }
+    const finalTotal = total - discountAmount;
+    // const finalTotal = discountValue === 0 ? total : total - discountAmount;
     setFinalAmount(finalTotal < 0 ? 0 : finalTotal);
-    setTotalDiscount(discountValue);
+    // setTotalDiscount(discountValue);
+    console.log("Discount Value:", discountValue);
+    console.log("Total Amount:", total);
+    console.log("Calculated Final Total:", finalTotal);
   };
 
   // ****************** Total of grandtotals *****************
@@ -187,15 +195,15 @@ const CreateInvoice = () => {
     const updatedErrors = { ...errors };
 
     // Ensure the row exists before updating
-    if (!updatedRows[index]) {updatedRows[index] = { label: labels[index] };}
-    if (!updatedRows[index]) {updatedRows[index] = {}}
+    if (!updatedRows[index]) { updatedRows[index] = { label: labels[index] }; }
+    if (!updatedRows[index]) { updatedRows[index] = {} }
 
     // Update the field in the row
     updatedRows[index][field] = value;
     setRows(updatedRows);
     // Ensure the installment exists before updating
-    if (!updatedInstallments[index]) {updatedInstallments[index] = { label: labels[index] };}
-    if (!updatedInstallments[index]) {updatedInstallments[index] = {};}
+    if (!updatedInstallments[index]) { updatedInstallments[index] = { label: labels[index] }; }
+    if (!updatedInstallments[index]) { updatedInstallments[index] = {}; }
     updatedInstallments[index][field] = value;
     setInstallments(updatedInstallments);
   };
@@ -212,7 +220,11 @@ const CreateInvoice = () => {
 
   const postData = async (e) => {
     e.preventDefault();
-
+    const calculatedFinalAmount = totalAmount() - (totalDiscountType === 'percentage' ? (totalAmount() * totalDiscount) / 100 : totalDiscount);
+    setFinalAmount(calculatedFinalAmount);
+  
+    console.log("Calculated Final Amount before sending:", calculatedFinalAmount);
+  
     // Validate input data
     if (Validate()) {
       console.log("Final rows before submission:", rows);
@@ -227,20 +239,22 @@ const CreateInvoice = () => {
           domain,
           total: totalAmount(),
           totalDiscount,
-          finalAmount,
+          finalAmount: calculatedFinalAmount,
           totalService,
           inputCount,
           services,
           installments: rows,
         };
-
+        console.log("posted data:", payload);
         // Check if we're updating an existing quotation
         if (quotationId) {
           const response = await axios.put(`https://railway-production-05a0.up.railway.app/update/${quotationId}`, payload);
           alert('Quotation updated successfully');
           window.location.href = '/';
         } else {
+          console.log("Final Amount before sending:", finalAmount);
           const response = await axios.post(`https://railway-production-05a0.up.railway.app/create`, payload);
+          console.log("Final Amount before sending:", finalAmount);
           alert('Quotation created successfully');
           window.location.href = '/';
         }
@@ -253,12 +267,11 @@ const CreateInvoice = () => {
 
   useEffect(() => {
     if (quotationId) {
-      // Fetch the existing data for the quotation
+      
       axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-
-          // Set the fetched data for the form fields
+          
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
@@ -266,10 +279,16 @@ const CreateInvoice = () => {
           setDomain(data.domain || "");
           setTotal(data.total || 0);
           setTotalDiscount(data.totalDiscount || 0);
-          setFinalAmount(data.totalDiscount === 0 ? 0 : data.finalAmount || 0); 
           setTotalService(data.totalService || 0);
-          if (data.totalDiscount > 0 || data.finalAmount > 0) {hide(false);}
-          // Update services state with fetched services
+          
+          // if(data) {
+          //   const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
+          //   setFinalAmount(finalTotal);
+          // }
+          const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
+          setFinalAmount(finalTotal);
+          
+          if (data.totalDiscount > 0 || data.finalAmount > 0) { hide(false); }
           const serviceData = data.services.map(service => ({
             service: service.service,
             price: service.price,
@@ -278,15 +297,15 @@ const CreateInvoice = () => {
           }));
           setServices(serviceData);
 
-          // Update rows state with fetched installments
           const rowsData = data.installments.map(installment => ({
             label: installment.label,
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-          setRows(rowsData);
 
-          // Also update installments state to ensure correct mapping
+          setRows(rowsData);
+          console.log("Received data:", data);
+
           setInstallments(rowsData);
           setInputCount(data.inputCount || 0);
         })
@@ -299,7 +318,7 @@ const CreateInvoice = () => {
       <div className='container'>
         <div className='row'>
           <div className='col-md-12 text-center pb-5'>
-            <Header as='h1' style={{color: '#2E207D'}}>Quotation Manager</Header>
+            <Header as='h1' style={{ color: '#443F11' }}>Quotation Manager</Header>
           </div>
         </div>
         <div className='row'>
@@ -352,20 +371,24 @@ const CreateInvoice = () => {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan="5"><Checkbox label='Do you want to provide discount on total amount ?'checked={!show}onClick={changeIcon}/></TableCell>
+                    <TableCell colSpan="5"><Checkbox label='Do you want to provide discount on total amount ?' checked={!show} onClick={changeIcon} /></TableCell>
                   </TableRow>
 
                   {!show && (
                     <>
                       <TableRow>
                         <TableCell colSpan="3">DISCOUNT:</TableCell>
-                        <TableCell><FormField><Select options={discountTypeOptions} value={totalDiscountType}onChange={(e, { value }) => setTotalDiscountType(value)}style={{ minWidth: '5em' }}/></FormField></TableCell>
-                        <TableCell><FormField><Input placeholder="Discount"value={totalDiscount}onChange={(e) => handleTotalDiscount(e.target.value)}/></FormField></TableCell>
+                        <TableCell><FormField><Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} /></FormField></TableCell>
+                        <TableCell><FormField><Input placeholder="Discount" value={totalDiscount} onChange={(e) => {
+                          const discountValue = e.target.value;
+                          handleTotalDiscount(discountValue);  
+                          setTotalDiscount(discountValue);
+                          }} /></FormField></TableCell>
                       </TableRow>
 
                       <TableRow>
                         <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
-                        <TableCell><FormField><Input value={finalAmount > 0 ? finalAmount : totalAmount()} readOnly /></FormField></TableCell>
+                        <TableCell><FormField><Input value={finalAmount > 0 ? finalAmount : totalAmount()} /></FormField></TableCell>
                       </TableRow>
                     </>
                   )}
@@ -373,7 +396,7 @@ const CreateInvoice = () => {
 
                   <TableRow>
                     <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>
-                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell> 
+                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell>
                   </TableRow>
 
                   {rows.map((row, index) => (
@@ -386,7 +409,7 @@ const CreateInvoice = () => {
                   ))}
                 </TableBody>
               </Table>
-              <center> <Button className='button w-75 text-large pt-3 pb-3 shadow' style={{backgroundColor: '#2E207D', color: 'white', fontSize: '20px'}} onClick={postData}>Submit</Button></center>
+              <center> <Button className='button w-75 text-large pt-3 pb-3 shadow' style={{ backgroundColor: '#443F11', color: 'white', fontSize: '20px' }} onClick={postData}>Submit</Button></center>
             </Form>
           </div>
         </div>

@@ -34,7 +34,7 @@ nav.navbar .navbar-nav .nav-link:hover{
 }
 
 nav.navbar .navbar-nav .nav-link.active {
-  background-color: #2E207D;
+  background-color: #443F11;
   color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }

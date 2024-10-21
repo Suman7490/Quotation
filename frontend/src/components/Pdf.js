@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import companyLogo from './KRW.png';
+import companyLogo from './new_logo.svg';
 import Signature from './Signature.png';
 import ReactToPrint from 'react-to-print';
 import { TableRow, TableCell, Table, Icon } from 'semantic-ui-react';
@@ -77,16 +77,16 @@ const Pdf = () => {
                                 <div className='col-md-12'>
                                     <Table className='border-0 table-stripped'>
                                         <TableRow>
-                                            <TableCell>
+                                            <TableCell className='align-content-end'>
                                                 <div className='header'>
                                                     <p style={{ fontSize: '25px', margin:'0' }}>
-                                                        <strong style={{ color: 'darkblue' }}>KALP </strong>
-                                                        <strong style={{ color: 'red' }}>RESEARCH </strong>
-                                                        <strong style={{ color: 'darkblue' }}>WORK</strong>
+                                                        <strong style={{ color: '#084B1B' }}>KALP </strong>
+                                                        <strong style={{ color: '#7F9D34' }}>RESEARCH </strong>
+                                                        <strong style={{ color: '#084B1B' }}>WORK</strong>
                                                         <strong> - </strong>
-                                                        <strong style={{ color: 'darkblue' }}>K</strong>
-                                                        <strong style={{ color: 'red' }}>R</strong>
-                                                        <strong style={{ color: 'darkblue' }}>W</strong>
+                                                        <strong style={{ color: '#084B1B' }}>K</strong>
+                                                        <strong style={{ color: '#7F9D34' }}>R</strong>
+                                                        <strong style={{ color: '#084B1B' }}>W</strong>
                                                     </p>
                                                     <p className='m-0'><Icon className='home'/>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
                                                     <p className='m-0'><Icon className='call'/> +91 - 7037663686</p>
@@ -94,7 +94,7 @@ const Pdf = () => {
                                                     <p className='m-0'><Icon className='globe'/> www.kalpresearchwork.com</p>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className='text-right'>
+                                            <TableCell className='text-right align-content-end pb-0'>
                                                 <img src={companyLogo} alt="Logo" style={{ width: '200px' }} />
                                             </TableCell>
                                         </TableRow>
@@ -109,7 +109,7 @@ const Pdf = () => {
                                             <TableCell>
                                                 <div className='header'>
                                                     <p className='m-0'><strong>Quotation To:</strong></p>
-                                                    <p className='m-0' style={{ color: 'red', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
+                                                    <p className='m-0' style={{ color: '#084B1B', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
                                                     <p className='m-0'><strong>Research Area/Domain:</strong> {data.domain}</p>
                                                 </div>
                                             </TableCell>
@@ -127,7 +127,7 @@ const Pdf = () => {
                                 <div className='col-12'>
                                     <table className='table table-stripped'>
                                         <thead>
-                                            <tr className='table-header' style={{ backgroundColor: '#d70202', color: 'white' }}>
+                                            <tr className='table-header' style={{ backgroundColor: '#084B1B', color: 'white' }}>
                                                 <th><strong>SERVICES</strong></th>
                                                 <th><strong>PRICE</strong></th>
                                                 <th><strong>DISCOUNT</strong></th>
@@ -136,23 +136,23 @@ const Pdf = () => {
                                         </thead>
                                         <tbody>
                                             {data.services.map((service, idx) => (
-                                                <tr key={idx}  style={{ backgroundColor: '#0722ad', color: 'white' }}>
+                                                <tr key={idx}  style={{ backgroundColor: '#7F9D34', color: 'white' }}>
                                                     <td>{service.service}</td>
                                                     <td>{service.price}</td>
                                                     <td>{service.discount}</td>
                                                     <td>{service.grandTotal}</td>
                                                 </tr>
                                             ))}
-                                            <tr style={{ backgroundColor: '#d70202', color: 'white' }}>
+                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
                                                 <td colSpan={3}>TOTAL AMOUNT OF ALL SERVICES :</td>
                                                 <td>{data.total}</td>
                                             </tr>
-                                            <tr style={{ backgroundColor: '#d70202', color: 'white' }}>
+                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
                                                 <td colSpan={3}>TOTAL INSTALLMENTS :</td>
                                                 <td>{data.inputCount}</td>
                                             </tr>
                                             {data.installments.map((installment, idx) => (
-                                                <tr key={idx} style={{ backgroundColor: '#0722ad', color: 'white' }}>
+                                                <tr key={idx} style={{ backgroundColor: '#7F9D34', color: 'white' }}>
                                                     <td colSpan={3} style={{ textTransform: 'uppercase' }}>
                                                         {installment.label} : {installment.dueWhen} {installment.when}
                                                     </td>
@@ -164,19 +164,19 @@ const Pdf = () => {
                                 </div>
                             </div>
                             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                            <div className='row pt-5 mt-5 fixed-bottom flex flex-wrap'>
+                            <div className='row pt-5 mt-5 fixed flex flex-wrap'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
                                             <TableCell className='border-0'>
                                                 <div className='header'>
-                                                    <h3 className='p-3' style={{ backgroundColor: 'lightpink', width: '50%' }}>PAYMENT METHOD</h3>
+                                                    <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>PAYMENT METHOD</h3>
                                                     <p className='m-0'>Account Details: 20005393359</p>
                                                     <p className='m-0'>IFSC: SBIN0002502</p>
                                                     <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
                                                 </div>
                                                 <div className='header mt-4'>
-                                                    <h3 className='p-3' style={{ backgroundColor: 'lightpink', width: '50%' }}>TERMS AND CONDITION</h3>
+                                                    <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>TERMS AND CONDITION</h3>
                                                     <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
                                                     <p className='m-0'>There will be a 10% interest charge per month on late invoices.</p>
                                                 </div>

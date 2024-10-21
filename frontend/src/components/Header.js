@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import Logo from "./KRW.png"
+import Logo from "./new_logo.svg"
 import { Icon } from "semantic-ui-react"
 import '../App.css'
 const Header = () => {
@@ -15,8 +15,8 @@ const Header = () => {
 
     return (
         <>
-            <nav className={`navbar navbar-expand-lg navbar-light ${icon ? 'light large bold' : 'dark small'}`}>
-                <NavLink className="navbar-brand" to="/"><img src={Logo} width="100px" alt='Logo' /></NavLink>
+            <nav className={`navbar navbar-expand-lg navbar-light pt-0 pb-0 ${icon ? 'light large bold' : 'dark small'}`}>
+                <NavLink className="navbar-brand p-0" to="/"><img src={Logo} width="80px" alt='Logo' /></NavLink>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
