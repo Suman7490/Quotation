@@ -88,10 +88,10 @@ const Pdf = () => {
                                                         <strong style={{ color: 'red' }}>R</strong>
                                                         <strong style={{ color: 'darkblue' }}>W</strong>
                                                     </p>
-                                                    <p className='m-0'>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
-                                                    <p className='m-0'> +91 - 7037663686</p>
-                                                    <p className='m-0'> info@kalpresearchwork.com</p>
-                                                    <p className='m-0'> www.kalpresearchwork.com</p>
+                                                    <p className='m-0'><Icon className='home'/>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
+                                                    <p className='m-0'><Icon className='call'/> +91 - 7037663686</p>
+                                                    <p className='m-0'><Icon className='mail'/> info@kalpresearchwork.com</p>
+                                                    <p className='m-0'><Icon className='globe'/> www.kalpresearchwork.com</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right'>
@@ -108,15 +108,15 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell>
                                                 <div className='header'>
-                                                    <p className='m-0'>Quotation To:</p>
+                                                    <p className='m-0'><strong>Quotation To:</strong></p>
                                                     <p className='m-0' style={{ color: 'red', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
-                                                    <p className='m-0'>Research Area/Domain: {data.domain}</p>
+                                                    <p className='m-0'><strong>Research Area/Domain:</strong> {data.domain}</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right'>
                                                 <div className='header'>
-                                                    <p className='m-0'>NO KRW/Q-{data.id}</p>
-                                                    <p className='m-0'>DATE: {formatDate(data.date)}</p>
+                                                    <p className='m-0'><strong>NO KRW/Q - </strong>{data.id}</p>
+                                                    <p className='m-0'><strong>DATE:</strong> {formatDate(data.date)}</p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -128,10 +128,10 @@ const Pdf = () => {
                                     <table className='table table-stripped'>
                                         <thead>
                                             <tr className='table-header' style={{ backgroundColor: '#d70202', color: 'white' }}>
-                                                <th>SERVICES</th>
-                                                <th>PRICE</th>
-                                                <th>DISCOUNT</th>
-                                                <th>GRAND TOTAL</th>
+                                                <th><strong>SERVICES</strong></th>
+                                                <th><strong>PRICE</strong></th>
+                                                <th><strong>DISCOUNT</strong></th>
+                                                <th><strong>GRAND TOTAL</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -164,7 +164,7 @@ const Pdf = () => {
                                 </div>
                             </div>
                             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                            <div className='row pt-5 mt-5 fixed flex flex-wrap'>
+                            <div className='row pt-5 mt-5 fixed-bottom flex flex-wrap'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>

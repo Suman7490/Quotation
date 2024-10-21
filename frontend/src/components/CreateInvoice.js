@@ -13,6 +13,7 @@ const ResearchDomain = [
   { text: 'Life Science', value: 'Life Science' },
   { text: 'Engineering', value: 'Engineering' },
   { text: 'Management', value: 'Management' },
+  { text: 'Language & Litreture', value: 'Language & Litreture' },
 ]
 
 const WritingService = [
