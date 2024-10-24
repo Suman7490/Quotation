@@ -281,10 +281,7 @@ const CreateInvoice = () => {
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
           
-          // if(data) {
-          //   const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
-          //   setFinalAmount(finalTotal);
-          // }
+        
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
           
@@ -371,7 +368,7 @@ const CreateInvoice = () => {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell colSpan="5"><Checkbox label='Do you want to provide discount on total amount ?' checked={!show} onClick={changeIcon} /></TableCell>
+                    <TableCell colSpan="5"><Checkbox label='Click if you want to provide discount on total amount ?' checked={!show} onClick={changeIcon} /></TableCell>
                   </TableRow>
 
                   {!show && (
