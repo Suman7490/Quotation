@@ -70,7 +70,7 @@ const Pdf = () => {
         <>
             {data ? (
                 <div>
-                    <ReactToPrint trigger={() => <Icon name='print' size='large' style={{cursor: 'pointer'}}/>} content={() => componentRef.current} pageStyle={pageStyle} />
+                    <ReactToPrint trigger={() => <Icon name='print' size='large' style={{ cursor: 'pointer' }} />} content={() => componentRef.current} pageStyle={pageStyle} />
                     <div ref={componentRef}>
                         <div className='container pdf'>
                             <div className='row'>
@@ -79,7 +79,7 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell className='align-content-end'>
                                                 <div className='header'>
-                                                    <p style={{ fontSize: '25px', margin:'0' }}>
+                                                    <p style={{ fontSize: '25px', margin: '0' }}>
                                                         <strong style={{ color: '#084B1B' }}>KALP </strong>
                                                         <strong style={{ color: '#7F9D34' }}>RESEARCH </strong>
                                                         <strong style={{ color: '#084B1B' }}>WORK</strong>
@@ -88,10 +88,10 @@ const Pdf = () => {
                                                         <strong style={{ color: '#7F9D34' }}>R</strong>
                                                         <strong style={{ color: '#084B1B' }}>W</strong>
                                                     </p>
-                                                    <p className='m-0'><Icon className='home'/>Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
-                                                    <p className='m-0'><Icon className='call'/> +91 - 7037663686</p>
-                                                    <p className='m-0'><Icon className='mail'/> info@kalpresearchwork.com</p>
-                                                    <p className='m-0'><Icon className='globe'/> www.kalpresearchwork.com</p>
+                                                    <p className='m-0'><Icon className='home' />Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
+                                                    <p className='m-0'><Icon className='call' /> +91 - 7037663686</p>
+                                                    <p className='m-0'><Icon className='mail' /> info@kalpresearchwork.com</p>
+                                                    <p className='m-0'><Icon className='globe' /> www.kalpresearchwork.com</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right align-content-end pb-0'>
@@ -136,7 +136,7 @@ const Pdf = () => {
                                         </thead>
                                         <tbody>
                                             {data.services.map((service, idx) => (
-                                                <tr key={idx}  style={{ backgroundColor: '#7F9D34', color: 'white' }}>
+                                                <tr key={idx} style={{ backgroundColor: '#7F9D34', color: 'white' }}>
                                                     <td>{service.service}</td>
                                                     <td>{service.price}</td>
                                                     <td>{service.discount}</td>
@@ -144,8 +144,16 @@ const Pdf = () => {
                                                 </tr>
                                             ))}
                                             <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
-                                                <td colSpan={3}>TOTAL AMOUNT OF ALL SERVICES :</td>
+                                                <td colSpan={3}>SUBTOTAL:</td>
                                                 <td>{data.total}</td>
+                                            </tr>
+                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
+                                                <td colSpan={3}>TOTAL DISCOUNT :</td>
+                                                <td>{data.totalDiscount}</td>
+                                            </tr>
+                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
+                                                <td colSpan={3}>TOTAL PAYABLE AMOUNT :</td>
+                                                <td>{data.finalAmount}</td>
                                             </tr>
                                             <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
                                                 <td colSpan={3}>TOTAL INSTALLMENTS :</td>
@@ -163,31 +171,33 @@ const Pdf = () => {
                                     </table>
                                 </div>
                             </div>
-                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                            <div className='row pt-5 mt-5 fixed flex flex-wrap'>
-                                <div className='col-md-12'>
-                                    <Table className='border-0'>
-                                        <TableRow>
-                                            <TableCell className='border-0'>
-                                                <div className='header'>
-                                                    <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>PAYMENT METHOD</h3>
-                                                    <p className='m-0'>Account Details: 20005393359</p>
-                                                    <p className='m-0'>IFSC: SBIN0002502</p>
-                                                    <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
-                                                </div>
-                                                <div className='header mt-4'>
-                                                    <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>TERMS AND CONDITION</h3>
-                                                    <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
-                                                    <p className='m-0'>There will be a 10% interest charge per month on late invoices.</p>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className='border-0 text-center'>
-                                                <img src={Signature} alt='Signature' style={{ width: '100px' }} />
-                                                <hr style={{ border: '1px solid black' }} />
-                                                <h5 className='pt-0 m-0'>AUTHORIZED SIGN</h5>
-                                            </TableCell>
-                                        </TableRow>
-                                    </Table>
+                            {/* <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /> */}
+                            <div className='container'>
+                                <div className='row pt-5 mt-5 fixed-bottom flex flex-wrap ml-5 mr-5'>
+                                    <div className='col-md-12'>
+                                        <Table className='border-0'>
+                                            <TableRow>
+                                                <TableCell className='border-0'>
+                                                    <div className='header'>
+                                                        <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>PAYMENT METHOD</h3>
+                                                        <p className='m-0'>Account Details: 20005393359</p>
+                                                        <p className='m-0'>IFSC: SBIN0002502</p>
+                                                        <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
+                                                    </div>
+                                                    <div className='header mt-4'>
+                                                        <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>TERMS AND CONDITION</h3>
+                                                        <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
+                                                        <p className='m-0'>There will be a 10% interest charge per month on late invoices.</p>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className='border-0 text-center'>
+                                                    <img src={Signature} alt='Signature' style={{ width: '100px' }} />
+                                                    <hr style={{ border: '1px solid black' }} />
+                                                    <h5 className='pt-0 m-0'>AUTHORIZED SIGN</h5>
+                                                </TableCell>
+                                            </TableRow>
+                                        </Table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
