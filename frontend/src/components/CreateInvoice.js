@@ -106,7 +106,7 @@ const WritingService = [
   { text: "UGC Systematic Review paper Writing", value: "UGC Systematic Review paper Writing" },
   { text: "WOS Journal Selection", value: "WOS Journal Selection" },
   { text: "WOS Paper Submission", value: "WOS Paper Submission" },
-  { text: "Other", value: "WOS Paper Submission" },
+  { text: "Other", value: "Other" },
 ];
 
 const discountTypeOptions = [
@@ -266,10 +266,34 @@ const CreateInvoice = () => {
 
   //  *************** Handle Writing Service Change for each row ***************
   const handleServiceChange = (index, value) => {
-    const updatedRow = services.map((row, i) =>
-      i === index ? { ...row, service: value } : row // Only update `service` field
-    );
-    setServices(updatedRow);
+    if (value === 'Other') {
+      setIsCustomService(true); // Show input box for custom service
+    } else {
+      // Update the selected service without setting a predefined price
+      const updatedServices = services.map((service, i) =>
+        i === index ? { ...service, service: value, price: service.price || 0 } : service
+      );
+      setServices(updatedServices);
+      setIsCustomService(false);
+    }
+  };
+  // ************* Handle CustomeService Add Option **************
+  const handleAddCustomService = () => {
+    if (customService.trim()) {
+      // Add custom service to the dropdown options
+      const newOption = { text: customService, value: customService.toLowerCase() };
+      setServiceOptions([...serviceOptions, newOption]);
+
+      // Update the service row to include the custom service with a manually entered price
+      const updatedServices = services.map((service, index) =>
+        index === services.length - 1 ? { ...service, service: customService, price: 0 } : service
+      );
+      setServices(updatedServices);
+
+      // Reset the custom service input field
+      setCustomService('');
+      setIsCustomService(false);
+    }
   };
   // **************** Add Service ************
   const addService = () => {
@@ -485,17 +509,36 @@ const CreateInvoice = () => {
 
                   {services.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell width={10}><FormField>
-                        <Dropdown
-                          placeholder="Services"
-                          fluid
-                          selection
-                          search
-                          clearable
-                          options={WritingService}
-                          value={row.service}
-                          onChange={(e, { value }) => handleServiceChange(index, value)}
-                          error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
+                      <TableCell width={10}>
+                        <FormField>
+                          <Dropdown
+                            placeholder="Services"
+                            fluid
+                            selection
+                            search
+                            clearable
+                            options={serviceOptions}
+                            value={row.service}
+                            onChange={(e, { value }) => handleServiceChange(index, value)}
+                            error={errors.domain ? { content: errors.domain } : null} />
+                        </FormField>
+                        {isCustomService && (
+                          <Form.Field>
+                            <Input
+                              placeholder="Enter custom service"
+                              value={customService}
+                              onChange={(e) => setCustomService(e.target.value)}
+                              action={{
+                                color: 'blue',
+                                labelPosition: 'right',
+                                icon: 'plus',
+                                content: 'Add Service',
+                                onClick: handleAddCustomService,
+                              }}
+                            />
+                          </Form.Field>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <FormField
                           control={Input}
