@@ -10,17 +10,103 @@ const genderOptions = [
   { text: 'Other', value: 'other' },
 ]
 const ResearchDomain = [
+  { text: 'Account & Management', value: 'Account & Management' },
+  { text: 'Agricultural Science', value: 'Agricultural Science' },
+  { text: 'Artificial Intelligence', value: 'Artificial Intelligence' },
+  { text: 'Arts & Humanities', value: 'Arts & Humanities' },
+
+  { text: 'Biotechnology', value: 'Biotechnology' },
+  { text: 'Botany', value: 'Botany' },
+  { text: 'Business & Mangement ', value: 'Business & Mangement ' },
+
+  { text: 'Chemistry', value: 'Chemistry' },
+  { text: 'Civil Engineering', value: 'Civil Engineering' },
+  { text: 'Computer Science Engineering', value: 'Computer Science Engineering' },
+
+  { text: 'Economics', value: 'Economics' },
+  { text: 'Educational Studies', value: 'Educational Studies' },
+  { text: 'Electrical Engineering', value: 'Electrical Engineering' },
+  { text: 'English Literature', value: 'English Literature' },
+  { text: 'Environmental Science', value: 'Environmental Science' },
+
+  { text: 'Finance', value: 'Finance' },
+  { text: 'Food & Nutrition Science', value: 'Food & Nutrition Science' },
+
+  { text: 'Health Science', value: 'Health Science' },
+  { text: 'Health Science', value: 'Health Science' },
+  { text: 'Hindi Literature', value: 'Hindi Literature' },
+  { text: 'History', value: 'History' },
+
+  { text: 'Law', value: 'Law' },
   { text: 'Life Science', value: 'Life Science' },
-  { text: 'Engineering', value: 'Engineering' },
-  { text: 'Management', value: 'Management' },
-  { text: 'Language & Litreture', value: 'Language & Litreture' },
+
+  { text: 'Machine Learning', value: 'Machine Learning' },
+  { text: 'Mathematics', value: 'Mathematics' },
+  { text: 'Mechanical Engineering', value: 'Mechanical Engineering' },
+  { text: 'Medical Science', value: 'Medical Science' },
+  { text: 'Microbiology', value: 'Microbiology' },
+  { text: 'Multidisciplinary Subject', value: 'Multidisciplinary Subject' },
+
+  { text: 'Pharmacy', value: 'Pharmacy' },
+  { text: 'Physics', value: 'Physics' },
+  { text: 'Physiotherapy', value: 'Physiotherapy' },
+  { text: 'Political Science', value: 'Political Science' },
+  { text: 'Psychology', value: 'Psychology' },
+
+  { text: 'Social Science', value: 'Social Science' },
+  { text: 'Zoology', value: 'Zoology' },
+  { text: 'Other', value: 'Other' },
 ]
 
 const WritingService = [
-  { text: "Research Paper", value: "Research Paper", price: 100000 },
-  { text: "Thesis", value: "Thesis", price: 150000 },
-  { text: "Research Proposal", value: "Research Proposal", price: 50000 },
-  { text: "Book", value: "Book", price: 80000 },
+  { text: "Book Editing", value: "Book Editing" },
+  { text: "Book Publishing", value: "Book Publishing" },
+  { text: "Book Writing", value: "Book Writing" },
+  { text: "Conference Research paper Editing", value: "Conference Research paper Editing" },
+  { text: "Conference Research paper writing", value: "Conference Research paper writing" },
+  { text: "Conference Review paper Editing", value: "Conference Review paper Editing" },
+  { text: "Conference Review paper writing", value: "Conference Review paper writing" },
+  { text: "Dissertation Editing", value: "Dissertation Editing" },
+  { text: "Dissertation Writing", value: "Dissertation Writing" },
+  { text: "Implementation", value: "Implementation" },
+  { text: "NAAS Paper Submission", value: "NAAS Paper Submission" },
+  { text: "NAAS rating Journal Selection", value: "NAAS rating Journal Selection" },
+  { text: "Peer-review Journal Selection", value: "Peer-review Journal Selection" },
+  { text: "Peer-Review Paper Submission", value: "BoPeer-Review Paper Submissionok" },
+  { text: "Pubmed Journal Selection", value: "Pubmed Journal Selection" },
+  { text: "Pubmed Paper Submission", value: "Pubmed Paper Submission" },
+  { text: "Research proposal Editing", value: "Research proposal Editing" },
+  { text: "Research Proposal Writing", value: "Research Proposal Writing" },
+  { text: "Results & Analysis", value: "Results & Analysis" },
+  { text: "SCI Research paper Editing", value: "SCI Research paper Editing" },
+  { text: "SCI Research paper Writing", value: "SCI Research paper Writing" },
+  { text: "SCI Review paper Editing", value: "SCI Review paper Editing" },
+  { text: "SCI Review paper Writing", value: "SCI Review paper Writing" },
+  { text: "SCI Systematic Review paper Editing", value: "SCI Systematic Review paper Editing" },
+  { text: "SCI Systematic Review paper Writing", value: "SCI Systematic Review paper Writing" },
+  { text: "Scopus Journal Selection", value: "Scopus Journal Selection" },
+  { text: "Scopus Paper Submission", value: "Scopus Paper Submission" },
+  { text: "Scopus Research paper Editing", value: "Scopus Research paper Editing" },
+  { text: "Scopus Research paper Writing", value: "Scopus Research paper Writing" },
+  { text: "Scopus Review paper Editing", value: "Scopus Review paper Editing" },
+  { text: "Scopus Review paper Writing", value: "Scopus Review paper Writing" },
+  { text: "Scopus Systematic Review paper Editing", value: "Scopus Systematic Review paper Editing" },
+  { text: "Scopus Systematic Review paper Writing", value: "Scopus Systematic Review paper Writing" },
+  { text: "Synopsis Editing", value: "Synopsis Editing" },
+  { text: "Synopsis Writing", value: "Synopsis Writing" },
+  { text: "BThesis Editingok", value: "Thesis Editing" },
+  { text: "Thesis Writing", value: "Thesis Writing" },
+  { text: "UGC Journal Selection", value: "UGC Journal Selection" },
+  { text: "UGC Paper Submission", value: "UGC Paper Submission" },
+  { text: "UGC Research paper Editing", value: "UGC Research paper Editing" },
+  { text: "UGC Research paper Writing", value: "UGC Research paper Writing" },
+  { text: "UGC Review paper Editing", value: "UGC Review paper Editing" },
+  { text: "UGC Review paper Writing", value: "UGC Review paper Writing" },
+  { text: "UGC Systematic Review paper Editing", value: "UGC Systematic Review paper Editing" },
+  { text: "UGC Systematic Review paper Writing", value: "UGC Systematic Review paper Writing" },
+  { text: "WOS Journal Selection", value: "WOS Journal Selection" },
+  { text: "WOS Paper Submission", value: "WOS Paper Submission" },
+  { text: "Other", value: "WOS Paper Submission" },
 ];
 
 const discountTypeOptions = [
@@ -35,6 +121,9 @@ const CreateInvoice = () => {
   const [gender, setGender] = useState("");
   const [date, setDate] = useState(null);
   const [domain, setDomain] = useState("");
+  const [isCustomDomain, setIsCustomDomain] = useState(false)
+  const [customDomain, setCustomDomain] = useState('')
+  const [domainOptions, setDomainOptions] = useState(ResearchDomain)
   const [total, setTotal] = useState(0);
   const [installments, setInstallments] = useState([]);
   const [inputCount, setInputCount] = useState(0);
@@ -48,6 +137,9 @@ const CreateInvoice = () => {
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
+  const [isCustomService, setIsCustomService] = useState(false);
+  const [customService, setCustomService] = useState('');
+  const [serviceOptions, setServiceOptions] = useState(WritingService);
   const [totalService, setTotalService] = useState(1);
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
@@ -102,7 +194,29 @@ const CreateInvoice = () => {
     if (show == true) { hide(false) }
     else (hide(true))
   }
+  // ********** Handle Domain Change *******************
+  const handleDomainChange = (e, { value }) => {
+    if (value === 'Other') {
+      setIsCustomDomain(true); // Show input box for custom value
+    } else {
+      setDomain(value);
+      setIsCustomDomain(false); // Hide input box
+    }
+  };
+  const handleAddCustomDomain = () => {
+    if (customDomain.trim()) {
+      // Add custom value to options
+      const newOption = { text: customDomain, value: customDomain.toLowerCase() };
+      setDomainOptions([...domainOptions, newOption]);
 
+      // Set custom value as selected
+      setDomain(customDomain.toLowerCase());
+
+      // Reset input and hide custom field
+      setCustomDomain('');
+      setIsCustomDomain(false);
+    }
+  };
   // ******************* Discount Calculation for each service ************
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
@@ -152,11 +266,11 @@ const CreateInvoice = () => {
 
   //  *************** Handle Writing Service Change for each row ***************
   const handleServiceChange = (index, value) => {
-    const selected = WritingService.find((service) => service.value === value);
     const updatedRow = services.map((row, i) =>
-      i === index ? { ...row, service: value, price: selected ? selected.price : 0, grandTotal: selected ? selected.price - (row.discount || 0) : 0 } : row)
-    setServices(updatedRow)
-  }
+      i === index ? { ...row, service: value } : row // Only update `service` field
+    );
+    setServices(updatedRow);
+  };
   // **************** Add Service ************
   const addService = () => {
     setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
@@ -222,9 +336,9 @@ const CreateInvoice = () => {
     e.preventDefault();
     const calculatedFinalAmount = totalAmount() - (totalDiscountType === 'percentage' ? (totalAmount() * totalDiscount) / 100 : totalDiscount);
     setFinalAmount(calculatedFinalAmount);
-  
+
     console.log("Calculated Final Amount before sending:", calculatedFinalAmount);
-  
+
     // Validate input data
     if (Validate()) {
       console.log("Final rows before submission:", rows);
@@ -267,11 +381,11 @@ const CreateInvoice = () => {
 
   useEffect(() => {
     if (quotationId) {
-      
+
       axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-          
+
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
@@ -280,11 +394,11 @@ const CreateInvoice = () => {
           setTotal(data.total || 0);
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
-          
-        
+
+
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
-          
+
           if (data.totalDiscount > 0 || data.finalAmount > 0) { hide(false); }
           const serviceData = data.services.map(service => ({
             service: service.service,
@@ -328,8 +442,35 @@ const CreateInvoice = () => {
               </FormGroup>
               <FormGroup widths='equal'>
                 <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date } : null} />
-                <FormField control={Select} label={{ children: 'Research Area / Domain' }} placeholder='Research Area/Domain' value={domain} options={ResearchDomain} onChange={(e, { value }) => setDomain(value)} error={errors.domain ? { content: errors.domain } : null} />
+                <FormField
+                  control={Select}
+                  label={{ children: 'Research Area / Domain' }}
+                  placeholder='Research Area/Domain'
+                  value={domain}
+                  search
+                  clearable
+                  options={domainOptions}
+                  // onChange={(e, { value }) => setDomain(value)}
+                  onChange={handleDomainChange}
+                  error={errors.domain ? { content: errors.domain } : null} />
+                {isCustomDomain && (
+                  <Form.Field>
+                    <Input
+                      placeholder="Enter custom gender"
+                      value={customDomain}
+                      onChange={(e) => setCustomDomain(e.target.value)}
+                      action={{
+                        color: 'blue',
+                        labelPosition: 'right',
+                        icon: 'plus',
+                        content: 'Add',
+                        onClick: handleAddCustomDomain,
+                      }}
+                    />
+                  </Form.Field>
+                )}
               </FormGroup>
+
               <Table celled padded>
                 <TableHeader>
                   <TableRow>
@@ -344,15 +485,37 @@ const CreateInvoice = () => {
 
                   {services.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell width={10}><FormField><Dropdown placeholder="Services" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
-                      <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} error={errors.price ? { content: errors.price } : null} /></TableCell>
+                      <TableCell width={10}><FormField>
+                        <Dropdown
+                          placeholder="Services"
+                          fluid
+                          selection
+                          search
+                          clearable
+                          options={WritingService}
+                          value={row.service}
+                          onChange={(e, { value }) => handleServiceChange(index, value)}
+                          error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
+                      <TableCell>
+                        <FormField
+                          control={Input}
+                          placeholder="Price"
+                          value={row.price}
+                          onChange={(e) => {
+                            const priceValue = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                            const updatedServices = services.map((serviceRow, i) =>
+                              i === index ? { ...serviceRow, price: priceValue, grandTotal: priceValue - (serviceRow.discount || 0) } : serviceRow
+                            );
+                            setServices(updatedServices);
+                          }} error={errors[`price_${index}`] ? { content: errors[`price_${index}`] } : null}
+                        /></TableCell>
                       <TableCell>
                         <FormField className='d-flex'>
                           <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '5em' }} />
                           <Input placeholder="Discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
                         </FormField>
                       </TableCell>
-                      <TableCell><FormField control={Input} placeholder="Grand Total" value={row.grandTotal ? `${row.grandTotal}` : ""} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
+                      <TableCell><FormField control={Input} placeholder="Grand Total" value={row.grandTotal || ''} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
                       <TableCell><Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button></TableCell>
                     </TableRow>
                   ))}
@@ -378,9 +541,9 @@ const CreateInvoice = () => {
                         <TableCell><FormField><Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} /></FormField></TableCell>
                         <TableCell><FormField><Input placeholder="Discount" value={totalDiscount} onChange={(e) => {
                           const discountValue = e.target.value;
-                          handleTotalDiscount(discountValue);  
+                          handleTotalDiscount(discountValue);
                           setTotalDiscount(discountValue);
-                          }} /></FormField></TableCell>
+                        }} /></FormField></TableCell>
                       </TableRow>
 
                       <TableRow>
