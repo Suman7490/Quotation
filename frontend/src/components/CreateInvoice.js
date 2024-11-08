@@ -466,7 +466,7 @@ const CreateInvoice = () => {
                 )}
               </FormGroup>
 
-              <Table celled padded>
+              <Table celled style={{overFlowX:'hidden'}}>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderCell singleLine>SERVICES</TableHeaderCell>
@@ -480,7 +480,7 @@ const CreateInvoice = () => {
 
                   {services.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell width={10}>
+                      <TableCell>
                         <FormField>
                           <Dropdown
                             placeholder="Services"
@@ -496,14 +496,12 @@ const CreateInvoice = () => {
                         {isCustomService && (
                           <FormField
                             control={Input}
-                            placeholder="Add service"
+                            placeholder="Add"
                             value={customService}
                             onChange={(e) => setCustomService(e.target.value)}
                             action={{
                               color: 'blue',
-                              labelPosition: 'right',
                               icon: 'plus',
-                              content: 'Add',
                               onClick: handleAddCustomService,
                             }}
                           />
@@ -528,7 +526,7 @@ const CreateInvoice = () => {
                           <Input placeholder="Discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
                         </FormField>
                       </TableCell>
-                      <TableCell><FormField control={Input} placeholder="Grand Total" value={row.grandTotal || ''} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
+                      <TableCell width={2}><FormField control={Input} placeholder="Grand Total" value={row.grandTotal || ''} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
                       <TableCell><Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button></TableCell>
                     </TableRow>
                   ))}
