@@ -14,45 +14,35 @@ const ResearchDomain = [
   { text: 'Agricultural Science', value: 'Agricultural Science' },
   { text: 'Artificial Intelligence', value: 'Artificial Intelligence' },
   { text: 'Arts & Humanities', value: 'Arts & Humanities' },
-
   { text: 'Biotechnology', value: 'Biotechnology' },
   { text: 'Botany', value: 'Botany' },
   { text: 'Business & Mangement ', value: 'Business & Mangement ' },
-
   { text: 'Chemistry', value: 'Chemistry' },
   { text: 'Civil Engineering', value: 'Civil Engineering' },
   { text: 'Computer Science Engineering', value: 'Computer Science Engineering' },
-
   { text: 'Economics', value: 'Economics' },
   { text: 'Educational Studies', value: 'Educational Studies' },
   { text: 'Electrical Engineering', value: 'Electrical Engineering' },
   { text: 'English Literature', value: 'English Literature' },
   { text: 'Environmental Science', value: 'Environmental Science' },
-
   { text: 'Finance', value: 'Finance' },
   { text: 'Food & Nutrition Science', value: 'Food & Nutrition Science' },
-
-  { text: 'Health Science', value: 'Health Science' },
   { text: 'Health Science', value: 'Health Science' },
   { text: 'Hindi Literature', value: 'Hindi Literature' },
   { text: 'History', value: 'History' },
-
   { text: 'Law', value: 'Law' },
   { text: 'Life Science', value: 'Life Science' },
-
   { text: 'Machine Learning', value: 'Machine Learning' },
   { text: 'Mathematics', value: 'Mathematics' },
   { text: 'Mechanical Engineering', value: 'Mechanical Engineering' },
   { text: 'Medical Science', value: 'Medical Science' },
   { text: 'Microbiology', value: 'Microbiology' },
   { text: 'Multidisciplinary Subject', value: 'Multidisciplinary Subject' },
-
   { text: 'Pharmacy', value: 'Pharmacy' },
   { text: 'Physics', value: 'Physics' },
   { text: 'Physiotherapy', value: 'Physiotherapy' },
   { text: 'Political Science', value: 'Political Science' },
   { text: 'Psychology', value: 'Psychology' },
-
   { text: 'Social Science', value: 'Social Science' },
   { text: 'Zoology', value: 'Zoology' },
   { text: 'Other', value: 'Other' },
@@ -115,6 +105,8 @@ const discountTypeOptions = [
 ];
 
 const CreateInvoice = () => {
+  const [errors, setErrors] = useState({});
+  const [rows, setRows] = useState([]);
   const { id: quotationId } = useParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -124,16 +116,6 @@ const CreateInvoice = () => {
   const [isCustomDomain, setIsCustomDomain] = useState(false)
   const [customDomain, setCustomDomain] = useState('')
   const [domainOptions, setDomainOptions] = useState(ResearchDomain)
-  const [total, setTotal] = useState(0);
-  const [installments, setInstallments] = useState([]);
-  const [inputCount, setInputCount] = useState(0);
-  const [errors, setErrors] = useState({});
-  const [rows, setRows] = useState([]);
-  const [totalDiscount, setTotalDiscount] = useState(0);
-  const [discountType, setDiscountType] = useState("amount");
-  const [finalAmount, setFinalAmount] = useState(0);
-  const [totalDiscountType, setTotalDiscountType] = useState("amount");
-  const [show, hide] = useState(true)
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
@@ -141,6 +123,15 @@ const CreateInvoice = () => {
   const [customService, setCustomService] = useState('');
   const [serviceOptions, setServiceOptions] = useState(WritingService);
   const [totalService, setTotalService] = useState(1);
+  const [show, hide] = useState(true)
+  const [totalDiscount, setTotalDiscount] = useState(0);
+  const [totalDiscountType, setTotalDiscountType] = useState("amount");
+  const [finalAmount, setFinalAmount] = useState(0);
+  const [discountType, setDiscountType] = useState("amount");
+  const [total, setTotal] = useState(0);
+  const [installments, setInstallments] = useState([]);
+  const [inputCount, setInputCount] = useState(0);
+
   const labels = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH'];
 
   // *************** Form Validations **************
@@ -175,14 +166,14 @@ const CreateInvoice = () => {
 
   // *************** Date Formate ***************
   const handleDateChange = (event, data) => {
-    const selectedDate = data.value; // Capturing the selected date
+    const selectedDate = data.value;
     const formattedDate = formatDate(selectedDate);
     setDate(formattedDate);
   };
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
     return `${year}-${month}-${day}`;
   };
@@ -194,25 +185,21 @@ const CreateInvoice = () => {
     if (show == true) { hide(false) }
     else (hide(true))
   }
+
   // ********** Handle Domain Change *******************
   const handleDomainChange = (e, { value }) => {
     if (value === 'Other') {
-      setIsCustomDomain(true); // Show input box for custom value
+      setIsCustomDomain(true);
     } else {
       setDomain(value);
-      setIsCustomDomain(false); // Hide input box
+      setIsCustomDomain(false);
     }
   };
   const handleAddCustomDomain = () => {
     if (customDomain.trim()) {
-      // Add custom value to options
       const newOption = { text: customDomain, value: customDomain.toLowerCase() };
       setDomainOptions([...domainOptions, newOption]);
-
-      // Set custom value as selected
       setDomain(customDomain.toLowerCase());
-
-      // Reset input and hide custom field
       setCustomDomain('');
       setIsCustomDomain(false);
     }
@@ -223,14 +210,12 @@ const CreateInvoice = () => {
     let updatedRow = [];
 
     if (discountType === 'percentage') {
-      // If discount is percentage, calculate n% of price
       updatedRow = services.map((row, i) =>
         i === index
           ? { ...row, discount: discountValue, grandTotal: row.price - (row.price * discountValue) / 100 }
           : row
       );
     } else {
-      // If discount is amount, directly subtract the discount from price
       updatedRow = services.map((row, i) =>
         i === index ? { ...row, discount: discountValue, grandTotal: row.price - discountValue } : row
       );
@@ -251,9 +236,7 @@ const CreateInvoice = () => {
       discountAmount = discountValue;
     }
     const finalTotal = total - discountAmount;
-    // const finalTotal = discountValue === 0 ? total : total - discountAmount;
     setFinalAmount(finalTotal < 0 ? 0 : finalTotal);
-    // setTotalDiscount(discountValue);
     console.log("Discount Value:", discountValue);
     console.log("Total Amount:", total);
     console.log("Calculated Final Total:", finalTotal);
@@ -263,13 +246,11 @@ const CreateInvoice = () => {
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
   }
-
-  //  *************** Handle Writing Service Change for each row ***************
+  //  ******* Handle Writing Service Change for each row *******
   const handleServiceChange = (index, value) => {
     if (value === 'Other') {
-      setIsCustomService(true); // Show input box for custom service
+      setIsCustomService(true);
     } else {
-      // Update the selected service without setting a predefined price
       const updatedServices = services.map((service, i) =>
         i === index ? { ...service, service: value, price: service.price || 0 } : service
       );
@@ -280,17 +261,12 @@ const CreateInvoice = () => {
   // ************* Handle CustomeService Add Option **************
   const handleAddCustomService = () => {
     if (customService.trim()) {
-      // Add custom service to the dropdown options
       const newOption = { text: customService, value: customService.toLowerCase() };
       setServiceOptions([...serviceOptions, newOption]);
-
-      // Update the service row to include the custom service with a manually entered price
       const updatedServices = services.map((service, index) =>
         index === services.length - 1 ? { ...service, service: customService, price: 0 } : service
       );
       setServices(updatedServices);
-
-      // Reset the custom service input field
       setCustomService('');
       setIsCustomService(false);
     }
@@ -305,7 +281,7 @@ const CreateInvoice = () => {
     setTotalService(totalService - 1);
   }
 
-  // ************** Start Row Increament on change the Total Installment ****************
+  // ***** Start Row Increament on change the Total Installment ******
   const handleInputChange = (event) => {
     const value = parseInt(event.target.value, 10);
     if (!isNaN(value)) {
@@ -313,7 +289,6 @@ const CreateInvoice = () => {
       const amount = finalAmount > 0 ? finalAmount : totalAmount();
       const installmentValue = Math.floor(amount / value / 100) * 100;
       const remainder = amount - (installmentValue * value);
-      // Distribute the remainder to the first installment
       const updatedRows = Array(value).fill('').map((_, index) => ({
         label: labels[index],
         dueWhen: index === 0 ? 'On Advance' : '',
@@ -332,14 +307,11 @@ const CreateInvoice = () => {
     const updatedInstallments = [...installments];
     const updatedErrors = { ...errors };
 
-    // Ensure the row exists before updating
     if (!updatedRows[index]) { updatedRows[index] = { label: labels[index] }; }
     if (!updatedRows[index]) { updatedRows[index] = {} }
 
-    // Update the field in the row
     updatedRows[index][field] = value;
     setRows(updatedRows);
-    // Ensure the installment exists before updating
     if (!updatedInstallments[index]) { updatedInstallments[index] = { label: labels[index] }; }
     if (!updatedInstallments[index]) { updatedInstallments[index] = {}; }
     updatedInstallments[index][field] = value;
@@ -419,7 +391,6 @@ const CreateInvoice = () => {
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
 
-
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
 
@@ -464,6 +435,7 @@ const CreateInvoice = () => {
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
               </FormGroup>
+              
               <FormGroup widths='equal'>
                 <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date } : null} />
                 <FormField
@@ -474,24 +446,23 @@ const CreateInvoice = () => {
                   search
                   clearable
                   options={domainOptions}
-                  // onChange={(e, { value }) => setDomain(value)}
                   onChange={handleDomainChange}
                   error={errors.domain ? { content: errors.domain } : null} />
                 {isCustomDomain && (
-                  <Form.Field>
-                    <Input
-                      placeholder="Enter custom gender"
-                      value={customDomain}
-                      onChange={(e) => setCustomDomain(e.target.value)}
-                      action={{
-                        color: 'blue',
-                        labelPosition: 'right',
-                        icon: 'plus',
-                        content: 'Add',
-                        onClick: handleAddCustomDomain,
-                      }}
-                    />
-                  </Form.Field>
+                  <FormField
+                    control={Input}
+                    label={{ children: 'Custom Domain' }}
+                    placeholder="Enter custom domain"
+                    value={customDomain}
+                    onChange={(e) => setCustomDomain(e.target.value)}
+                    action={{
+                      color: 'blue',
+                      labelPosition: 'right',
+                      icon: 'plus',
+                      content: 'Add',
+                      onClick: handleAddCustomDomain,
+                    }}
+                  />
                 )}
               </FormGroup>
 
@@ -523,20 +494,19 @@ const CreateInvoice = () => {
                             error={errors.domain ? { content: errors.domain } : null} />
                         </FormField>
                         {isCustomService && (
-                          <Form.Field>
-                            <Input
-                              placeholder="Enter custom service"
-                              value={customService}
-                              onChange={(e) => setCustomService(e.target.value)}
-                              action={{
-                                color: 'blue',
-                                labelPosition: 'right',
-                                icon: 'plus',
-                                content: 'Add Service',
-                                onClick: handleAddCustomService,
-                              }}
-                            />
-                          </Form.Field>
+                          <FormField
+                            control={Input}
+                            placeholder="Add service"
+                            value={customService}
+                            onChange={(e) => setCustomService(e.target.value)}
+                            action={{
+                              color: 'blue',
+                              labelPosition: 'right',
+                              icon: 'plus',
+                              content: 'Add',
+                              onClick: handleAddCustomService,
+                            }}
+                          />
                         )}
                       </TableCell>
                       <TableCell>
