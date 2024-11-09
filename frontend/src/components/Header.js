@@ -24,7 +24,7 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto">
                         <li className="nav-item">
-                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} exact to="/">View</NavLink>
+                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} exact="true" to="/">View</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} to="/createinvoice">Create</NavLink>
