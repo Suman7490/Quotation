@@ -119,7 +119,7 @@ const CreateInvoice = () => {
   const [services, setServices] = useState([
     { service: '', price: 0, discount: 0, grandTotal: 0 }
   ])
-  const [isCustomService, setIsCustomService] = useState(false);
+  const [isCustomService, setIsCustomService] = useState([]);
   const [customService, setCustomService] = useState('');
   const [serviceOptions, setServiceOptions] = useState(WritingService);
   const [totalService, setTotalService] = useState(1);
@@ -208,37 +208,48 @@ const CreateInvoice = () => {
   //  ******* Handle Writing Service Change for each row *******
   const handleServiceChange = (index, value) => {
     if (value === 'Other') {
-      setIsCustomService(true);
+      const newIsCustomService = [...isCustomService];
+      newIsCustomService[index] = true;
+      setIsCustomService(newIsCustomService);
     } else {
       const updatedServices = services.map((service, i) =>
         i === index ? { ...service, service: value, price: service.price || 0 } : service
       );
       setServices(updatedServices);
-      setIsCustomService(false);
+      const newIsCustomService = [...isCustomService];
+      newIsCustomService[index] = false;
+      setIsCustomService(newIsCustomService);
     }
   };
   // ************* Handle CustomeService Add Option **************
-  const handleAddCustomService = () => {
+  const handleAddCustomService = (index) => {
     if (customService.trim()) {
       const newOption = { text: customService, value: customService.toLowerCase() };
       setServiceOptions([...serviceOptions, newOption]);
-      const updatedServices = services.map((service, index) =>
-        index === services.length - 1 ? { ...service, service: customService, price: 0 } : service
+
+      const updatedServices = services.map((service, i) =>
+        i === index ? { ...service, service: customService, price: 0 } : service
       );
       setServices(updatedServices);
+
       setCustomService('');
-      setIsCustomService(false);
+
+      const newIsCustomService = [...isCustomService];
+      newIsCustomService[index] = false;
+      setIsCustomService(newIsCustomService);
     }
   };
   // **************** Add Service ************
   const addService = () => {
     setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
-    setTotalService(totalService + 1);
+    setIsCustomService([...isCustomService, false]); 
   }
   const removeService = (index) => {
     setServices(services.filter((_, i) => i !== index));
-    setTotalService(totalService - 1);
+    setIsCustomService(isCustomService.filter((_, i) => i !== index)); 
   }
+
+  
   // ******************* Discount Calculation for each service ************
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
@@ -495,7 +506,7 @@ const CreateInvoice = () => {
                             onChange={(e, { value }) => handleServiceChange(index, value)}
                             error={errors.domain ? { content: errors.domain } : null} />
                         </FormField>
-                        {isCustomService && (
+                        {isCustomService[index] && (
                           <FormField
                             control={Input}
                             placeholder="Add"
@@ -504,7 +515,7 @@ const CreateInvoice = () => {
                             action={{
                               color: 'blue',
                               icon: 'plus',
-                              onClick: handleAddCustomService,
+                              onClick: () => handleAddCustomService(index),
                             }}
                           />
                         )}
