@@ -204,6 +204,41 @@ const CreateInvoice = () => {
       setIsCustomDomain(false);
     }
   };
+
+  //  ******* Handle Writing Service Change for each row *******
+  const handleServiceChange = (index, value) => {
+    if (value === 'Other') {
+      setIsCustomService(true);
+    } else {
+      const updatedServices = services.map((service, i) =>
+        i === index ? { ...service, service: value, price: service.price || 0 } : service
+      );
+      setServices(updatedServices);
+      setIsCustomService(false);
+    }
+  };
+  // ************* Handle CustomeService Add Option **************
+  const handleAddCustomService = () => {
+    if (customService.trim()) {
+      const newOption = { text: customService, value: customService.toLowerCase() };
+      setServiceOptions([...serviceOptions, newOption]);
+      const updatedServices = services.map((service, index) =>
+        index === services.length - 1 ? { ...service, service: customService, price: 0 } : service
+      );
+      setServices(updatedServices);
+      setCustomService('');
+      setIsCustomService(false);
+    }
+  };
+  // **************** Add Service ************
+  const addService = () => {
+    setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
+    setTotalService(totalService + 1);
+  }
+  const removeService = (index) => {
+    setServices(services.filter((_, i) => i !== index));
+    setTotalService(totalService - 1);
+  }
   // ******************* Discount Calculation for each service ************
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
@@ -246,40 +281,7 @@ const CreateInvoice = () => {
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
   }
-  //  ******* Handle Writing Service Change for each row *******
-  const handleServiceChange = (index, value) => {
-    if (value === 'Other') {
-      setIsCustomService(true);
-    } else {
-      const updatedServices = services.map((service, i) =>
-        i === index ? { ...service, service: value, price: service.price || 0 } : service
-      );
-      setServices(updatedServices);
-      setIsCustomService(false);
-    }
-  };
-  // ************* Handle CustomeService Add Option **************
-  const handleAddCustomService = () => {
-    if (customService.trim()) {
-      const newOption = { text: customService, value: customService.toLowerCase() };
-      setServiceOptions([...serviceOptions, newOption]);
-      const updatedServices = services.map((service, index) =>
-        index === services.length - 1 ? { ...service, service: customService, price: 0 } : service
-      );
-      setServices(updatedServices);
-      setCustomService('');
-      setIsCustomService(false);
-    }
-  };
-  // **************** Add Service ************
-  const addService = () => {
-    setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
-    setTotalService(totalService + 1);
-  }
-  const removeService = (index) => {
-    setServices(services.filter((_, i) => i !== index));
-    setTotalService(totalService - 1);
-  }
+
 
   // ***** Start Row Increament on change the Total Installment ******
   const handleInputChange = (event) => {
@@ -435,7 +437,7 @@ const CreateInvoice = () => {
                 <FormField control={Input} label='Email' placeholder='joe@schmoe.com' value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email ? { content: errors.email } : null} />
                 <FormField control={Select} label={{ children: 'Gender' }} placeholder='Gender' value={gender} options={genderOptions} onChange={(e, { value }) => setGender(value)} error={errors.gender} />
               </FormGroup>
-              
+
               <FormGroup widths='equal'>
                 <SemanticDatepicker control={Date} label='Date' value={date ? new Date(date) : null} onChange={handleDateChange} error={errors.date ? { content: errors.date } : null} />
                 <FormField
@@ -466,7 +468,7 @@ const CreateInvoice = () => {
                 )}
               </FormGroup>
 
-              <Table celled style={{overFlowX:'hidden'}}>
+              <Table celled padded>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderCell singleLine>SERVICES</TableHeaderCell>
