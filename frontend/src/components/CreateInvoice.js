@@ -190,6 +190,7 @@ const CreateInvoice = () => {
   const handleDomainChange = (e, { value }) => {
     if (value === 'Other') {
       setIsCustomDomain(true);
+      setTimeout(() => document.getElementById('customDomainInput')?.focus(), 0);
     } else {
       setDomain(value);
       setIsCustomDomain(false);
@@ -211,6 +212,7 @@ const CreateInvoice = () => {
       const newIsCustomService = [...isCustomService];
       newIsCustomService[index] = true;
       setIsCustomService(newIsCustomService);
+      setTimeout(() => document.getElementById(`customServiceInput_${index}`)?.focus(), 0);
     } else {
       const updatedServices = services.map((service, i) =>
         i === index ? { ...service, service: value, price: service.price || 0 } : service
@@ -404,6 +406,7 @@ const CreateInvoice = () => {
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
 
+
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
 
@@ -464,15 +467,14 @@ const CreateInvoice = () => {
                 {isCustomDomain && (
                   <FormField
                     control={Input}
+                    id="customDomainInput"
                     label={{ children: 'Custom Domain' }}
                     placeholder="Enter custom domain"
                     value={customDomain}
                     onChange={(e) => setCustomDomain(e.target.value)}
                     action={{
                       color: 'blue',
-                      labelPosition: 'right',
                       icon: 'plus',
-                      content: 'Add',
                       onClick: handleAddCustomDomain,
                     }}
                   />
@@ -504,11 +506,12 @@ const CreateInvoice = () => {
                             options={serviceOptions}
                             value={row.service}
                             onChange={(e, { value }) => handleServiceChange(index, value)}
-                            error={errors.domain ? { content: errors.domain } : null} />
+                            error={errors[`service_${index}`] ? { content: errors[`service_${index}`] } : null} />
                         </FormField>
                         {isCustomService[index] && (
                           <FormField
                             control={Input}
+                            id={`customServiceInput_${index}`}
                             width="75%"
                             placeholder="Add"
                             value={customService}
