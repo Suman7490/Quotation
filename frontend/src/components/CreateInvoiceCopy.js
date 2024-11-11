@@ -224,9 +224,9 @@ const CreateInvoiceCopy = () => {
     e.preventDefault();
     const calculatedFinalAmount = totalAmount() - (totalDiscountType === 'percentage' ? (totalAmount() * totalDiscount) / 100 : totalDiscount);
     setFinalAmount(calculatedFinalAmount);
-  
+
     console.log("Calculated Final Amount before sending:", calculatedFinalAmount);
-  
+
     // Validate input data
     if (Validate()) {
       console.log("Final rows before submission:", rows);
@@ -269,11 +269,11 @@ const CreateInvoiceCopy = () => {
 
   useEffect(() => {
     if (quotationId) {
-      
+
       axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-          
+
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
@@ -282,11 +282,11 @@ const CreateInvoiceCopy = () => {
           setTotal(data.total || 0);
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
-          
-        
+
+
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
-          
+
           if (data.totalDiscount > 0 || data.finalAmount > 0) { hide(false); }
           const serviceData = data.services.map(service => ({
             service: service.service,
@@ -346,7 +346,18 @@ const CreateInvoiceCopy = () => {
 
                   {services.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell width={10}><FormField><Dropdown placeholder="Services" fluid selection options={WritingService} value={row.service} onChange={(e, { value }) => handleServiceChange(index, value)} error={errors.domain ? { content: errors.domain } : null} /></FormField></TableCell>
+                      <TableCell width={10}>
+                        <FormField>
+                          <Dropdown
+                            placeholder="Services"
+                            fluid
+                            selection
+                            options={WritingService}
+                            value={row.service}
+                            onChange={(e, { value }) => handleServiceChange(index, value)}
+                            error={errors.domain ? { content: errors.domain } : null} />
+                        </FormField>
+                      </TableCell>
                       <TableCell><FormField control={Input} placeholder="Price" value={row.price ? `${row.price}` : ""} error={errors.price ? { content: errors.price } : null} /></TableCell>
                       <TableCell>
                         <FormField className='d-flex'>
@@ -380,9 +391,9 @@ const CreateInvoiceCopy = () => {
                         <TableCell><FormField><Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} /></FormField></TableCell>
                         <TableCell><FormField><Input placeholder="Discount" value={totalDiscount} onChange={(e) => {
                           const discountValue = e.target.value;
-                          handleTotalDiscount(discountValue);  
+                          handleTotalDiscount(discountValue);
                           setTotalDiscount(discountValue);
-                          }} /></FormField></TableCell>
+                        }} /></FormField></TableCell>
                       </TableRow>
 
                       <TableRow>
