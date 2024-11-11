@@ -242,14 +242,14 @@ const CreateInvoice = () => {
   // **************** Add Service ************
   const addService = () => {
     setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
-    setIsCustomService([...isCustomService, false]); 
+    setIsCustomService([...isCustomService, false]);
   }
   const removeService = (index) => {
     setServices(services.filter((_, i) => i !== index));
-    setIsCustomService(isCustomService.filter((_, i) => i !== index)); 
+    setIsCustomService(isCustomService.filter((_, i) => i !== index));
   }
 
-  
+
   // ******************* Discount Calculation for each service ************
   const handleDiscount = (index, value) => {
     const discountValue = value === '' ? 0 : parseFloat(value);
@@ -479,7 +479,7 @@ const CreateInvoice = () => {
                 )}
               </FormGroup>
 
-              <Table celled padded>
+              <Table celled padded className='service-table'>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderCell singleLine>SERVICES</TableHeaderCell>
@@ -509,6 +509,7 @@ const CreateInvoice = () => {
                         {isCustomService[index] && (
                           <FormField
                             control={Input}
+                            width="75%"
                             placeholder="Add"
                             value={customService}
                             onChange={(e) => setCustomService(e.target.value)}
@@ -535,7 +536,7 @@ const CreateInvoice = () => {
                         /></TableCell>
                       <TableCell>
                         <FormField className='d-flex'>
-                          <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '5em' }} />
+                          <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '2em' }} />
                           <Input placeholder="Discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
                         </FormField>
                       </TableCell>

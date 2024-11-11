@@ -49,3 +49,9 @@ nav.navbar .icon{
   /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;  */
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
+.ui.padded.table th{
+  width: 11em;
+}
+.ui.padded.table td{
+  padding: 0.8rem 0.5em;
+}
