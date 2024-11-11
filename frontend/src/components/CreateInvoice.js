@@ -390,51 +390,110 @@ const CreateInvoice = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (quotationId) {
+
+  //     axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
+  //       .then((response) => {
+  //         const data = response.data;
+
+  //         setName(data.name || "");
+  //         setEmail(data.email || "");
+  //         setGender(data.gender || "");
+  //         setDate(new Date(data.date));
+  //         setDomain(data.domain || "");
+  //         setTotal(data.total || 0);
+  //         setTotalDiscount(data.totalDiscount || 0);
+  //         setTotalService(data.totalService || 0);
+
+
+  //         const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
+  //         setFinalAmount(finalTotal);
+
+  //         if (data.totalDiscount > 0 || data.finalAmount > 0) { hide(false); }
+  //         const serviceData = data.services.map(service => ({
+  //           service: service.service,
+  //           price: service.price,
+  //           discount: service.discount,
+  //           grandTotal: service.grandTotal,
+  //         }));
+  //         setServices(serviceData);
+
+  //         const rowsData = data.installments.map(installment => ({
+  //           label: installment.label,
+  //           dueWhen: installment.dueWhen,
+  //           installmentAmount: installment.installmentAmount,
+  //         }));
+
+  //         setRows(rowsData);
+  //         console.log("Received data:", data);
+
+  //         setInstallments(rowsData);
+  //         setInputCount(data.inputCount || 0);
+  //       })
+  //       .catch((error) => console.log('Error fetching data:', error));
+  //   }
+  // }, [quotationId]);
+
+
   useEffect(() => {
     if (quotationId) {
-
       axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-
+  
+          // Set basic fields
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
           setDate(new Date(data.date));
-          setDomain(data.domain || "");
+  
+          // Set domain, including custom domain handling
+          if (data.domain === 'Other') {
+            setDomain('Other');
+            setIsCustomDomain(true);  // Show custom domain input
+            setCustomDomain(data.customDomain || ""); // Set custom domain value from API if available
+          } else {
+            setDomain(data.domain || "");
+            setIsCustomDomain(false);  // Hide custom domain input if not 'Other'
+            setCustomDomain("");  // Clear any previous custom domain
+          }
+  
           setTotal(data.total || 0);
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
-
-
+  
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
-
-          if (data.totalDiscount > 0 || data.finalAmount > 0) { hide(false); }
-          const serviceData = data.services.map(service => ({
-            service: service.service,
-            price: service.price,
-            discount: service.discount,
-            grandTotal: service.grandTotal,
-          }));
+  
+          // Map services, handling custom services as needed
+          const serviceData = data.services.map(service => {
+            if (service.service === 'Other') {
+              setCustomService(service.customService || ''); // Set custom service from API if available
+              return { ...service, service: 'Other' };
+            }
+            return service;
+          });
+  
           setServices(serviceData);
-
+  
+          // Set the isCustomService array to reflect custom services in fetched data
+          const customServiceFlags = serviceData.map(service => service.service === 'Other');
+          setIsCustomService(customServiceFlags);
+  
           const rowsData = data.installments.map(installment => ({
             label: installment.label,
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-
+  
           setRows(rowsData);
           console.log("Received data:", data);
-
-          setInstallments(rowsData);
-          setInputCount(data.inputCount || 0);
         })
         .catch((error) => console.log('Error fetching data:', error));
     }
   }, [quotationId]);
-
+  
   return (
     <>
       <div className='container'>
