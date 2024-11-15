@@ -62,7 +62,7 @@ const Home = () => {
                         <TableHeaderCell>Date</TableHeaderCell>
                         <TableHeaderCell>Research Domain</TableHeaderCell>
                         <TableHeaderCell>Services</TableHeaderCell>
-                        <TableHeaderCell>Total Discount</TableHeaderCell>
+                        {/* <TableHeaderCell>Total Discount</TableHeaderCell> */}
                         <TableHeaderCell>Final Amount</TableHeaderCell>
                         <TableHeaderCell>Total Installments</TableHeaderCell>
                         <TableHeaderCell>Action</TableHeaderCell>
@@ -86,8 +86,8 @@ const Home = () => {
                                     ))}
                                 </ul>
                             </TableCell>
-                            <TableCell>{row.totalDiscount}</TableCell>
-                            <TableCell>{row.finalAmount}</TableCell>
+                            {/* <TableCell>{row.totalDiscount}</TableCell> */}
+                            <TableCell>{row.total}</TableCell>
                             <TableCell>
                                 <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
                                     {/* <span>{row.inputCount}</span> */}

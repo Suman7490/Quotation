@@ -390,52 +390,7 @@ const CreateInvoice = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (quotationId) {
-
-  //     axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
-  //       .then((response) => {
-  //         const data = response.data;
-
-  //         setName(data.name || "");
-  //         setEmail(data.email || "");
-  //         setGender(data.gender || "");
-  //         setDate(new Date(data.date));
-  //         setDomain(data.domain || "");
-  //         setTotal(data.total || 0);
-  //         setTotalDiscount(data.totalDiscount || 0);
-  //         setTotalService(data.totalService || 0);
-
-
-  //         const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
-  //         setFinalAmount(finalTotal);
-
-  //         if (data.totalDiscount > 0 || data.finalAmount > 0) { hide(false); }
-  //         const serviceData = data.services.map(service => ({
-  //           service: service.service,
-  //           price: service.price,
-  //           discount: service.discount,
-  //           grandTotal: service.grandTotal,
-  //         }));
-  //         setServices(serviceData);
-
-  //         const rowsData = data.installments.map(installment => ({
-  //           label: installment.label,
-  //           dueWhen: installment.dueWhen,
-  //           installmentAmount: installment.installmentAmount,
-  //         }));
-
-  //         setRows(rowsData);
-  //         console.log("Received data:", data);
-
-  //         setInstallments(rowsData);
-  //         setInputCount(data.inputCount || 0);
-  //       })
-  //       .catch((error) => console.log('Error fetching data:', error));
-  //   }
-  // }, [quotationId]);
-
-
+  
   useEffect(() => {
     if (quotationId) {
       axios.get(`https://railway-production-05a0.up.railway.app/pdf/${quotationId}`)
@@ -617,11 +572,11 @@ const CreateInvoice = () => {
                     <TableCell><FormField control={Input} value={totalAmount()} /></TableCell>
                   </TableRow>
 
-                  <TableRow>
+                  {/* <TableRow>
                     <TableCell colSpan="5"><Checkbox label='Click if you want to provide discount on total amount ?' checked={!show} onClick={changeIcon} /></TableCell>
-                  </TableRow>
+                  </TableRow> */}
 
-                  {!show && (
+                  {/* {!show && (
                     <>
                       <TableRow>
                         <TableCell colSpan="3">DISCOUNT:</TableCell>
@@ -638,7 +593,7 @@ const CreateInvoice = () => {
                         <TableCell><FormField><Input value={finalAmount > 0 ? finalAmount : totalAmount()} /></FormField></TableCell>
                       </TableRow>
                     </>
-                  )}
+                  )} */}
 
 
                   <TableRow>

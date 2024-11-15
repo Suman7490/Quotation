@@ -108,24 +108,22 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell>
                                                 <div className='header'>
-                                                    <p className='m-0'><strong>Quotation To:</strong></p>
+                                                    <p className='m-0' style={{ fontSize: '17px' }}><strong>Quotation To:</strong></p>
                                                     <p className='m-0' style={{ color: '#084B1B', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
-                                                    <p className='m-0'><strong>Research Area/Domain:</strong> {data.domain}</p>
+                                                    <p className='m-0 pt-5' style={{ fontSize: '17px' }}><strong>Research Area/Domain:</strong> {data.domain}</p>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right'>
                                                 <div className='header'>
-                                                    <p className='m-0'><strong>NO KRW/Q - </strong>{data.id}</p>
-                                                    <p className='m-0'><strong>DATE:</strong> {formatDate(data.date)}</p>
+                                                    <p className='m-0' style={{ fontSize: '17px' }}><strong>NO KRW/Q - </strong>{data.id}</p>
+                                                    <p className='m-0' style={{ fontSize: '17px' }}><strong>DATE:</strong> {formatDate(data.date)}</p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     </Table>
                                 </div>
                             </div>
-                            <div className='row pt-1 mt-5 mb-5 pb-5'>
-                                <div className='col-12'>
-                                    <table className='table table-stripped'>
+                            {/* <table className='table table-stripped'>
                                         <thead>
                                             <tr className='table-header' style={{ backgroundColor: '#084B1B', color: 'white' }}>
                                                 <th><strong>SERVICES</strong></th>
@@ -168,9 +166,91 @@ const Pdf = () => {
                                                 </tr>
                                             ))}
                                         </tbody>
-                                    </table>
+                                    </table> */}
+
+                            <div className='rows'>
+                                <div className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white' style={{ fontSize: '1.1em' }}>
+                                    <div className='col-md-3'>
+                                        <strong>SERVICES</strong>
+                                    </div>
+                                    <div className='col-md-3'>
+                                        <strong>PRICE</strong>
+                                    </div>
+                                    <div className='col-md-3'>
+                                        <strong>DISCOUNT</strong>
+                                    </div>
+                                    <div className='col-md-3'>
+                                        <strong>GRAND TOTAL</strong>
+                                    </div>
                                 </div>
+                                {data.services.map((service, idx) => (
+                                    <div key={idx} className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white' style={{ fontSize: '1.1em' }}>
+                                        <div className='col-md-3'>
+                                            <span className='mb-2 mt-2'>{service.service}</span>
+                                        </div>
+                                        <div className='col-md-3'>
+                                            <span>{service.price}</span>
+                                        </div>
+                                        <div className='col-md-3'>
+                                            <span>{service.discount}</span>
+                                        </div>
+                                        <div className='col-md-3'>
+                                            <span>{service.grandTotal}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white'>
+                                    <div className='col-md-6'></div>
+                                    <div className='col-md-3'>
+                                        <strong>SUBTOTAL :</strong>
+                                    </div>
+                                    <div className='col-md-3'>
+                                        <span>{data.total}</span>
+                                    </div>
+                                </div>
+                                <div className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white'>
+                                    <div className='col-md-9'>
+                                        <strong>TOTAL INSTALLMENTS :</strong>
+                                    </div>
+                                    <div className='col-md-3'>
+                                        <span>{data.inputCount}</span>
+                                    </div>
+                                </div>
+                                {data.installments.map((installment, idx) => (
+                                    <div key={idx} className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white' style={{ textTransform: 'uppercase' }}>
+                                        {/* {installment.label} : {installment.dueWhen} {installment.when} */}
+                                        <div className='col-md-9 d-flex'>
+                                            <div className='' style={{ width: '70px' }}>{installment.label}</div>
+                                            <span className='pr-2'>:</span>
+                                            <span>{installment.dueWhen}</span>
+                                        </div>
+                                        <div className='col-md-3'>{installment.installmentAmount}</div>
+                                    </div>
+                                ))}
                             </div>
+
+                            {/* <div className='row'>
+                                        <div className='col-md-12 services'>
+                                            <ul className='d-flex flex-row list-unstyled bg-primary p-2'>
+                                                <li className='flex-fill'>SERVICES</li>
+                                                <li className='flex-fill'>PRICE</li>
+                                                <li className='flex-fill'>DISCOUNT</li>
+                                                <li className='flex-fill'>GRAND TOTAL</li>
+                                            </ul>
+                                            {data.services.map((service, idx) => (
+                                            <ul key={idx} style={{ backgroundColor: '#7F9D34', color: 'white', }} className='d-flex flex-row list-unstyled bg-danger p-2'>
+                                                <li className='flex-fill'>{service.service}</li>
+                                                <li className='flex-fill'>{service.price}</li>
+                                                <li className='flex-fill'>{service.discount}</li>
+                                                <li className='flex-fill'>{service.grandTotal}</li>
+                                            </ul>
+                                            ))}
+                                        </div>
+                                    </div> */}
+
+
+
+
                             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                             <div className='row pt-5 mt-5 flex flex-wrap'>
                                 <div className='col-md-12'>
@@ -179,9 +259,10 @@ const Pdf = () => {
                                             <TableCell className='border-0'>
                                                 <div className='header'>
                                                     <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>PAYMENT METHOD</h3>
-                                                    <p className='m-0'>Account Details: 20005393359</p>
+                                                    <p className='m-0'>Account Type: Current Account</p>
+                                                    <p className='m-0'>Account Holder Name: Kalp Squad Group</p>
+                                                    <p className='m-0'>Account Number: 42188265333</p>
                                                     <p className='m-0'>IFSC: SBIN0002502</p>
-                                                    <p className='m-0'>Branch: Pratap Bajar Vrindavan Mathura</p>
                                                 </div>
                                                 <div className='header mt-4'>
                                                     <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>TERMS AND CONDITION</h3>

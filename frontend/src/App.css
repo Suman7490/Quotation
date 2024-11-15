@@ -55,3 +55,25 @@ nav.navbar .icon{
 .ui.padded.table td{
   padding: 0.8rem 0.5em;
 }
+
+.rows .row:nth-child(even){
+  background-color: #7F9D34;
+}
+.rows .row:nth-child(odd){
+  background-color: #084B1B;
+  }
+
+
+
+.services ul{
+  margin-bottom: inherit;
+}
+.services ul li{
+  width: '12em';
+  padding: 0.3em;
+  text-align: left;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: white;
+  border: 1px solid black;
+}
