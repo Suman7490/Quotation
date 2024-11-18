@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import companyLogo from './new_logo.svg';
 import Signature from './Signature.png';
+import QR from './QR.jpeg';
 import ReactToPrint from 'react-to-print';
 import { TableRow, TableCell, Table, Icon } from 'semantic-ui-react';
 import '../App.css';
@@ -164,7 +165,7 @@ const Pdf = () => {
                                     </table> */}
 
                             <div className='rows'>
-                                <div className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white' style={{ fontSize: '1.1em' }}>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-3'>
                                         <strong>SERVICES</strong>
                                     </div>
@@ -179,7 +180,7 @@ const Pdf = () => {
                                     </div>
                                 </div>
                                 {data.services.map((service, idx) => (
-                                    <div key={idx} className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white' style={{ fontSize: '1.1em' }}>
+                                    <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                         <div className='col-md-3'>
                                             <span className='mb-2 mt-2'>{service.service}</span>
                                         </div>
@@ -194,7 +195,7 @@ const Pdf = () => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white'>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0'}}>
                                     <div className='col-md-6'></div>
                                     <div className='col-md-3'>
                                         <strong>SUBTOTAL :</strong>
@@ -203,7 +204,7 @@ const Pdf = () => {
                                         <span>{data.total}</span>
                                     </div>
                                 </div>
-                                <div className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white'>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-9'>
                                         <strong>TOTAL INSTALLMENTS :</strong>
                                     </div>
@@ -212,7 +213,7 @@ const Pdf = () => {
                                     </div>
                                 </div>
                                 {data.installments.map((installment, idx) => (
-                                    <div key={idx} className='row ml-1 mr-1 mb-0 pt-2 pb-2 border-bottom text-white' style={{ textTransform: 'uppercase' }}>
+                                    <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0', textTransform: 'uppercase' }}>
                                         {/* {installment.label} : {installment.dueWhen} {installment.when} */}
                                         <div className='col-md-9 d-flex'>
                                             <div className='' style={{ width: '70px' }}>{installment.label}</div>
@@ -248,8 +249,9 @@ const Pdf = () => {
                                             </TableCell>
                                             <TableCell className='border-0 text-center'>
                                                 <img src={Signature} alt='Signature' style={{ width: '100px' }} />
-                                                <hr style={{ border: '1px solid black' }} />
-                                                <h5 className='pt-0 m-0'>AUTHORIZED SIGN</h5>
+                                                <hr style={{ border: '1px solid black', marginTop: '-1rem', marginBottom: '0rem' }} />
+                                                <h5 className='pt-0 pb-3 m-0'>AUTHORIZED SIGN</h5>
+                                                <img src={QR} alt='Signature' style={{ width: '150px' }} />
                                             </TableCell>
                                         </TableRow>
                                     </Table>
