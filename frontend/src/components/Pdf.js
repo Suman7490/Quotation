@@ -51,17 +51,12 @@ const Pdf = () => {
       body {
         -webkit-print-color-adjust: exact;
       }
-      .table-header {
-        background-color: red;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      
-    td, th {
-     color: black; 
-    }
+     .footer{
+      position: fixed; 
+      bottom: 50px; 
+      left: 80px; 
+      right: 80px; 
+     }
     }
   `;
 
@@ -229,30 +224,11 @@ const Pdf = () => {
                                 ))}
                             </div>
 
-                            {/* <div className='row'>
-                                        <div className='col-md-12 services'>
-                                            <ul className='d-flex flex-row list-unstyled bg-primary p-2'>
-                                                <li className='flex-fill'>SERVICES</li>
-                                                <li className='flex-fill'>PRICE</li>
-                                                <li className='flex-fill'>DISCOUNT</li>
-                                                <li className='flex-fill'>GRAND TOTAL</li>
-                                            </ul>
-                                            {data.services.map((service, idx) => (
-                                            <ul key={idx} style={{ backgroundColor: '#7F9D34', color: 'white', }} className='d-flex flex-row list-unstyled bg-danger p-2'>
-                                                <li className='flex-fill'>{service.service}</li>
-                                                <li className='flex-fill'>{service.price}</li>
-                                                <li className='flex-fill'>{service.discount}</li>
-                                                <li className='flex-fill'>{service.grandTotal}</li>
-                                            </ul>
-                                            ))}
-                                        </div>
-                                    </div> */}
 
 
 
 
-                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                            <div className='row pt-5 mt-5 flex flex-wrap'>
+                            <div className='row pt-5 mt-5 footer'>
                                 <div className='col-md-12'>
                                     <Table className='border-0'>
                                         <TableRow>
