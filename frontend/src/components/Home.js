@@ -1,16 +1,22 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Icon } from 'semantic-ui-react';
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Icon, FormField, Input } from 'semantic-ui-react';
 
 const Home = () => {
     const [data, setData] = useState([]);
+    const [search, setSearch] = useState('')
     const navigate = useNavigate();
     const [quotations, setQuotations] = useState([]);
 
 
+    const filteredItems = data.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+    )
+
     useEffect(() => {
-        axios.get('https://railway-production-05a0.up.railway.app')
+        // axios.get('https://railway-production-05a0.up.railway.app')
+        axios.get('http://localhost:8000')
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
@@ -37,7 +43,7 @@ const Home = () => {
 
     const deleteQuotation = (quotationId) => {
         if (window.confirm('Are you sure you want to delete this quotation?')) {
-            axios.delete(`https://railway-production-05a0.up.railway.app/delete/${quotationId}`)
+            axios.delete(`http://localhost:8000/delete/${quotationId}`)
                 .then((response) => {
                     alert('Quotation deleted successfully');
                     // Remove the deleted quotation from the state
@@ -53,60 +59,72 @@ const Home = () => {
 
     return (
         <>
-            <Table celled striped>
-                <TableHeader>
-                    <TableRow>
-                        <TableHeaderCell>ID</TableHeaderCell>
-                        <TableHeaderCell>Name</TableHeaderCell>
-                        <TableHeaderCell>Email</TableHeaderCell>
-                        <TableHeaderCell>Date</TableHeaderCell>
-                        <TableHeaderCell>Research Domain</TableHeaderCell>
-                        <TableHeaderCell>Services</TableHeaderCell>
-                        {/* <TableHeaderCell>Total Discount</TableHeaderCell> */}
-                        <TableHeaderCell>Final Amount</TableHeaderCell>
-                        <TableHeaderCell>Total Installments</TableHeaderCell>
-                        <TableHeaderCell>Action</TableHeaderCell>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((row, index) => {
-                        return <TableRow key={index}>
-                            <TableCell>{row.id}</TableCell>
-                            <TableCell>{row.name}</TableCell>
-                            <TableCell>{row.email}</TableCell>
-                            <TableCell>{formatDate(row.date)}</TableCell>
-                            <TableCell>{row.domain}</TableCell>
-                            <TableCell>
-                                <ul className='p-0 m-0' style={{ listStyle: 'none', }}> 
-                                     {/* <span>{row.totalServices}</span> */}
-                                    {row.services.map((service, idx) => (
-                                        <li key={idx}>
-                                            {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </TableCell>
-                            {/* <TableCell>{row.totalDiscount}</TableCell> */}
-                            <TableCell>{row.total}</TableCell>
-                            <TableCell>
-                                <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                    {/* <span>{row.inputCount}</span> */}
-                                    {row.installments.map((installment, idx) => (
-                                        <li key={idx}>
-                                            {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </TableCell>
-                            <TableCell>
-                                <Icon name='edit' size='large' onClick={() => edit(row.id)} className='text-primary' style={{ cursor: 'pointer' }} />
-                                <Icon name='trash' size='large' onClick={() => deleteQuotation(row.id)} className='text-danger' style={{ cursor: 'pointer' }} />
-                                <Icon name='eye' size='large' onClick={() => pdf(row.id)} className='text-success' style={{ cursor: 'pointer' }} />
-                            </TableCell>
-                        </TableRow>
-                    })}
-                </TableBody>
-            </Table>
+            <div className='container-fluid bg-dark h-100'>
+                <div className='row'>
+                    <div className='col-md-12'>
+                        <FormField
+                            control={Input}
+                            placeholder="Seacrh by name"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <Table celled striped>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHeaderCell>ID</TableHeaderCell>
+                                    <TableHeaderCell>Name</TableHeaderCell>
+                                    <TableHeaderCell>Email</TableHeaderCell>
+                                    <TableHeaderCell>Date</TableHeaderCell>
+                                    <TableHeaderCell>Research Domain</TableHeaderCell>
+                                    <TableHeaderCell>Services</TableHeaderCell>
+                                    {/* <TableHeaderCell>Total Discount</TableHeaderCell> */}
+                                    <TableHeaderCell>Final Amount</TableHeaderCell>
+                                    <TableHeaderCell>Total Installments</TableHeaderCell>
+                                    <TableHeaderCell>Action</TableHeaderCell>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredItems.map((row, index) => {
+                                    return <TableRow key={index}>
+                                        <TableCell>{row.id}</TableCell>
+                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>{row.email}</TableCell>
+                                        <TableCell>{formatDate(row.date)}</TableCell>
+                                        <TableCell>{row.domain}</TableCell>
+                                        <TableCell>
+                                            <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                                {/* <span>{row.totalServices}</span> */}
+                                                {row.services.map((service, idx) => (
+                                                    <li key={idx}>
+                                                        {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </TableCell>
+                                        {/* <TableCell>{row.totalDiscount}</TableCell> */}
+                                        <TableCell>{row.total}</TableCell>
+                                        <TableCell>
+                                            <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                                {/* <span>{row.inputCount}</span> */}
+                                                {row.installments.map((installment, idx) => (
+                                                    <li key={idx}>
+                                                        {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Icon name='edit' size='large' onClick={() => edit(row.id)} className='text-primary' style={{ cursor: 'pointer' }} />
+                                            <Icon name='trash' size='large' onClick={() => deleteQuotation(row.id)} className='text-danger' style={{ cursor: 'pointer' }} />
+                                            <Icon name='eye' size='large' onClick={() => pdf(row.id)} className='text-success' style={{ cursor: 'pointer' }} />
+                                        </TableCell>
+                                    </TableRow>
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

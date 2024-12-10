@@ -11,13 +11,12 @@ import Pdf from "./components/Pdf";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import './App.css'
-function App(props) {
+function App() {
   return (
     <>
-     
+      <div className="" style={{height: '100vh'}}>
       <Router>
         <Header />
-        <br /> <br />
         <Routes>
           <Route exact path='/' element={<Home />}></Route>
           <Route path='/CreateInvoice' element={<CreateInvoice />}></Route>
@@ -28,6 +27,7 @@ function App(props) {
           <Route path="/login" element={<Login/>}></Route>
         </Routes>
       </Router>
+      </div>
     </>
   );
 }

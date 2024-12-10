@@ -1,81 +1,61 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
-const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+function Login() {
+    const [values, setValues] = useState({ email: '', password: '' })
+    const [error, setError] = useState(null)
 
-  const [errors, setErrors] = useState({});
+    const navigate = useNavigate()
+    axios.defaults.withCredentials = true
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-
-    return newErrors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        axios.post('http://localhost:8081/auth/adminlogin', values)
+            .then(result => {
+                if (result.data.LoginStatus) {
+                    navigate('/dashboard')
+                } else {
+                    setError(result.data.Error)
+                }
+            })
     }
 
-    axios.post('http://localhost:8081/login', formData)
-      .then(response => {
-        alert('Login successful');
-        // You can store the JWT token in localStorage or state for authenticated requests
-        localStorage.setItem('token', response.data.token);
-      })
-      .catch(error => {
-        console.error('Error logging in:', error);
-        alert('Invalid email or password');
-      });
-  };
+    return (
+        <>
+            <div className='d-flex justify-content-center align-items-center LoginPage' style={{height: "100%"}}>
+                <form className='p-3 w-25 rounded text-center LoginForm' onSubmit={handleSubmit}>
+                    <span className='text-danger text-sm'>{error && error}</span>
+                    <h2 className='pb-3 text-white text-xl font-bold'>Login Page</h2>
 
-  return (
-    <>
-      <div className='container'>
-        <div className='row'>
-          <div className='col-md-3'></div>
-          <div className='col-md-6 border border-info rounded p-5'>
-            <h1 className='text-center'>Login Form</h1>
-            <form onSubmit={handleSubmit}>
-              <div className='form-group'>
-                <label htmlFor='email'>Email:</label>
-                <input type="email" name="email" className='form-control' value={formData.email} onChange={handleChange} />
-                {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-              </div>
-              <div className='form-group'>
-                <label htmlFor='password'>Password:</label>
-                <input type="password" name="password" className='form-control' value={formData.password} onChange={handleChange} />
-                {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-              </div>
-              <div className='form-group text-center'>
-              <button type="submit" className='btn btn-info btn-large'>Login</button>
-              </div>
-            </form>
-          </div>
-          <div className='col-md-3'></div>
-        </div>
-      </div>
+                    <div className='form-group'>
+                        <input
+                            type='email'
+                            name='email'
+                            placeholder='email'
+                            className='form-control'
+                            onChange={e => setValues({ ...values, email: e.target.value })} />
+                    </div>
+                    <div className='form-group'>
+                        <input
+                            type='password'
+                            name='password'
+                            placeholder='password'
+                            className='form-control'
+                            onChange={e => setValues({ ...values, password: e.target.value })} />
+                    </div>
+                    <div className='form-group d-flex justify-content-around'>
+                        <button type='submit' className='btn btn-success w-100'>Login</button>
+                    </div>
+                    <div className=''>
+                        <input type='checkbox' />
+                        <label className='text-sm pt-2 pl-2'>You are agree with the terms & conditions</label>
+                    </div>
+                </form>
+            </div>
+        
+        </>
+    )
+}
 
-    </>
-
-  );
-};
-
-export default Login;
+export default Login

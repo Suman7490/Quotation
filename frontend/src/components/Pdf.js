@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import companyLogo from './new_logo.svg';
-import Signature from './Signature.png';
-import QR from './QR.jpeg';
+import logo from '../Images/new_logo.svg'
+import Signature from '../Images/Signature.png';
+import QR from '../Images/QR.jpeg';
 import ReactToPrint from 'react-to-print';
 import { TableRow, TableCell, Table, Icon } from 'semantic-ui-react';
 import '../App.css';
@@ -27,7 +27,7 @@ const Pdf = () => {
 
     useEffect(() => {
         // Fetch the data from the server
-        axios.get(`https://railway-production-05a0.up.railway.app/pdf/${id}`)
+        axios.get(`http://localhost:8000/pdf/${id}`)
             .then((response) => {
                 setData(response.data);
                 setLoading(false);
@@ -91,7 +91,7 @@ const Pdf = () => {
                                                 </div>
                                             </TableCell>
                                             <TableCell className='text-right align-content-end pb-0'>
-                                                <img src={companyLogo} alt="Logo" style={{ width: '200px' }} />
+                                                <img src={logo} alt="Logo" style={{ width: '200px' }} />
                                             </TableCell>
                                         </TableRow>
                                     </Table>

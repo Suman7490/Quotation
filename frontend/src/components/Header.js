@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import Logo from "./new_logo.svg"
-import { Icon } from "semantic-ui-react"
+import Logo from "../Images/new_logo.svg"
 import '../App.css'
 const Header = () => {
     const [icon, setIcon] = useState(true)
