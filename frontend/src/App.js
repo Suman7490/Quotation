@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
+  BrowserRouter,
+  Navigate,
 } from "react-router-dom";
 import CreateInvoice from './components/CreateInvoice';
 import Header from "./components/Header";
@@ -12,21 +14,37 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import './App.css'
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
     <>
-      <div className="" style={{height: '100vh'}}>
-      <Router>
-        <Header />
-        <Routes>
-          <Route exact path='/' element={<Home />}></Route>
-          <Route path='/CreateInvoice' element={<CreateInvoice />}></Route>
-          <Route path="/pdf/:id" element={<Pdf/>}></Route>
-          <Route path="/update/:id" element={<CreateInvoice/>}></Route>
-          <Route path="/delete/:id" element={<Home/>}></Route>
-          <Route path="/register" element={<Register/>}></Route>
-          <Route path="/login" element={<Login/>}></Route>
-        </Routes>
-      </Router>
+      <div className="" style={{ height: '100vh' }}>
+
+        <Router>
+          {isAuthenticated && <Header />}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? <Navigate to="/home" /> : <Login setIsAuthenticated={setIsAuthenticated} />
+              }
+            />
+            {isAuthenticated ? (
+              <>
+                <Route path="/home" element={<Home />} />
+                <Route path="/CreateInvoice" element={<CreateInvoice />} />
+                <Route path="/pdf/:id" element={<Pdf />} />
+                <Route path="/update/:id" element={<CreateInvoice />} />
+                <Route path="/delete/:id" element={<Home />} />
+                <Route path="/register" element={<Register />} />
+              </>
+            ) : (
+              <>
+                <Route path="/" element={<Navigate to="/" />} />
+              </>
+            )}
+          </Routes>
+        </Router>
+
       </div>
     </>
   );

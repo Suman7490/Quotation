@@ -1,29 +1,36 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+axios.defaults.withCredentials = true
 
-function Login() {
+const Login = ({setIsAuthenticated }) => {
     const [values, setValues] = useState({ email: '', password: '' })
     const [error, setError] = useState(null)
 
     const navigate = useNavigate()
-    axios.defaults.withCredentials = true
+   
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        axios.post('http://localhost:8081/auth/adminlogin', values)
+        axios.post('http://localhost:8000/login', values, { withCredentials: true })
             .then(result => {
                 if (result.data.LoginStatus) {
-                    navigate('/dashboard')
+                    setIsAuthenticated(true); 
+                    navigate('/home')
                 } else {
                     setError(result.data.Error)
+                    navigate('/')
                 }
             })
+            .catch(err => {
+                setError('Invalid Credential.');
+                console.error(err);
+            });
     }
 
     return (
         <>
-            <div className='d-flex justify-content-center align-items-center LoginPage' style={{height: "100%"}}>
+            <div className='d-flex justify-content-center align-items-center LoginPage' style={{ height: "100%" }}>
                 <form className='p-3 w-25 rounded text-center LoginForm' onSubmit={handleSubmit}>
                     <span className='text-danger text-sm'>{error && error}</span>
                     <h2 className='pb-3 text-white text-xl font-bold'>Login Page</h2>
@@ -53,7 +60,7 @@ function Login() {
                     </div>
                 </form>
             </div>
-        
+
         </>
     )
 }

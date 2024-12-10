@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, Icon, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody, Checkbox } from 'semantic-ui-react';
+import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 const genderOptions = [
@@ -181,10 +181,10 @@ const CreateInvoice = () => {
 
 
   // ******************* Show or Hide Discount **********
-  const changeIcon = () => {
-    if (show == true) { hide(false) }
-    else (hide(true))
-  }
+  // const changeIcon = () => {
+  //   if (show == true) { hide(false) }
+  //   else (hide(true))
+  // }
 
   // ********** Handle Domain Change *******************
   const handleDomainChange = (e, { value }) => {
@@ -611,6 +611,7 @@ const CreateInvoice = () => {
                   ))}
                 </TableBody>
               </Table>
+
               <center> <Button className='button w-75 text-large pt-3 pb-3 shadow' style={{ backgroundColor: '#443F11', color: 'white', fontSize: '20px' }} onClick={postData}>Submit</Button></center>
             </Form>
           </div>
