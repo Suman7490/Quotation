@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  BrowserRouter,
   Navigate,
 } from "react-router-dom";
 import CreateInvoice from './components/CreateInvoice';
@@ -36,10 +35,11 @@ function App() {
                 <Route path="/update/:id" element={<CreateInvoice />} />
                 <Route path="/delete/:id" element={<Home />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="*" element={<Navigate to="/home" />} />
               </>
             ) : (
               <>
-                <Route path="/" element={<Navigate to="/" />} />
+              <Route path="*" element={<Navigate to="/" />} />
               </>
             )}
           </Routes>

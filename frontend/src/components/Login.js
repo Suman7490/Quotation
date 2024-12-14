@@ -16,7 +16,6 @@ const Login = ({setIsAuthenticated }) => {
             .then(result => {
                 if (result.data.LoginStatus) {
                     setIsAuthenticated(true); 
-                    navigate('/home')
                 } else {
                     setError(result.data.Error)
                     navigate('/')
@@ -53,11 +52,7 @@ const Login = ({setIsAuthenticated }) => {
                     </div>
                     <div className='form-group d-flex justify-content-around'>
                         <button type='submit' className='btn btn-success w-100'>Login</button>
-                    </div>
-                    <div className=''>
-                        <input type='checkbox' />
-                        <label className='text-sm pt-2 pl-2'>You are agree with the terms & conditions</label>
-                    </div>
+                    </div>  
                 </form>
             </div>
 

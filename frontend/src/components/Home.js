@@ -20,7 +20,10 @@ const Home = () => {
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
-
+    let a = 0;
+    // console.log(a++);
+    console.log(++a);
+    // console.log(a);
 
     // ****************** Date fromate ******************
     const formatDate = (isoDate) => {
@@ -59,9 +62,9 @@ const Home = () => {
 
     return (
         <>
-            <div className='container-fluid bg-dark h-100'>
+            <div className='container-fluid h-100'>
                 <div className='row'>
-                    <div className='col-md-12'>
+                    <div className='col-md-12 pt-5'>
                         <FormField
                             control={Input}
                             placeholder="Seacrh by name"

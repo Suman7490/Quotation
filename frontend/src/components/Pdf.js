@@ -119,51 +119,7 @@ const Pdf = () => {
                                     </Table>
                                 </div>
                             </div>
-                            {/* <table className='table table-stripped'>
-                                        <thead>
-                                            <tr className='table-header' style={{ backgroundColor: '#084B1B', color: 'white' }}>
-                                                <th><strong>SERVICES</strong></th>
-                                                <th><strong>PRICE</strong></th>
-                                                <th><strong>DISCOUNT</strong></th>
-                                                <th><strong>GRAND TOTAL</strong></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data.services.map((service, idx) => (
-                                                <tr key={idx} style={{ backgroundColor: '#7F9D34', color: 'white' }}>
-                                                    <td>{service.service}</td>
-                                                    <td>{service.price}</td>
-                                                    <td>{service.discount}</td>
-                                                    <td>{service.grandTotal}</td>
-                                                </tr>
-                                            ))}
-                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
-                                                <td colSpan={3}>SUBTOTAL:</td>
-                                                <td>{data.total}</td>
-                                            </tr>
-                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
-                                                <td colSpan={3}>TOTAL DISCOUNT :</td>
-                                                <td>{data.totalDiscount}</td>
-                                            </tr>
-                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
-                                                <td colSpan={3}>TOTAL PAYABLE AMOUNT :</td>
-                                                <td>{data.finalAmount}</td>
-                                            </tr>
-                                            <tr style={{ backgroundColor: '#084B1B', color: 'white' }}>
-                                                <td colSpan={3}>TOTAL INSTALLMENTS :</td>
-                                                <td>{data.inputCount}</td>
-                                            </tr>
-                                            {data.installments.map((installment, idx) => (
-                                                <tr key={idx} style={{ backgroundColor: '#7F9D34', color: 'white' }}>
-                                                    <td colSpan={3} style={{ textTransform: 'uppercase' }}>
-                                                        {installment.label} : {installment.dueWhen} {installment.when}
-                                                    </td>
-                                                    <td>Rs. {installment.installmentAmount}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table> */}
-
+                           
                             <div className='rows'>
                                 <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-3'>

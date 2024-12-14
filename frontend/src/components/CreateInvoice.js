@@ -123,7 +123,6 @@ const CreateInvoice = () => {
   const [customService, setCustomService] = useState('');
   const [serviceOptions, setServiceOptions] = useState(WritingService);
   const [totalService, setTotalService] = useState(1);
-  const [show, hide] = useState(true)
   const [totalDiscount, setTotalDiscount] = useState(0);
   const [totalDiscountType, setTotalDiscountType] = useState("amount");
   const [finalAmount, setFinalAmount] = useState(0);
@@ -178,13 +177,6 @@ const CreateInvoice = () => {
     return `${year}-${month}-${day}`;
   };
 
-
-
-  // ******************* Show or Hide Discount **********
-  // const changeIcon = () => {
-  //   if (show == true) { hide(false) }
-  //   else (hide(true))
-  // }
 
   // ********** Handle Domain Change *******************
   const handleDomainChange = (e, { value }) => {
@@ -272,25 +264,7 @@ const CreateInvoice = () => {
   };
 
 
-  const handleTotalDiscount = (value) => {
-    const discountValue = value === '' ? 0 : parseFloat(value);
-    const total = totalAmount();
-    let discountAmount = 0;
-
-    if (totalDiscountType === 'percentage') {
-      discountAmount = (total * discountValue) / 100;
-    }
-    else {
-      discountAmount = discountValue;
-    }
-    const finalTotal = total - discountAmount;
-    setFinalAmount(finalTotal < 0 ? 0 : finalTotal);
-    console.log("Discount Value:", discountValue);
-    console.log("Total Amount:", total);
-    console.log("Calculated Final Total:", finalTotal);
-  };
-
-  // ****************** Total of grandtotals *****************
+ 
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
   }
@@ -320,7 +294,6 @@ const CreateInvoice = () => {
   const handleInstallmentChange = (index, field, value) => {
     const updatedRows = [...rows];
     const updatedInstallments = [...installments];
-    const updatedErrors = { ...errors };
 
     if (!updatedRows[index]) { updatedRows[index] = { label: labels[index] }; }
     if (!updatedRows[index]) { updatedRows[index] = {} }
@@ -571,30 +544,6 @@ const CreateInvoice = () => {
                     <TableCell colSpan="4">TOTAL:</TableCell>
                     <TableCell><FormField control={Input} value={totalAmount()} /></TableCell>
                   </TableRow>
-
-                  {/* <TableRow>
-                    <TableCell colSpan="5"><Checkbox label='Click if you want to provide discount on total amount ?' checked={!show} onClick={changeIcon} /></TableCell>
-                  </TableRow> */}
-
-                  {/* {!show && (
-                    <>
-                      <TableRow>
-                        <TableCell colSpan="3">DISCOUNT:</TableCell>
-                        <TableCell><FormField><Select options={discountTypeOptions} value={totalDiscountType} onChange={(e, { value }) => setTotalDiscountType(value)} style={{ minWidth: '5em' }} /></FormField></TableCell>
-                        <TableCell><FormField><Input placeholder="Discount" value={totalDiscount} onChange={(e) => {
-                          const discountValue = e.target.value;
-                          handleTotalDiscount(discountValue);
-                          setTotalDiscount(discountValue);
-                        }} /></FormField></TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell colSpan="4">AMOUNT TO BE PAID:</TableCell>
-                        <TableCell><FormField><Input value={finalAmount > 0 ? finalAmount : totalAmount()} /></FormField></TableCell>
-                      </TableRow>
-                    </>
-                  )} */}
-
 
                   <TableRow>
                     <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>

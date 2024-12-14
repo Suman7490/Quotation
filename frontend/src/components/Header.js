@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from "../Images/new_logo.svg"
+import axios from 'axios';
 import '../App.css'
+
+
+
 const Header = () => {
     const [icon, setIcon] = useState(true)
+    const navigate = useNavigate();
 
-    // const changeIcon = () => {
-    //     if (icon == true) {
-    //         setIcon(false)
-    //     }
-    //     else (setIcon(true))
-    // }
+    const handleLogout = () => {
+        axios.get('http://localhost:8081/auth/logout')
+          .then(result => {
+            if (result.data.Status) {
+              navigate('/')
+            }
+          })
+      }
 
     return (
         <>
@@ -23,14 +30,14 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto">
                         <li className="nav-item">
-                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} exact="true" to="/">View</NavLink>
+                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`}  to="/home">View</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} to="/createinvoice">Create</NavLink>
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
+                        <li className="nav-item" onClick={handleLogout}>
                             <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} exact="true" to="/">Logout</NavLink>
                         </li>
                     </ul>
