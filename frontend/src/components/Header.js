@@ -11,13 +11,19 @@ const Header = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        axios.get('http://localhost:8081/auth/logout')
+        axios.get('http://localhost:8000/logout')
           .then(result => {
             if (result.data.Status) {
-              navigate('/')
+              // Clear authentication state
+              localStorage.removeItem('isAuthenticated');
+              navigate('/');
             }
           })
-      }
+          .catch(err => {
+            console.error('Logout failed:', err);
+          });
+    };
+    
 
     return (
         <>
@@ -38,7 +44,7 @@ const Header = () => {
                     </ul>
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item" onClick={handleLogout}>
-                            <NavLink className={`nav-link ${icon ? 'bold' : 'bg-white text-dark'}`} exact="true" to="/">Logout</NavLink>
+                            <button className={`nav-link btn btn-link ${icon ? 'bold' : 'bg-white text-dark'}`} >Logout</button>
                         </li>
                     </ul>
                   

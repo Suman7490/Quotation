@@ -20,10 +20,7 @@ const Home = () => {
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
-    let a = 0;
-    // console.log(a++);
-    console.log(++a);
-    // console.log(a);
+
 
     // ****************** Date fromate ******************
     const formatDate = (isoDate) => {
@@ -67,6 +64,7 @@ const Home = () => {
                     <div className='col-md-12 pt-5'>
                         <FormField
                             control={Input}
+                            name="search"
                             placeholder="Seacrh by name"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}

@@ -486,6 +486,7 @@ const CreateInvoice = () => {
                         <FormField>
                           <Dropdown
                             placeholder="Services"
+                            name="services"
                             fluid
                             selection
                             search
@@ -514,6 +515,7 @@ const CreateInvoice = () => {
                       <TableCell>
                         <FormField
                           control={Input}
+                          name="Price"
                           placeholder="Price"
                           value={row.price}
                           onChange={(e) => {
@@ -526,11 +528,11 @@ const CreateInvoice = () => {
                         /></TableCell>
                       <TableCell>
                         <FormField className='d-flex'>
-                          <Select options={discountTypeOptions} value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '2em' }} />
-                          <Input placeholder="Discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
+                          <Select options={discountTypeOptions} name="discountType" value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '2em' }} />
+                          <Input placeholder="Discount" name="discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
                         </FormField>
                       </TableCell>
-                      <TableCell width={2}><FormField control={Input} placeholder="Grand Total" value={row.grandTotal || ''} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
+                      <TableCell width={2}><FormField control={Input} name="grandTotal" placeholder="Grand Total" value={row.grandTotal || ''} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
                       <TableCell><Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button></TableCell>
                     </TableRow>
                   ))}
@@ -542,12 +544,12 @@ const CreateInvoice = () => {
 
                   <TableRow>
                     <TableCell colSpan="4">TOTAL:</TableCell>
-                    <TableCell><FormField control={Input} value={totalAmount()} /></TableCell>
+                    <TableCell><FormField control={Input} name="totalAmount" value={totalAmount()} /></TableCell>
                   </TableRow>
 
                   <TableRow>
                     <TableCell colSpan={4}><p>TOTAL INSTALLMENT:</p></TableCell>
-                    <TableCell><FormField type="number" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell>
+                    <TableCell><FormField type="number" name="totalInstallments" control={Input} min="0" max="10" value={inputCount} onChange={handleInputChange} error={errors.inputCount ? { content: errors.inputCount } : null} /></TableCell>
                   </TableRow>
 
                   {rows.map((row, index) => (
