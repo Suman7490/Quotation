@@ -11,7 +11,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        axios.get('http://localhost:8000/logout')
+        axios.get('https://backend-three-xi-82.vercel.app/logout')
           .then(result => {
             if (result.data.Status) {
               // Clear authentication state

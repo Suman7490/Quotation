@@ -27,7 +27,7 @@ const Pdf = () => {
 
     useEffect(() => {
         // Fetch the data from the server
-        axios.get(`http://localhost:8000/pdf/${id}`)
+        axios.get(`https://backend-three-xi-82.vercel.app/pdf/${id}`)
             .then((response) => {
                 setData(response.data);
                 setLoading(false);

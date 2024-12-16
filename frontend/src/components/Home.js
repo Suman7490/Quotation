@@ -16,7 +16,7 @@ const Home = () => {
 
     useEffect(() => {
         // axios.get('https://railway-production-05a0.up.railway.app')
-        axios.get('http://localhost:8000')
+        axios.get('https://backend-three-xi-82.vercel.app')
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
@@ -43,7 +43,7 @@ const Home = () => {
 
     const deleteQuotation = (quotationId) => {
         if (window.confirm('Are you sure you want to delete this quotation?')) {
-            axios.delete(`http://localhost:8000/delete/${quotationId}`)
+            axios.delete(`https://backend-three-xi-82.vercel.app/delete/${quotationId}`)
                 .then((response) => {
                     alert('Quotation deleted successfully');
                     // Remove the deleted quotation from the state

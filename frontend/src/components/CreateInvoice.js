@@ -346,12 +346,12 @@ const CreateInvoice = () => {
         console.log("posted data:", payload);
         // Check if we're updating an existing quotation
         if (quotationId) {
-          const response = await axios.put(`http://localhost:8000/update/${quotationId}`, payload);
+          const response = await axios.put(`https://backend-three-xi-82.vercel.app/update/${quotationId}`, payload);
           alert('Quotation updated successfully');
           window.location.href = '/';
         } else {
           console.log("Final Amount before sending:", finalAmount);
-          const response = await axios.post(`http://localhost:8000/create`, payload);
+          const response = await axios.post(`https://backend-three-xi-82.vercel.app/create`, payload);
           console.log("Final Amount before sending:", finalAmount);
           alert('Quotation created successfully');
           window.location.href = '/';
@@ -366,7 +366,7 @@ const CreateInvoice = () => {
   
   useEffect(() => {
     if (quotationId) {
-      axios.get(`http://localhost:8000/pdf/${quotationId}`)
+      axios.get(`https://backend-three-xi-82.vercel.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
   

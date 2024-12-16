@@ -12,7 +12,7 @@ const Login = ({setIsAuthenticated }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        axios.post('http://localhost:8000/login', values, { withCredentials: true })
+        axios.post('https://backend-three-xi-82.vercel.app/login', values, { withCredentials: true })
             .then(result => {
                 if (result.data.LoginStatus) {
                     setIsAuthenticated(true); 
