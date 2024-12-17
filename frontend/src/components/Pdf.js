@@ -119,7 +119,7 @@ const Pdf = () => {
                                     </Table>
                                 </div>
                             </div>
-                           
+
                             <div className='rows'>
                                 <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-3'>
@@ -151,7 +151,7 @@ const Pdf = () => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0'}}>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-6'></div>
                                     <div className='col-md-3'>
                                         <strong>SUBTOTAL :</strong>

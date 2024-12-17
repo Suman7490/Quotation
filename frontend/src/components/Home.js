@@ -15,7 +15,6 @@ const Home = () => {
     )
 
     useEffect(() => {
-        // axios.get('https://railway-production-05a0.up.railway.app')
         axios.get('https://backend-three-xi-82.vercel.app')
             .then(res => setData(res.data))
             .catch(err => console.log(err));
@@ -69,7 +68,7 @@ const Home = () => {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <Table celled striped className='table-responsive'>
+                        <Table celled striped className=''>
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell>ID</TableHeaderCell>

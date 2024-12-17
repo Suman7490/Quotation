@@ -25,7 +25,7 @@ function App() {
       <div className="" style={{ height: '100vh' }}>
 
         <Router>
-          {isAuthenticated && <Header />}
+          {isAuthenticated && <Header setIsAuthenticated={setIsAuthenticated} />}
           <Routes>
             <Route
               path="/"
