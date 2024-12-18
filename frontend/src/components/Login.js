@@ -3,19 +3,19 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 axios.defaults.withCredentials = true
 
-const Login = ({setIsAuthenticated }) => {
+const Login = ({ setIsAuthenticated }) => {
     const [values, setValues] = useState({ email: '', password: '' })
     const [error, setError] = useState(null)
 
     const navigate = useNavigate()
-   
+
 
     const handleSubmit = (event) => {
         event.preventDefault()
         axios.post('https://backend-three-xi-82.vercel.app/login', values, { withCredentials: true })
             .then(result => {
                 if (result.data.LoginStatus) {
-                    setIsAuthenticated(true); 
+                    setIsAuthenticated(true);
                 } else {
                     setError(result.data.Error)
                     navigate('/')
@@ -52,7 +52,7 @@ const Login = ({setIsAuthenticated }) => {
                     </div>
                     <div className='form-group d-flex justify-content-around'>
                         <button type='submit' className='btn btn-success w-100'>Login</button>
-                    </div>  
+                    </div>
                 </form>
             </div>
 
