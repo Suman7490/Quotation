@@ -68,7 +68,7 @@ const Home = () => {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <Table celled striped className=''>
+                        <Table celled striped className='table-responsive'>
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell>ID</TableHeaderCell>

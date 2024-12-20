@@ -264,7 +264,7 @@ const CreateInvoice = () => {
   };
 
 
- 
+
   const totalAmount = () => {
     return services.reduce((total, row) => total + row.grandTotal, 0)
   }
@@ -363,19 +363,19 @@ const CreateInvoice = () => {
     }
   };
 
-  
+
   useEffect(() => {
     if (quotationId) {
       axios.get(`https://backend-three-xi-82.vercel.app/pdf/${quotationId}`)
         .then((response) => {
           const data = response.data;
-  
+
           // Set basic fields
           setName(data.name || "");
           setEmail(data.email || "");
           setGender(data.gender || "");
           setDate(new Date(data.date));
-  
+
           // Set domain, including custom domain handling
           if (data.domain === 'Other') {
             setDomain('Other');
@@ -386,14 +386,14 @@ const CreateInvoice = () => {
             setIsCustomDomain(false);  // Hide custom domain input if not 'Other'
             setCustomDomain("");  // Clear any previous custom domain
           }
-  
+
           setTotal(data.total || 0);
           setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
-  
+
           const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
-  
+
           // Map services, handling custom services as needed
           const serviceData = data.services.map(service => {
             if (service.service === 'Other') {
@@ -402,26 +402,26 @@ const CreateInvoice = () => {
             }
             return service;
           });
-  
+
           setServices(serviceData);
-  
+
           // Set the isCustomService array to reflect custom services in fetched data
           const customServiceFlags = serviceData.map(service => service.service === 'Other');
           setIsCustomService(customServiceFlags);
-  
+
           const rowsData = data.installments.map(installment => ({
             label: installment.label,
             dueWhen: installment.dueWhen,
             installmentAmount: installment.installmentAmount,
           }));
-  
+
           setRows(rowsData);
           console.log("Received data:", data);
         })
         .catch((error) => console.log('Error fetching data:', error));
     }
   }, [quotationId]);
-  
+
   return (
     <>
       <div className='container'>
