@@ -9,7 +9,6 @@ const Home = () => {
     const navigate = useNavigate();
     const [quotations, setQuotations] = useState([]);
 
-
     const filteredItems = data.filter((item) =>
         item.name.toLowerCase().includes(search.toLowerCase())
     )
@@ -20,7 +19,6 @@ const Home = () => {
             .catch(err => console.log(err));
     }, []);
 
-
     // ****************** Date fromate ******************
     const formatDate = (isoDate) => {
         const date = new Date(isoDate);
@@ -30,7 +28,6 @@ const Home = () => {
 
         return `${day}-${month}-${year}`;
     };
-
 
     // ***************** print *****************
     const pdf = (id) => {

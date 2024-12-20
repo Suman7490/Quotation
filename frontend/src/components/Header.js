@@ -3,8 +3,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from "../Images/new_logo.svg"
 import '../App.css'
 
-
-
 const Header = ({ setIsAuthenticated }) => {
     const [icon, setIcon] = useState(true)
     const navigate = useNavigate();
@@ -14,7 +12,6 @@ const Header = ({ setIsAuthenticated }) => {
         localStorage.removeItem('token');
         navigate('/');
     };
-
 
     return (
         <>
@@ -44,7 +41,5 @@ const Header = ({ setIsAuthenticated }) => {
         </>
     )
 }
-
-
 
 export default Header;

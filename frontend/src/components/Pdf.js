@@ -15,8 +15,6 @@ const Pdf = () => {
     const [error, setError] = useState(null);
     const componentRef = useRef();
 
-
-
     const formatDate = (isoDate) => {
         const date = new Date(isoDate);
         const day = String(date.getDate()).padStart(2, '0');
@@ -40,8 +38,6 @@ const Pdf = () => {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
-
-
 
     const pageStyle = `
     @page {
@@ -180,10 +176,6 @@ const Pdf = () => {
                                     </div>
                                 ))}
                             </div>
-
-
-
-
 
                             <div className='row pt-5 mt-5 footer'>
                                 <div className='col-md-12'>

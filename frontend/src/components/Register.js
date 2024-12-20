@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 const Register = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
@@ -21,7 +20,6 @@ const Register = () => {
         setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value, });
     }
 
-
     const Validations = () => {
         const newErrors = {};
         if (!formData.name) newErrors.name = 'Name is required';
@@ -33,9 +31,6 @@ const Register = () => {
         if (!formData.checkbox) newErrors.checkbox = 'You must agree to the terms and conditions';
         return newErrors;
     }
-
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -57,12 +52,7 @@ const Register = () => {
         } catch (error) {
             console.error('Error during registration:', error);
         }
-
-
     };
-
-
-
 
     return (
         <>

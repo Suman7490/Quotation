@@ -7,8 +7,7 @@ const Login = ({ setIsAuthenticated }) => {
     const [values, setValues] = useState({ email: '', password: '' })
     const [error, setError] = useState(null)
 
-    const navigate = useNavigate()
-
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault()
