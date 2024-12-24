@@ -73,14 +73,14 @@ const Pdf = () => {
                                                 <div className='header'>
                                                     <p style={{ fontSize: '25px', margin: '0' }}>
                                                         <strong style={{ color: '#084B1B' }}>KALP </strong>
-                                                        <strong style={{ color: '#7F9D34' }}>RESEARCH </strong>
+                                                        <strong style={{ color: '#5D8C13' }}>RESEARCH </strong>
                                                         <strong style={{ color: '#084B1B' }}>WORK</strong>
                                                         <strong> - </strong>
                                                         <strong style={{ color: '#084B1B' }}>K</strong>
-                                                        <strong style={{ color: '#7F9D34' }}>R</strong>
+                                                        <strong style={{ color: '#5D8C13' }}>R</strong>
                                                         <strong style={{ color: '#084B1B' }}>W</strong>
                                                     </p>
-                                                    <p className='m-0'><Icon className='home' />Link road Krishna Nagar Mathura Utter Pradesh 281003</p>
+                                                    <p className='m-0'><Icon className='home' />Vrindavan Marg, near Radha Rani Sweet, Masani, Tiraha, Mathura, Uttar Pradesh 281003</p>
                                                     <p className='m-0'><Icon className='call' /> +91 - 7037663686</p>
                                                     <p className='m-0'><Icon className='mail' /> info@kalpresearchwork.com</p>
                                                     <p className='m-0'><Icon className='globe' /> www.kalpresearchwork.com</p>
@@ -102,6 +102,7 @@ const Pdf = () => {
                                                 <div className='header'>
                                                     <p className='m-0' style={{ fontSize: '17px' }}><strong>Quotation To:</strong></p>
                                                     <p className='m-0' style={{ color: '#084B1B', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
+                                                    <p className='m-0' style={{ fontSize: '17px' }}><strong>Note: </strong>1.Only two times updation is applicable<br/>2.Under 10% plagiarism applicable</p>
                                                     <p className='m-0 pt-5' style={{ fontSize: '17px' }}><strong>Research Area/Domain:</strong> {data.domain}</p>
                                                 </div>
                                             </TableCell>
@@ -183,16 +184,22 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell className='border-0'>
                                                 <div className='header'>
-                                                    <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>PAYMENT METHOD</h3>
+                                                    <h3 className='p-3 text-white' style={{ backgroundColor: '#084B1B', width: '50%' }}>PAYMENT METHOD</h3>
                                                     <p className='m-0'>Account Type: Current Account</p>
                                                     <p className='m-0'>Account Holder Name: Kalp Squad Group</p>
                                                     <p className='m-0'>Account Number: 42188265333</p>
                                                     <p className='m-0'>IFSC: SBIN0002502</p>
                                                 </div>
-                                                <div className='header mt-4'>
-                                                    <h3 className='p-3' style={{ backgroundColor: '#7F9D34', width: '50%' }}>TERMS AND CONDITION</h3>
-                                                    <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
+                                                <div className='header mt-2'>
+                                                    <h3 className='p-3 text-white' style={{ backgroundColor: '#084B1B', width: '50%' }}>TERMS AND CONDITION</h3>
+                                                   {/*  <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
                                                     <p className='m-0'>There will be a 10% interest charge per month on late invoices.</p>
+                                                    <p>Congratulations on receiving the discount! Please note, the discount is only valid for 7 days from the date of this quotation. After this period, there will be an increment of 10% in the quoted price.</p>
+                                                    <p>Payments should be made as per the installment schedule. Delays in payment may affect project timelines.</p> */}
+                                                    <ul className='list-group list-unstyled m-0 p-0'>
+                                                        <li>Congratulations on receiving the discount! Please note, the discount is only<br/> valid for 7 days from the date of this quotation. After this period, there will<br/> be an increment of 10% in the quoted price.</li>
+                                                        <li>Payments should be made as per the installment schedule. Delays in payment<br/> may affect project timelines.</li>
+                                                    </ul>
                                                 </div>
                                             </TableCell>
                                             <TableCell className='border-0 text-center'>

@@ -1,37 +1,45 @@
-*{
+* {
   font-family: "PT Serif", serif;
   font-weight: 500;
   font-style: normal;
 }
-html, body{
+
+html,
+body {
   height: 100%;
   margin: 0;
 }
-.form-control:focus{
+
+.form-control:focus {
   outline: none;
   box-shadow: none;
 }
-.light{
+
+.light {
   background-color: white;
 }
-.dark{
+
+.dark {
   background-color: black;
 }
-nav.navbar{
+
+nav.navbar {
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
-nav.navbar .navbar-nav .nav-link{
+
+nav.navbar .navbar-nav .nav-link {
   font-size: 16px;
   border-radius: 5px;
   background-color: transparent;
   margin: 0 15px;
   text-align: center;
   padding: 10px 15px;
-  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; 
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   transition: .3s linear;
   color: black;
 }
-nav.navbar .navbar-nav .nav-link:hover{
+
+nav.navbar .navbar-nav .nav-link:hover {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
 
@@ -40,36 +48,40 @@ nav.navbar .navbar-nav .nav-link.active {
   color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
-nav.navbar .btn{
+
+nav.navbar .btn {
   background: none;
 }
-nav.navbar .icon{
+
+nav.navbar .icon {
   font-size: 16px;
   border-radius: 5px;
   background-color: transparent;
   text-align: center;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
-.ui.padded.table th{
+
+.ui.padded.table th {
   width: 11em;
 }
-.ui.padded.table td{
+
+.ui.padded.table td {
   padding: 0.8rem 0.5em;
 }
 
-.rows .row:nth-child(even){
-  background-color: #7F9D34;
+.rows .row:nth-child(even) {
+  background-color: #5D8C13;
 }
-.rows .row:nth-child(odd){
+
+.rows .row:nth-child(odd) {
   background-color: #084B1B;
-  }
+}
 
-
-
-.services ul{
+.services ul {
   margin-bottom: inherit;
 }
-.services ul li{
+
+.services ul li {
   width: '12em';
   padding: 0.3em;
   text-align: left;
@@ -78,14 +90,16 @@ nav.navbar .icon{
   color: white;
   border: 1px solid black;
 }
-.LoginPage{
+
+.LoginPage {
   background: url('./Images/LoginPage.jpg');
   background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url('./Images/LoginPage.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 120%;
 }
-.LoginForm{
+
+.LoginForm {
   background-color: rgba(1, 32, 93, 0.6);
   color: white;
 }
