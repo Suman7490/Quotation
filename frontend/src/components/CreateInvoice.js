@@ -275,7 +275,7 @@ const CreateInvoice = () => {
     const value = parseInt(event.target.value, 10);
     if (!isNaN(value)) {
       setInputCount(value);
-      const amount = finalAmount > 0 ? finalAmount : totalAmount();
+      const amount = totalAmount();
       const installmentValue = Math.floor(amount / value / 100) * 100;
       const remainder = amount - (installmentValue * value);
       const updatedRows = Array(value).fill('').map((_, index) => ({
