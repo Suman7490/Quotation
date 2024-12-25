@@ -69,12 +69,15 @@ nav.navbar .icon {
   padding: 0.8rem 0.5em;
 }
 
+
 .rows .row:nth-child(even) {
-  background-color: #5D8C13;
+  background-color: #A9DFBF;
+  color: #004B23;
 }
 
 .rows .row:nth-child(odd) {
-  background-color: #084B1B;
+  background-color: #DFFFD6;
+  color: #004B23;
 }
 
 .services ul {

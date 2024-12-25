@@ -80,7 +80,7 @@ const Pdf = () => {
                                                         <strong style={{ color: '#5D8C13' }}>R</strong>
                                                         <strong style={{ color: '#084B1B' }}>W</strong>
                                                     </p>
-                                                    <p className='m-0'><Icon className='home' />Vrindavan Marg, near Radha Rani Sweet, Masani, Tiraha, Mathura, Uttar Pradesh 281003</p>
+                                                    <p className='m-0'><Icon className='home' />Vrindavan Marg, Near Radha Rani Sweet, Masani, Tiraha, Mathura, Uttar Pradesh 281003</p>
                                                     <p className='m-0'><Icon className='call' /> +91 - 7037663686</p>
                                                     <p className='m-0'><Icon className='mail' /> info@kalpresearchwork.com</p>
                                                     <p className='m-0'><Icon className='globe' /> www.kalpresearchwork.com</p>
@@ -102,7 +102,7 @@ const Pdf = () => {
                                                 <div className='header'>
                                                     <p className='m-0' style={{ fontSize: '17px' }}><strong>Quotation To:</strong></p>
                                                     <p className='m-0' style={{ color: '#084B1B', fontWeight: '800', fontSize: '25px', textTransform: 'uppercase' }}>{data.name}</p>
-                                                    <p className='m-0' style={{ fontSize: '17px' }}><strong>Note: </strong>1.Only two times updation is applicable<br/>2.Under 10% plagiarism applicable</p>
+                                                    <p className='m-0 p-0' style={{ fontSize: '15px' }}><strong>Note: </strong>1.Only two times updation is applicable<br/>2.Under 10% plagiarism applicable</p>
                                                     <p className='m-0 pt-5' style={{ fontSize: '17px' }}><strong>Research Area/Domain:</strong> {data.domain}</p>
                                                 </div>
                                             </TableCell>
@@ -118,7 +118,7 @@ const Pdf = () => {
                             </div>
 
                             <div className='rows'>
-                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0', background: '#006400', color: '#FFFFFF' }}>
                                     <div className='col-md-3'>
                                         <strong>SERVICES</strong>
                                     </div>
@@ -133,7 +133,7 @@ const Pdf = () => {
                                     </div>
                                 </div>
                                 {data.services.map((service, idx) => (
-                                    <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
+                                    <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                         <div className='col-md-3'>
                                             <span className='mb-2 mt-2'>{service.service}</span>
                                         </div>
@@ -148,7 +148,7 @@ const Pdf = () => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-6'></div>
                                     <div className='col-md-3'>
                                         <strong>SUBTOTAL :</strong>
@@ -157,7 +157,7 @@ const Pdf = () => {
                                         <span>{data.total}</span>
                                     </div>
                                 </div>
-                                <div className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
+                                <div className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
                                     <div className='col-md-9'>
                                         <strong>TOTAL INSTALLMENTS :</strong>
                                     </div>
@@ -166,7 +166,7 @@ const Pdf = () => {
                                     </div>
                                 </div>
                                 {data.installments.map((installment, idx) => (
-                                    <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom text-white' style={{ fontSize: '1.1em', padding: '0.7rem 0', textTransform: 'uppercase' }}>
+                                    <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0', textTransform: 'uppercase' }}>
                                         {/* {installment.label} : {installment.dueWhen} {installment.when} */}
                                         <div className='col-md-9 d-flex'>
                                             <div className='' style={{ width: '70px' }}>{installment.label}</div>
@@ -184,14 +184,14 @@ const Pdf = () => {
                                         <TableRow>
                                             <TableCell className='border-0'>
                                                 <div className='header'>
-                                                    <h3 className='p-3 text-white' style={{ backgroundColor: '#084B1B', width: '50%' }}>PAYMENT METHOD</h3>
+                                                    <h4 className='pl-3 pr-3 pt-2 pb-2 text-white' style={{ backgroundColor: '#006400', width: '50%' }}>PAYMENT METHOD</h4>
                                                     <p className='m-0'>Account Type: Current Account</p>
                                                     <p className='m-0'>Account Holder Name: Kalp Squad Group</p>
                                                     <p className='m-0'>Account Number: 42188265333</p>
                                                     <p className='m-0'>IFSC: SBIN0002502</p>
                                                 </div>
                                                 <div className='header mt-2'>
-                                                    <h3 className='p-3 text-white' style={{ backgroundColor: '#084B1B', width: '50%' }}>TERMS AND CONDITION</h3>
+                                                    <h4 className='pl-3 pr-3 pt-2 pb-2 text-white' style={{ backgroundColor: '#006400', width: '50%' }}>TERMS AND CONDITION</h4>
                                                    {/*  <p className='m-0'>Please send payment within 30 days of receiving this invoice.</p>
                                                     <p className='m-0'>There will be a 10% interest charge per month on late invoices.</p>
                                                     <p>Congratulations on receiving the discount! Please note, the discount is only valid for 7 days from the date of this quotation. After this period, there will be an increment of 10% in the quoted price.</p>
