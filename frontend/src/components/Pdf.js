@@ -119,61 +119,61 @@ const Pdf = () => {
 
                             <div className='rows'>
                                 <div className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0', background: '#006400', color: '#FFFFFF' }}>
-                                    <div className='col-md-3'>
+                                    <div className='col-3'>
                                         <strong>SERVICES</strong>
                                     </div>
-                                    <div className='col-md-3'>
+                                    <div className='col-3'>
                                         <strong>PRICE</strong>
                                     </div>
-                                    <div className='col-md-3'>
+                                    <div className='col-3'>
                                         <strong>DISCOUNT</strong>
                                     </div>
-                                    <div className='col-md-3'>
+                                    <div className='col-3'>
                                         <strong>GRAND TOTAL</strong>
                                     </div>
                                 </div>
                                 {data.services.map((service, idx) => (
                                     <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
-                                        <div className='col-md-3'>
+                                        <div className='col-3'>
                                             <span className='mb-2 mt-2'>{service.service}</span>
                                         </div>
-                                        <div className='col-md-3'>
+                                        <div className='col-3'>
                                             <span>{service.price}</span>
                                         </div>
-                                        <div className='col-md-3'>
+                                        <div className='col-3'>
                                             <span>{service.discount}</span>
                                         </div>
-                                        <div className='col-md-3'>
+                                        <div className='col-3'>
                                             <span>{service.grandTotal}</span>
                                         </div>
                                     </div>
                                 ))}
                                 <div className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
-                                    <div className='col-md-6'></div>
-                                    <div className='col-md-3'>
+                                    <div className='col-6'></div>
+                                    <div className='col-3'>
                                         <strong>SUBTOTAL :</strong>
                                     </div>
-                                    <div className='col-md-3'>
+                                    <div className='col-3'>
                                         <span>{data.total}</span>
                                     </div>
                                 </div>
                                 <div className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0' }}>
-                                    <div className='col-md-9'>
+                                    <div className='col-9'>
                                         <strong>TOTAL INSTALLMENTS :</strong>
                                     </div>
-                                    <div className='col-md-3'>
+                                    <div className='col-3'>
                                         <span>{data.inputCount}</span>
                                     </div>
                                 </div>
                                 {data.installments.map((installment, idx) => (
                                     <div key={idx} className='row ml-1 mr-1 mb-0 border-bottom' style={{ fontSize: '1.1em', padding: '0.7rem 0', textTransform: 'uppercase' }}>
                                         {/* {installment.label} : {installment.dueWhen} {installment.when} */}
-                                        <div className='col-md-9 d-flex'>
+                                        <div className='col-9 d-flex'>
                                             <div className='' style={{ width: '70px' }}>{installment.label}</div>
                                             <span className='pr-2'>:</span>
                                             <span>{installment.dueWhen}</span>
                                         </div>
-                                        <div className='col-md-3'>{installment.installmentAmount}</div>
+                                        <div className='col-3'>{installment.installmentAmount}</div>
                                     </div>
                                 ))}
                             </div>
