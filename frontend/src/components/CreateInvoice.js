@@ -123,6 +123,9 @@ const CreateInvoice = () => {
   const [customService, setCustomService] = useState('');
   const [serviceOptions, setServiceOptions] = useState(WritingService);
   const [totalService, setTotalService] = useState(1);
+  const [totalDiscount, setTotalDiscount] = useState(0);
+  const [totalDiscountType, setTotalDiscountType] = useState("amount");
+  const [finalAmount, setFinalAmount] = useState(0);
   const [discountType, setDiscountType] = useState("amount");
   const [total, setTotal] = useState(0);
   const [installments, setInstallments] = useState([]);
@@ -315,6 +318,9 @@ const CreateInvoice = () => {
 
   const postData = async (e) => {
     e.preventDefault();
+    const calculatedFinalAmount = totalAmount() - (totalDiscountType === 'percentage' ? (totalAmount() * totalDiscount) / 100 : totalDiscount);
+    setFinalAmount(calculatedFinalAmount);
+    console.log("Calculated Final Amount before sending:", calculatedFinalAmount);
 
     // Validate input data
     if (Validate()) {
@@ -329,6 +335,8 @@ const CreateInvoice = () => {
           date: formattedDate,
           domain,
           total: totalAmount(),
+            totalDiscount,
+          finalAmount: calculatedFinalAmount,
           totalService,
           inputCount,
           services,
@@ -378,7 +386,10 @@ const CreateInvoice = () => {
           }
 
           setTotal(data.total || 0);
+            setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
+            const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
+          setFinalAmount(finalTotal);
 
           // Map services, handling custom services as needed
           const serviceData = data.services.map(service => {
