@@ -138,8 +138,8 @@ const CreateInvoice = () => {
     const newErrors = {};
 
     if (!name) newErrors.name = 'Name is required';
-    if (!email) { newErrors.email = 'Email is required'; }
-    else if (!/\S+@\S+\.\S+/.test(email)) { newErrors.email = 'Email is invalid'; }
+    // if (!email) { newErrors.email = 'Email is required'; }
+    // else if (!/\S+@\S+\.\S+/.test(email)) { newErrors.email = 'Email is invalid'; }
     if (!gender) newErrors.gender = 'Gender is required';
     if (!date) newErrors.date = 'Date is required';
     if (!domain) newErrors.domain = 'Research Area / Domain is required';
