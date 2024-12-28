@@ -12,6 +12,11 @@ const Home = () => {
     const filteredItems = data.filter((item) =>
         item.name.toLowerCase().includes(search.toLowerCase())
     )
+    if (filteredItems.length === 0) {
+        console.log("No record found")
+    } else {
+        console.log("Filtered Items:", filteredItems)
+    }
 
     useEffect(() => {
         axios.get('https://backend-three-xi-82.vercel.app')
@@ -81,42 +86,48 @@ const Home = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {filteredItems.map((row, index) => {
-                                    return <TableRow key={index}>
-                                        <TableCell>{row.id}</TableCell>
-                                        <TableCell>{row.name}</TableCell>
-                                        <TableCell>{row.email}</TableCell>
-                                        <TableCell>{formatDate(row.date)}</TableCell>
-                                        <TableCell>{row.domain}</TableCell>
-                                        <TableCell>
-                                            <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                                {/* <span>{row.totalServices}</span> */}
-                                                {row.services.map((service, idx) => (
-                                                    <li key={idx}>
-                                                        {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </TableCell>
-                                        {/* <TableCell>{row.totalDiscount}</TableCell> */}
-                                        <TableCell>{row.total}</TableCell>
-                                        <TableCell>
-                                            <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
-                                                {/* <span>{row.inputCount}</span> */}
-                                                {row.installments.map((installment, idx) => (
-                                                    <li key={idx}>
-                                                        {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Icon name='edit' size='large' onClick={() => edit(row.id)} className='text-primary' style={{ cursor: 'pointer' }} />
-                                            <Icon name='trash' size='large' onClick={() => deleteQuotation(row.id)} className='text-danger' style={{ cursor: 'pointer' }} />
-                                            <Icon name='eye' size='large' onClick={() => pdf(row.id)} className='text-success' style={{ cursor: 'pointer' }} />
-                                        </TableCell>
-                                    </TableRow>
-                                })}
+                                {filteredItems.length === 0 ? (
+                                    <p>No record found</p>
+                                ) : (
+                                   
+                                        filteredItems.map((row, index) => {
+                                            return <TableRow key={index}>
+                                                <TableCell>{row.id}</TableCell>
+                                                <TableCell>{row.name}</TableCell>
+                                                <TableCell>{row.email}</TableCell>
+                                                <TableCell>{formatDate(row.date)}</TableCell>
+                                                <TableCell>{row.domain}</TableCell>
+                                                <TableCell>
+                                                    <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                                        {/* <span>{row.totalServices}</span> */}
+                                                        {row.services.map((service, idx) => (
+                                                            <li key={idx}>
+                                                                {service.serviceName} = P: {service.price}, D: {service.discount}, G: {service.grandTotal}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </TableCell>
+                                                {/* <TableCell>{row.totalDiscount}</TableCell> */}
+                                                <TableCell>{row.total}</TableCell>
+                                                <TableCell>
+                                                    <ul className='p-0 m-0' style={{ listStyle: 'none', }}>
+                                                        {/* <span>{row.inputCount}</span> */}
+                                                        {row.installments.map((installment, idx) => (
+                                                            <li key={idx}>
+                                                                {installment.label}: {installment.dueWhen} - {installment.installmentAmount}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Icon name='edit' size='large' onClick={() => edit(row.id)} className='text-primary' style={{ cursor: 'pointer' }} />
+                                                    <Icon name='trash' size='large' onClick={() => deleteQuotation(row.id)} className='text-danger' style={{ cursor: 'pointer' }} />
+                                                    <Icon name='eye' size='large' onClick={() => pdf(row.id)} className='text-success' style={{ cursor: 'pointer' }} />
+                                                </TableCell>
+                                            </TableRow>
+                                        })
+                                    
+                                )}
                             </TableBody>
                         </Table>
                     </div>

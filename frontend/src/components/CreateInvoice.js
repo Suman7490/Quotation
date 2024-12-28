@@ -525,7 +525,7 @@ const CreateInvoice = () => {
                         /></TableCell>
                       <TableCell>
                         <FormField className='d-flex'>
-                          <Select options={discountTypeOptions} name="discountType" value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '2em' }} />
+                          <Select className='mr-1' options={discountTypeOptions} name="discountType" value={discountType} onChange={(e, { value }) => setDiscountType(value)} style={{ minWidth: '2em', }} />
                           <Input placeholder="Discount" name="discount" value={row.discount} onChange={(e) => handleDiscount(index, e.target.value)} />
                         </FormField>
                       </TableCell>
