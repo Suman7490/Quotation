@@ -32,7 +32,7 @@ const Header = ({ setIsAuthenticated }) => {
                     </ul>
                     <ul className="navbar-nav">
                         <li className="nav-item" onClick={handleLogout}>
-                            <button className={`nav-link btn btn-link ${icon ? 'bold' : 'bg-white text-dark'}`} >Logout</button>
+                            <button className={`nav-link btn btn-link ${icon ? 'bold' : 'bg-white text-dark'}`} ><span>Logout</span></button>
                         </li>
                     </ul>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody } from 'semantic-ui-react';
+import { FormGroup, FormField, Form, Input, Button, Header, Select, Dropdown, TableHeader, TableHeaderCell, TableRow, TableCell, Table, TableBody, Icon } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 const genderOptions = [
@@ -423,8 +423,8 @@ const CreateInvoice = () => {
     <>
       <div className='container'>
         <div className='row'>
-          <div className='col-md-12 text-center pb-5'>
-            <Header as='h1' style={{ color: '#443F11' }}>Quotation Manager</Header>
+          <div className='col-md-12 text-center pb-5 pt-5'>
+            <h1 style={{ color: '#443F11' }}>Quotation Manager</h1>
           </div>
         </div>
         <div className='row'>
@@ -530,13 +530,16 @@ const CreateInvoice = () => {
                         </FormField>
                       </TableCell>
                       <TableCell width={2}><FormField control={Input} name="grandTotal" placeholder="Grand Total" value={row.grandTotal || ''} error={errors.grandTotal ? { content: errors.grandTotal } : null} /></TableCell>
-                      <TableCell><Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button></TableCell>
+                      <TableCell>
+                        <Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button>
+                        {/* <Icon name='trash' size='large' onClick={() => removeService(index)} className='text-danger' style={{ cursor: 'pointer' }} /> */}
+                        </TableCell>
                     </TableRow>
                   ))}
 
                   <TableRow>
                     <TableCell colSpan="4">ADD SERVICE:</TableCell>
-                    <TableCell className='border'><Button className='ui green button w-100' onClick={addService}>Add Service</Button></TableCell>
+                    <TableCell className='border'><Button className='ui blue button w-100' onClick={addService}>Add Service</Button></TableCell>
                   </TableRow>
 
                   <TableRow>
@@ -554,13 +557,15 @@ const CreateInvoice = () => {
                       <TableCell><p>{labels[index]}:</p></TableCell>
                       <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', parseFloat(e.target.value))} /></TableCell>
-                      <TableCell><Button className='ui red button w-100' onClick={() => removeInstallment(index)}>Delete Row</Button></TableCell>
+                      <TableCell>
+                        <Button className='ui red button w-100' onClick={() => removeInstallment(index)}>Delete Row</Button>                                                
+                        </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
 
-              <center> <Button className='button w-75 text-large pt-3 pb-3 shadow' style={{ backgroundColor: '#443F11', color: 'white', fontSize: '20px' }} onClick={postData}>Submit</Button></center>
+              <center> <Button className='button w-10 text-md pt-3 pb-3 shadow' style={{ background: 'darkgreen', color: 'white', fontSize: '16px' }} onClick={postData}>Submit</Button></center>
             </Form>
           </div>
         </div>

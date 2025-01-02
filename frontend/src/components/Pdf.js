@@ -68,7 +68,7 @@ const Pdf = () => {
                             <div className='row'>
                                 <div className='col-md-12'>
                                     <Table className='border-0 table-stripped'>
-                                        <TableRow>
+                                        <TableRow> 
                                             <TableCell className='align-content-end'>
                                                 <div className='header'>
                                                     <p style={{ fontSize: '25px', margin: '0' }}>
