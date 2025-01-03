@@ -13,9 +13,10 @@ const Home = () => {
         item.name.toLowerCase().includes(search.toLowerCase())
     )
     if (filteredItems.length === 0) {
-        console.log("No record found")
+        console.log(true)
     } else {
-        console.log("Filtered Items:", filteredItems)
+        // console.log("Filtered Items:", filteredItems)
+        console.log(false)
     }
 
     useEffect(() => {
