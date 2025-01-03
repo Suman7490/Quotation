@@ -207,12 +207,21 @@ const CreateInvoice = () => {
       setTimeout(() => document.getElementById(`customServiceInput_${index}`)?.focus(), 0);
     } else {
       const updatedServices = services.map((service, i) =>
-        i === index ? { ...service, service: value, price: service.price || 0 } : service
+        i === index ? {
+          ...service,
+          service: value,
+          price: service.price || 0,
+          discount: service.discount || 0,
+          grandTotal: service.grandTotal || 0,
+        }
+          : service
       );
       setServices(updatedServices);
       const newIsCustomService = [...isCustomService];
       newIsCustomService[index] = false;
       setIsCustomService(newIsCustomService);
+      console.log(services)
+      console.log('Updated services:', updatedServices);
     }
   };
   // ************* Handle CustomeService Add Option **************
@@ -231,12 +240,14 @@ const CreateInvoice = () => {
       const newIsCustomService = [...isCustomService];
       newIsCustomService[index] = false;
       setIsCustomService(newIsCustomService);
+      console.log(services)
     }
   };
   // **************** Add Service ************
   const addService = () => {
     setServices([...services, { service: '', price: 0, discount: 0, grandTotal: 0 }]);
     setIsCustomService([...isCustomService, false]);
+    console.log(services)
   }
   const removeService = (index) => {
     setServices(services.filter((_, i) => i !== index));
@@ -318,6 +329,7 @@ const CreateInvoice = () => {
 
   const postData = async (e) => {
     e.preventDefault();
+    document.querySelectorAll('input').forEach(input => input.dispatchEvent(new Event('blur')));
     const calculatedFinalAmount = totalAmount() - (totalDiscountType === 'percentage' ? (totalAmount() * totalDiscount) / 100 : totalDiscount);
     setFinalAmount(calculatedFinalAmount);
     console.log("Calculated Final Amount before sending:", calculatedFinalAmount);
@@ -335,7 +347,7 @@ const CreateInvoice = () => {
           date: formattedDate,
           domain,
           total: totalAmount(),
-            totalDiscount,
+          totalDiscount,
           finalAmount: calculatedFinalAmount,
           totalService,
           inputCount,
@@ -345,6 +357,7 @@ const CreateInvoice = () => {
         console.log("posted data:", payload);
         // Check if we're updating an existing quotation
         if (quotationId) {
+          console.log(payload.services)
           const response = await axios.put(`https://backend-three-xi-82.vercel.app/update/${quotationId}`, payload);
           alert('Quotation updated successfully');
           window.location.href = '/';
@@ -386,9 +399,9 @@ const CreateInvoice = () => {
           }
 
           setTotal(data.total || 0);
-            setTotalDiscount(data.totalDiscount || 0);
+          setTotalDiscount(data.totalDiscount || 0);
           setTotalService(data.totalService || 0);
-            const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
+          const finalTotal = data.totalDiscount === 0 ? data.total : data.finalAmount || 0;
           setFinalAmount(finalTotal);
 
           // Map services, handling custom services as needed
@@ -533,7 +546,7 @@ const CreateInvoice = () => {
                       <TableCell>
                         <Button className='ui red button w-100' onClick={() => removeService(index)} >Delete Row</Button>
                         {/* <Icon name='trash' size='large' onClick={() => removeService(index)} className='text-danger' style={{ cursor: 'pointer' }} /> */}
-                        </TableCell>
+                      </TableCell>
                     </TableRow>
                   ))}
 
@@ -558,8 +571,8 @@ const CreateInvoice = () => {
                       <TableCell colSpan={2}><FormField name='Installment' control={Input} placeholder='Installment' value={row.dueWhen || ''} onChange={(e) => handleInstallmentChange(index, 'dueWhen', e.target.value)} /></TableCell>
                       <TableCell><FormField name='Total' type='number' control={Input} placeholder='Amount' value={row.installmentAmount || ''} onChange={(e) => handleInstallmentChange(index, 'installmentAmount', parseFloat(e.target.value))} /></TableCell>
                       <TableCell>
-                        <Button className='ui red button w-100' onClick={() => removeInstallment(index)}>Delete Row</Button>                                                
-                        </TableCell>
+                        <Button className='ui red button w-100' onClick={() => removeInstallment(index)}>Delete Row</Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
